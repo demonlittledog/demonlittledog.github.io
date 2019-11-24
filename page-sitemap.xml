@@ -21,14 +21,14 @@
     </url>
     
     <url>
-        <loc>http://yoursite.com/child/archive/</loc>
+        <loc>http://yoursite.com/child/tags/</loc>
         <lastmod>2019-11-21T12:26:18.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     
     <url>
-        <loc>http://yoursite.com/child/tags/</loc>
+        <loc>http://yoursite.com/child/archive/</loc>
         <lastmod>2019-11-21T12:26:18.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>

@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Linux日常使用详解记录一 - 妖精小狗@MX | Blog
+        
+    </title>
+
+    <link rel="canonical" href="http://yoursite.com/child/article/linux1/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/ice_rock.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Linux" title="Linux">Linux</a>
+                            
+                        </div>
+                        <h1>Linux日常使用详解记录一</h1>
+                        <h2 class="subheading">Linux日常使用详解记录一。</h2>
+                        <span class="meta">
+                            Posted by MX on
+                            2019-11-23
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">妖精小狗@MX Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h3 id="欢迎来到妖精小狗的博客">欢迎来到妖精小狗的博客</h3>
+<hr>
+<h4 id="基础表示">基础表示</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[bda       @  mao01        ~]          $</span><br></pre></td></tr></table></figure>
+<p>登录的用户           机器的名称              家目录       可以写命令了</p>
+<h4 id="查看当前光标所在的目录">查看当前光标所在的目录</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[bda@mao01 softwares]$ pwd</span><br><span class="line">/opt/softwares</span><br><span class="line">[bda@mao01 ~]$</span><br></pre></td></tr></table></figure>
+<h4 id="切换目录-cd">切换目录 cd</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[bda@mao01 ~]$ cd /opt</span><br><span class="line">[bda@mao01 opt] $ pwd</span><br><span class="line">/opt</span><br></pre></td></tr></table></figure>
+<p>==root用户 家目录 /root 规定<br>
+bda用户  家目录 默认【/home/bda】（可以修改）==</p>
+<h5 id="回退家目录-三种方法a直接cdbcd-~ccd-root">回退家目录 三种方法（a.直接cd；<a href="http://b.cd" target="_blank" rel="noopener">b.cd</a> ~；<a href="http://c.cd" target="_blank" rel="noopener">c.cd</a> /root）</h5>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[bda@mao01 ~]$ cd /softwares</span><br><span class="line">[bda@mao01 softwares]$ pwd</span><br><span class="line">/opt/softwares</span><br><span class="line">[bda@mao01 softwares]$ cd</span><br><span class="line">[bda@mao01 ~]$ cd -</span><br><span class="line">/home</span><br><span class="line">[bda@mao01 softwares]$ cd ~</span><br><span class="line">[bda@mao01 ~]$ pwd</span><br><span class="line">/root</span><br><span class="line">[bda@mao01 ~]$ cd -</span><br><span class="line">/home</span><br><span class="line">[bda@mao01 softwares]$ cd /root</span><br><span class="line">[bda@mao01 ~]$</span><br></pre></td></tr></table></figure>
+<h5 id="cd-回退到上一次的目录">cd -  回退到上一次的目录</h5>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[bda@mao01 ~]$ cd /opt/modules</span><br><span class="line">[bda@mao01 modules]$ pwd</span><br><span class="line">/opt/modules</span><br><span class="line">[bda@mao01 modules]$ cd /opt</span><br><span class="line">[bda@mao01 opt]$ cd -</span><br><span class="line">/opt/modules</span><br><span class="line">[bda@mao01 modules]$ cd ../</span><br><span class="line">[bda@mao01 opt]$ pwd</span><br><span class="line">/opt</span><br><span class="line">[bda@mao01 opt]$ cd -</span><br><span class="line">/opt/modules</span><br><span class="line">[bda@mao01 modules]$ cd ../../</span><br><span class="line">[bda@mao01 /]$ pwd</span><br><span class="line">/</span><br></pre></td></tr></table></figure>
+<h5 id="cd-回退上一层目录">cd …/ 回退上一层目录</h5>
+<h5 id="cd-回退上2层目录">cd …/…/ 回退上2层目录</h5>
+<h4 id="目录-文件夹-路径">目录 文件夹  路径</h4>
+<p>绝对路径   /根目录   以根目录开始   Windows中：E:\opt\modules<br>
+Linux中：     /opt/modules<br>
+相对路径    不以根目录为开始，以当前光标所在的目录为开始</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[bda@mao01 /]$ cd /opt/modules</span><br><span class="line">[bda@mao01 /]$ cd opt</span><br><span class="line">[bda@mao01 /]$ cd ./opt</span><br></pre></td></tr></table></figure>
+<h4 id="clear-清空屏幕">clear  清空屏幕</h4>
+<h4 id="ls查看当前光标所在的目录文件有哪些">ls查看当前光标所在的目录文件有哪些</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[bda@mao01 ~]$ cd /opt/modules/</span><br><span class="line">[bda@mao01 modules]$ ls</span><br><span class="line">apache-flume-1.9.0-bin  hbase-1.3.2   kafka_2.11-2.1.0  scala-2.12.8               zookeeper-3.4.13</span><br><span class="line">hadoop-2.7.6            jdk1.8.0_201  phoenix           spark-2.1.0-bin-hadoop2.7  zookeeper.out</span><br></pre></td></tr></table></figure>
+<h5 id="ls-l查看详细信息">ls -l（查看详细信息）</h5>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[bda@mao01 modules]$ ls -l（查看详细信息）</span><br><span class="line">总用量 168</span><br><span class="line">drwxrwxr-x.  7 bda bda    187 5月   7 2019 apache-flume-1.9.0-bin</span><br><span class="line">drwxr-xr-x. 11 bda bda    194 3月  12 2019 hadoop-2.7.6</span><br><span class="line">drwxrwxr-x.  8 bda bda    172 8月   9 15:34 hbase-1.3.2</span><br><span class="line">drwxr-xr-x.  7 bda bda    245 12月 16 2018 jdk1.8.0_201</span><br><span class="line">drwxr-xr-x.  7 bda bda    101 5月  15 2019 kafka_2.11-2.1.0</span><br><span class="line">drwxr-xr-x.  5 bda bda   4096 6月  27 2018 phoenix</span><br><span class="line">drwxrwxr-x.  6 bda bda     50 12月  4 2018 scala-2.12.8</span><br><span class="line">drwxr-xr-x. 14 bda bda    217 8月   9 13:38 spark-2.1.0-bin-hadoop2.7</span><br><span class="line">drwxr-xr-x. 12 bda bda   4096 3月  12 2019 zookeeper-3.4.13</span><br><span class="line">-rw-rw-r--.  1 bda bda 163436 8月   7 18:57 zookeeper.out</span><br></pre></td></tr></table></figure>
+<p>==ls -l ==&gt; 等价于ll==</p>
+<h5 id="ls-l-a-查看当前的文件文件夹也可以看到隐藏文件文件夹隐藏文件以开头">ls -l -a 查看当前的文件文件夹也可以看到隐藏文件文件夹（隐藏文件以.开头）</h5>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[bda@mao01 modules]$ ls -l -a</span><br><span class="line">总用量 168</span><br><span class="line">drwxr-xr-x. 11 bda bda    232 8月   9 13:37 .</span><br><span class="line">drwxr-xr-x.  4 bda bda     38 3月  11 2019 ..</span><br><span class="line">drwxrwxr-x.  7 bda bda    187 5月   7 2019 apache-flume-1.9.0-bin</span><br><span class="line">drwxr-xr-x. 11 bda bda    194 3月  12 2019 hadoop-2.7.6</span><br><span class="line">drwxrwxr-x.  8 bda bda    172 8月   9 15:34 hbase-1.3.2</span><br><span class="line">drwxr-xr-x.  7 bda bda    245 12月 16 2018 jdk1.8.0_201</span><br><span class="line">drwxr-xr-x.  7 bda bda    101 5月  15 2019 kafka_2.11-2.1.0</span><br><span class="line">drwxr-xr-x.  5 bda bda   4096 6月  27 2018 phoenix</span><br><span class="line">drwxrwxr-x.  6 bda bda     50 12月  4 2018 scala-2.12.8</span><br><span class="line">drwxr-xr-x. 14 bda bda    217 8月   9 13:38 spark-2.1.0-bin-hadoop2.7</span><br><span class="line">drwxr-xr-x. 12 bda bda   4096 3月  12 2019 zookeeper-3.4.13</span><br><span class="line">-rw-rw-r--.  1 bda bda 163436 8月   7 18:57 zookeeper.out</span><br></pre></td></tr></table></figure>
+<h5 id="ll-h-查看文件的大小">ll -h 查看文件的大小</h5>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[bda@mao01 softwares]$ ll -h</span><br><span class="line">总用量 1.8G</span><br><span class="line">-rw-rw-r--. 1 bda bda  65M 4月  27 2019 apache-flume-1.9.0-bin.tar.gz</span><br><span class="line">-rw-rw-r--. 1 bda bda 417M 3月  15 2019 apache-phoenix-5.0.0-HBase-2.0-bin.tar.gz</span><br><span class="line">-rw-rw-r--. 1 bda bda 207M 3月  11 2019 hadoop-2.7.6.tar.gz</span><br><span class="line">-rw-rw-r--. 1 bda bda 103M 8月   6 11:32 hbase-1.3.2-bin.tar.gz</span><br><span class="line">-rw-rw-r--. 1 bda bda 254M 3月  12 2019 hbase-2.1.1-bin.tar.gz</span><br><span class="line">-rw-rw-r--. 1 bda bda 183M 3月  11 2019 jdk-8u201-linux-x64.tar.gz</span><br><span class="line">-rw-rw-r--. 1 bda bda  60M 4月  27 2019 kafka_2.11-2.1.0.tgz</span><br><span class="line">-rw-rw-r--. 1 bda bda  20M 3月  25 2019 scala-2.12.8.tgz</span><br><span class="line">-rw-rw-r--. 1 bda bda 187M 8月   9 13:29 spark-2.1.0-bin-hadoop2.7.tgz</span><br><span class="line">-rw-rw-r--. 1 bda bda 218M 3月  25 2019 spark-2.4.0-bin-hadoop2.7.tgz</span><br><span class="line">-rw-rw-r--. 1 bda bda  36M 3月  12 2019 zookeeper-3.4.13.tar.gz</span><br></pre></td></tr></table></figure>
+<h5 id="ll-rt-按时间排序">ll -rt 按时间排序</h5>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[bda@mao01 softwares]$ ll -rt</span><br><span class="line">总用量 1786796</span><br><span class="line">-rw-rw-r--. 1 bda bda 191817140 3月  11 2019 jdk-8u201-linux-x64.tar.gz</span><br><span class="line">-rw-rw-r--. 1 bda bda 216745683 3月  11 2019 hadoop-2.7.6.tar.gz</span><br><span class="line">-rw-rw-r--. 1 bda bda  37191810 3月  12 2019 zookeeper-3.4.13.tar.gz</span><br><span class="line">-rw-rw-r--. 1 bda bda 266060230 3月  12 2019 hbase-2.1.1-bin.tar.gz</span><br><span class="line">-rw-rw-r--. 1 bda bda 436868323 3月  15 2019 apache-phoenix-5.0.0-HBase-2.0-bin.tar.gz</span><br><span class="line">-rw-rw-r--. 1 bda bda  20467943 3月  25 2019 scala-2.12.8.tgz</span><br><span class="line">-rw-rw-r--. 1 bda bda 227893062 3月  25 2019 spark-2.4.0-bin-hadoop2.7.tgz</span><br><span class="line">-rw-rw-r--. 1 bda bda  61914514 4月  27 2019 kafka_2.11-2.1.0.tgz</span><br><span class="line">-rw-rw-r--. 1 bda bda  67938106 4月  27 2019 apache-flume-1.9.0-bin.tar.gz</span><br><span class="line">-rw-rw-r--. 1 bda bda 107118673 8月   6 11:32 hbase-1.3.2-bin.tar.gz</span><br><span class="line">-rw-rw-r--. 1 bda bda 195636829 8月   9 13:29 spark-2.1.0-bin-hadoop2.7.tgz</span><br></pre></td></tr></table></figure>
+<p>==ls -l -a ==&gt; ls -la==</p>
+<h4 id="如何查询命令帮助">如何查询命令帮助</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br></pre></td><td class="code"><pre><span class="line">[bda@mao01 softwares]$ ls --help</span><br><span class="line">用法：ls [选项]... [文件]...（每次先看用法）</span><br><span class="line">List information about the FILEs (the current directory by default).</span><br><span class="line">Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.</span><br><span class="line">Mandatory arguments to long options are mandatory for short options too.</span><br><span class="line">  -a, --all			不隐藏任何以. 开始的项目</span><br><span class="line">  -A, --almost-all		列出除. 及.. 以外的任何项目</span><br><span class="line">      --author			与-l 同时使用时列出每个文件的作者</span><br><span class="line">  -b, --escape			以八进制溢出序列表示不可打印的字符</span><br><span class="line">      --block-size=SIZE      scale sizes by SIZE before printing them; e.g.,</span><br><span class="line">                               '--block-size=M' prints sizes in units of</span><br><span class="line">                               1,048,576 bytes; see SIZE format below</span><br><span class="line">  -B, --ignore-backups       do not list implied entries ending with ~</span><br><span class="line">  -c                         with -lt: sort by, and show, ctime (time of last</span><br><span class="line">                               modification of file status information);</span><br><span class="line">                               with -l: show ctime and sort by name;</span><br><span class="line">                               otherwise: sort by ctime, newest first</span><br><span class="line">  -C                         list entries by columns</span><br><span class="line">      --color[=WHEN]         colorize the output; WHEN can be 'never', 'auto',</span><br><span class="line">                               or 'always' (the default); more info below</span><br><span class="line">  -d, --directory            list directories themselves, not their contents</span><br><span class="line">  -D, --dired                generate output designed for Emacs' dired mode</span><br><span class="line">  -f                         do not sort, enable -aU, disable -ls --color</span><br><span class="line">  -F, --classify             append indicator (one of */=&gt;@|) to entries</span><br><span class="line">      --file-type            likewise, except do not append '*'</span><br><span class="line">      --format=WORD          across -x, commas -m, horizontal -x, long -l,</span><br><span class="line">                               single-column -1, verbose -l, vertical -C</span><br><span class="line">      --full-time            like -l --time-style=full-iso</span><br><span class="line">  -g				类似-l，但不列出所有者</span><br><span class="line">      --group-directories-first</span><br><span class="line">                             group directories before files;</span><br><span class="line">                               can be augmented with a --sort option, but any</span><br><span class="line">                               use of --sort=none (-U) disables grouping</span><br><span class="line">  -G, --no-group		以一个长列表的形式，不输出组名</span><br><span class="line">  -h, --human-readable		与-l 一起，以易于阅读的格式输出文件大小(例如 1K 234M 2G)</span><br><span class="line">      --si			同上面类似，但是使用1000 为基底而非1024</span><br><span class="line">  -H, --dereference-command-line</span><br><span class="line">                             follow symbolic links listed on the command line</span><br><span class="line">      --dereference-command-line-symlink-to-dir</span><br><span class="line">                             follow each command line symbolic link</span><br><span class="line">                               that points to a directory</span><br><span class="line">      --hide=PATTERN         do not list implied entries matching shell PATTERN</span><br><span class="line">                               (overridden by -a or -A)</span><br><span class="line">      --indicator-style=WORD  append indicator with style WORD to entry names:</span><br><span class="line">                               none (default), slash (-p),</span><br><span class="line">                               file-type (--file-type), classify (-F)</span><br><span class="line">  -i, --inode                print the index number of each file</span><br><span class="line">  -I, --ignore=PATTERN       do not list implied entries matching shell PATTERN</span><br><span class="line">  -k, --kibibytes            default to 1024-byte blocks for disk usage</span><br><span class="line">  -l				使用较长格式列出信息</span><br><span class="line">  -L, --dereference		当显示符号链接的文件信息时，显示符号链接所指示</span><br><span class="line">				的对象而并非符号链接本身的信息</span><br><span class="line">  -m				所有项目以逗号分隔，并填满整行行宽</span><br><span class="line">  -n, --numeric-uid-gid		类似 -l，但列出UID 及GID 号</span><br><span class="line">  -N, --literal			输出未经处理的项目名称 (如不特别处理控制字符)</span><br><span class="line">  -o				类似 -l，但不列出有关组的信息</span><br><span class="line">  -p,  --indicator-style=slash	对目录加上表示符号"/"</span><br><span class="line">  -q, --hide-control-chars   print ? instead of nongraphic characters</span><br><span class="line">      --show-control-chars   show nongraphic characters as-is (the default,</span><br><span class="line">                               unless program is 'ls' and output is a terminal)</span><br><span class="line">  -Q, --quote-name           enclose entry names in double quotes</span><br><span class="line">      --quoting-style=WORD   use quoting style WORD for entry names:</span><br><span class="line">                               literal, locale, shell, shell-always, c, escape</span><br><span class="line">  -r, --reverse			逆序排列</span><br><span class="line">  -R, --recursive		递归显示子目录</span><br><span class="line">  -s, --size			以块数形式显示每个文件分配的尺寸</span><br><span class="line">  -S                         sort by file size</span><br><span class="line">      --sort=WORD            sort by WORD instead of name: none (-U), size (-S),</span><br><span class="line">                               time (-t), version (-v), extension (-X)</span><br><span class="line">      --time=WORD            with -l, show time as WORD instead of default</span><br><span class="line">                               modification time: atime or access or use (-u)</span><br><span class="line">                               ctime or status (-c); also use specified time</span><br><span class="line">                               as sort key if --sort=time</span><br><span class="line">      --time-style=STYLE     with -l, show times using style STYLE:</span><br><span class="line">                               full-iso, long-iso, iso, locale, or +FORMAT;</span><br><span class="line">                               FORMAT is interpreted like in 'date'; if FORMAT</span><br><span class="line">                               is FORMAT1&lt;newline&gt;FORMAT2, then FORMAT1 applies</span><br><span class="line">                               to non-recent files and FORMAT2 to recent files;</span><br><span class="line">                               if STYLE is prefixed with 'posix-', STYLE</span><br><span class="line">                               takes effect only outside the POSIX locale</span><br><span class="line">  -t                         sort by modification time, newest first</span><br><span class="line">  -T, --tabsize=COLS         assume tab stops at each COLS instead of 8</span><br><span class="line">  -u                         with -lt: sort by, and show, access time;</span><br><span class="line">                               with -l: show access time and sort by name;</span><br><span class="line">                               otherwise: sort by access time</span><br><span class="line">  -U                         do not sort; list entries in directory order</span><br><span class="line">  -v                         natural sort of (version) numbers within text</span><br><span class="line">  -w, --width=COLS           assume screen width instead of current value</span><br><span class="line">  -x                         list entries by lines instead of by columns</span><br><span class="line">  -X                         sort alphabetically by entry extension</span><br><span class="line">  -1                         list one file per line</span><br><span class="line">SELinux options:</span><br><span class="line">  --lcontext                 Display security context.   Enable -l. Lines</span><br><span class="line">                             will probably be too wide for most displays.</span><br><span class="line">  -Z, --context              Display security context so it fits on most</span><br><span class="line">                             displays.  Displays only mode, user, group,</span><br><span class="line">                             security context and file name.</span><br><span class="line">  --scontext                 Display only security context and file name.</span><br><span class="line">      --help		显示此帮助信息并退出</span><br><span class="line">      --version		显示版本信息并退出</span><br><span class="line">SIZE is an integer and optional unit (example: 10M is 10*1024*1024).  Units</span><br><span class="line">are K, M, G, T, P, E, Z, Y (powers of 1024) or KB, MB, ... (powers of 1000).</span><br><span class="line">使用色彩来区分文件类型的功能已被禁用，默认设置和 --color=never 同时禁用了它。</span><br><span class="line">使用 --color=auto 选项，ls 只在标准输出被连至终端时才生成颜色代码。</span><br><span class="line">LS_COLORS 环境变量可改变此设置，可使用 dircolors 命令来设置。</span><br><span class="line">退出状态：</span><br><span class="line"> 0  正常</span><br><span class="line"> 1  一般问题 (例如：无法访问子文件夹)</span><br><span class="line"> 2  严重问题 (例如：无法使用命令行参数)</span><br><span class="line">GNU coreutils online help: &lt;http://www.gnu.org/software/coreutils/&gt;</span><br><span class="line">请向&lt;http://translationproject.org/team/zh_CN.html&gt; 报告ls 的翻译错误</span><br><span class="line">要获取完整文档，请运行：info coreutils 'ls invocation'</span><br></pre></td></tr></table></figure>
+<h4 id="mkdir-创建文件夹">mkdir 创建文件夹</h4>
+<h5 id="bdamao01-softwares-mkdir-a创建一个文件夹">[bda@mao01 softwares]$ mkdir a（创建一个文件夹）</h5>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[bda@mao01 softwares]$ mkdir a</span><br><span class="line">[bda@mao01 softwares]$ cd a</span><br><span class="line">[bda@mao01 a]$ pwd</span><br><span class="line">/opt/softwares/a</span><br></pre></td></tr></table></figure>
+<h5 id="bdamao01-a-mkdir-p-bcd创建一组文件夹路径">[bda@mao01 a]$ mkdir -p b/c/d（创建一组文件夹路径）</h5>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[bda@mao01 a]$ mkdir -p b/c/d</span><br><span class="line">[bda@mao01 a]$ cd b/c/d</span><br><span class="line">[bda@mao01 d]$ pwd</span><br><span class="line">/opt/softwares/a/b/c/d</span><br></pre></td></tr></table></figure>
+<h5 id="bdamao01-d-mkdir-1-2-3创建多个文件夹">[bda@mao01 d]$ mkdir 1 2 3（创建多个文件夹）</h5>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[bda@mao01 d]$ mkdir 1 2 3</span><br><span class="line">[bda@mao01 d]$ ls</span><br><span class="line">1  2  3</span><br></pre></td></tr></table></figure>
+<h4 id="mv移动-始终只有1份-cp拷贝-原文件不动新增一份">mv移动 始终只有1份  cp拷贝 原文件不动，新增一份</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[bda@mao01 d]$ touch mao.log</span><br><span class="line">[bda@mao01 d]$ echo "www.ruoze.com" &gt;&gt; mao.log</span><br><span class="line">[bda@mao01 d]$ mv mao.log 1</span><br></pre></td></tr></table></figure>
+<p>==使用tab键可以补全文件名==</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[bda@mao01 d]$ mv 1/mao.log ./</span><br><span class="line">mv ruoze.log 1/ruoze.log20191110  移动+修改名称</span><br><span class="line">[bda@mao01 d]$ mv mao.log 1/mao.log123</span><br><span class="line">[bda@mao01 d]$ cd 1</span><br><span class="line">[bda@mao01 1]$ ls</span><br><span class="line">mao.log123</span><br></pre></td></tr></table></figure>
+<p>==（移动比复制速度要快，复制和拷贝都能做修改名称）==</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[bda@mao01 1]$ cp mao.log123 ../</span><br><span class="line">[bda@mao01 1]$ cp mao.log123 ../mao.lpg124  拷贝+修改名称</span><br><span class="line">[bda@mao01 1]$ cd ../</span><br><span class="line">[bda@mao01 d]$ ls</span><br><span class="line">1  2  3  mao.log123  mao.lpg124</span><br></pre></td></tr></table></figure>
+<h4 id="如何创建一个空文件-或者把一个文件设置为空">如何创建一个空文件 或者把一个文件设置为空</h4>
+<p><strong>touch rz.log 创建一个空文件<br>
+echo “” &gt; rz.log1 慎用<br>
+cat /dev/null &gt; ruoze.log20191113  把一个文件设置为空</strong></p>
+<h4 id="查看文件内容">查看文件内容</h4>
+<h5 id="cat-文件内容一下子全部显示">cat 文件内容一下子全部显示</h5>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[bda@mao01 logs]$ cat hadoop-bda-namenode-mao01.log</span><br></pre></td></tr></table></figure>
+<h5 id="more-文件内容一页一页的往下翻按空格键往下回退不了按q退出">more 文件内容一页一页的往下翻，按空格键往下，回退不了，按q退出</h5>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[bda@mao01 logs]$ more hadoop-bda-namenode-mao01.log</span><br></pre></td></tr></table></figure>
+<h5 id="less-文件内容-往下-往上-按上下箭头的按键-按q键退出">less 文件内容 往下 往上  按上下箭头的按键 按q键退出</h5>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bda@mao01 logs]$ less hadoop-bda-namenode-mao01.log</span><br></pre></td></tr></table></figure>
+<p>==配置文件 内容较少时使用：cat more less<br>
+log日志   内容较多时使用：实时查看命令==</p>
+<h5 id="tail-f-xxxlog用-f新创建的就不能匹配到">tail -f xxx.log（用-f新创建的就不能匹配到）</h5>
+<h5 id="tail-f-xxxlog-就是-f-retry不断尝试存不存在">tail -F xxx.log 就是 -f+ retry（不断尝试存不存在）</h5>
+<h5 id="flume-exec-source-切记使用-f">flume exec source 切记使用 -F</h5>
+<p>xxx.log  log4j代码项目，配置输出的日志<br>
+规则：xxx.log 保留10份存放100M，aaa服务的日志xxx.log一直写到99m，xxx.log如果写到了100m此时就会将xxx.log进行mv变成xxx.log1，然后touch一个新的xxx.log 空文件，此时应该使用-F不断尝试，能读取到新的文件。</p>
+<h5 id="当error-如何定位">当ERROR 如何定位</h5>
+<h6 id="文件内容很小-几十兆上传给window用editplus工具打开">文件内容很小 几十兆，上传给window，用editplus工具打开</h6>
+<p>上传下载  yum install -y lrzsz</p>
+<h6 id="文件内容很大-几百兆-2g">文件内容很大 几百兆 2G</h6>
+<p>==cat xxx.log | grep ERROR<br>
+命令输出结果 | 命令输入的 管道符<br>
+grep过滤==</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[bda@mao01 logs]$ cat hadoop-bda-namenode-mao01.log | grep ERROR</span><br><span class="line">2019-03-11 23:49:50,453 ERROR org.apache.hadoop.hdfs.server.namenode.NameNode: RECEIVED SIGNAL 15: SIGTERM</span><br><span class="line">2019-03-11 23:53:54,685 ERROR org.apache.hadoop.hdfs.server.namenode.NameNode: RECEIVED SIGNAL 15: SIGTERM</span><br><span class="line">2019-03-12 00:34:36,834 ERROR org.apache.hadoop.hdfs.server.common.Storage: Error reported on storage directory Storage Directory /opt/modules/hadoop-2.7.6/data/full/tmp/dfs/name</span><br><span class="line">2019-03-12 00:34:36,835 ERROR org.apache.hadoop.hdfs.server.namenode.FSEditLog: Error: finalize log segment 2, 8 failed for (journal JournalAndStream(mgr=FileJournalManager(root=/opt/modules/hadoop-2.7.6/data/full/tmp/dfs/name), stream=null))</span><br><span class="line">2019-03-12 00:34:36,956 ERROR org.apache.hadoop.hdfs.server.namenode.FSEditLog: Disabling journal JournalAndStream(mgr=FileJournalManager(root=/opt/modules/hadoop-2.7.6/data/full/tmp/dfs/name), stream=null)</span><br><span class="line">2019-03-12 00:34:36,956 ERROR org.apache.hadoop.hdfs.server.namenode.FSEditLog: Error: finalize log segment 2, 8 failed for too many journals</span><br></pre></td></tr></table></figure>
+<p><strong>cat hadoop-bda-namenode-mao01.log | grep -A 10 ERROR 后10行<br>
+cat hadoop-bda-namenode-mao01.log | grep -B 10 ERROR 前10行<br>
+cat hadoop-bda-namenode-mao01.log | grep -C 30 ERROR 前后各30行  经常用  迅速定位ERROR上下文<br>
+cat hadoop-bda-namenode-mao01.log | grep -C 30 ERROR &gt; 新建/覆盖一个新文件<br>
+cat hadoop-bda-namenode-mao01.log | grep -C 30 ERROR &gt;&gt; 对这个文件进行追加</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">[bda@mao01 logs]$ tail --help</span><br><span class="line">用法：tail [选项]... [文件]...</span><br><span class="line">Print the last 10 lines of each FILE to standard output.</span><br><span class="line">With more than one FILE, precede each with a header giving the file name.</span><br><span class="line">With no FILE, or when FILE is -, read standard input.</span><br><span class="line"></span><br><span class="line">Mandatory arguments to long options are mandatory for short options too.</span><br><span class="line">  -c, --bytes=K            output the last K bytes; or use -c +K to output</span><br><span class="line">                             bytes starting with the Kth of each file</span><br><span class="line">  -f, --follow[=&#123;name|descriptor&#125;]</span><br><span class="line">                           output appended data as the file grows;</span><br><span class="line">                             an absent option argument means 'descriptor'</span><br><span class="line">  -F                       same as --follow=name --retry</span><br><span class="line">  -n, --lines=K            output the last K lines, instead of the last 10;</span><br><span class="line">                             or use -n +K to output starting with the Kth</span><br><span class="line">      --max-unchanged-stats=N</span><br><span class="line">                           with --follow=name, reopen a FILE which has not</span><br><span class="line">                             changed size after N (default 5) iterations</span><br><span class="line">                             to see if it has been unlinked or renamed</span><br><span class="line">                             (this is the usual case of rotated log files);</span><br><span class="line">                             with inotify, this option is rarely useful</span><br><span class="line">      --pid=PID            with -f, terminate after process ID, PID dies</span><br><span class="line">  -q, --quiet, --silent    never output headers giving file names</span><br><span class="line">      --retry              keep trying to open a file if it is inaccessible</span><br><span class="line">  -s, --sleep-interval=N   with -f, sleep for approximately N seconds</span><br><span class="line">                             (default 1.0) between iterations;</span><br><span class="line">                             with inotify and --pid=P, check process P at</span><br><span class="line">                             least once every N seconds</span><br><span class="line">  -v, --verbose            always output headers giving file names</span><br><span class="line">      --help		显示此帮助信息并退出</span><br><span class="line">      --version		显示版本信息并退出</span><br></pre></td></tr></table></figure>
+<p><strong><em>注：<br>
+tail -300f messages 实时查看倒数300行文件（定位日志，重命名时有问题）<br>
+tail -300F messages 不能这样写<br>
+tail: option used in invalid context – 3</em></strong></p>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share"  data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+  
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#欢迎来到妖精小狗的博客"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">&#x6B22;&#x8FCE;&#x6765;&#x5230;&#x5996;&#x7CBE;&#x5C0F;&#x72D7;&#x7684;&#x535A;&#x5BA2;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#基础表示"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">&#x57FA;&#x7840;&#x8868;&#x793A;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#查看当前光标所在的目录"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">&#x67E5;&#x770B;&#x5F53;&#x524D;&#x5149;&#x6807;&#x6240;&#x5728;&#x7684;&#x76EE;&#x5F55;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#切换目录-cd"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">&#x5207;&#x6362;&#x76EE;&#x5F55; cd</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#回退家目录-三种方法a直接cdbcd-~ccd-root"><span class="toc-nav-number">1.3.1.</span> <span class="toc-nav-text">&#x56DE;&#x9000;&#x5BB6;&#x76EE;&#x5F55; &#x4E09;&#x79CD;&#x65B9;&#x6CD5;&#xFF08;a.&#x76F4;&#x63A5;cd&#xFF1B;<a href="http://b.cd" target="_blank" rel="noopener">b.cd</a> ~&#xFF1B;<a href="http://c.cd" target="_blank" rel="noopener">c.cd</a> /root&#xFF09;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#cd-回退到上一次的目录"><span class="toc-nav-number">1.3.2.</span> <span class="toc-nav-text">cd -  &#x56DE;&#x9000;&#x5230;&#x4E0A;&#x4E00;&#x6B21;&#x7684;&#x76EE;&#x5F55;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#cd-回退上一层目录"><span class="toc-nav-number">1.3.3.</span> <span class="toc-nav-text">cd &#x2026;/ &#x56DE;&#x9000;&#x4E0A;&#x4E00;&#x5C42;&#x76EE;&#x5F55;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#cd-回退上2层目录"><span class="toc-nav-number">1.3.4.</span> <span class="toc-nav-text">cd &#x2026;/&#x2026;/ &#x56DE;&#x9000;&#x4E0A;2&#x5C42;&#x76EE;&#x5F55;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#目录-文件夹-路径"><span class="toc-nav-number">1.4.</span> <span class="toc-nav-text">&#x76EE;&#x5F55; &#x6587;&#x4EF6;&#x5939;  &#x8DEF;&#x5F84;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#clear-清空屏幕"><span class="toc-nav-number">1.5.</span> <span class="toc-nav-text">clear  &#x6E05;&#x7A7A;&#x5C4F;&#x5E55;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#ls查看当前光标所在的目录文件有哪些"><span class="toc-nav-number">1.6.</span> <span class="toc-nav-text">ls&#x67E5;&#x770B;&#x5F53;&#x524D;&#x5149;&#x6807;&#x6240;&#x5728;&#x7684;&#x76EE;&#x5F55;&#x6587;&#x4EF6;&#x6709;&#x54EA;&#x4E9B;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#ls-l查看详细信息"><span class="toc-nav-number">1.6.1.</span> <span class="toc-nav-text">ls -l&#xFF08;&#x67E5;&#x770B;&#x8BE6;&#x7EC6;&#x4FE1;&#x606F;&#xFF09;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#ls-l-a-查看当前的文件文件夹也可以看到隐藏文件文件夹隐藏文件以开头"><span class="toc-nav-number">1.6.2.</span> <span class="toc-nav-text">ls -l -a &#x67E5;&#x770B;&#x5F53;&#x524D;&#x7684;&#x6587;&#x4EF6;&#x6587;&#x4EF6;&#x5939;&#x4E5F;&#x53EF;&#x4EE5;&#x770B;&#x5230;&#x9690;&#x85CF;&#x6587;&#x4EF6;&#x6587;&#x4EF6;&#x5939;&#xFF08;&#x9690;&#x85CF;&#x6587;&#x4EF6;&#x4EE5;.&#x5F00;&#x5934;&#xFF09;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#ll-h-查看文件的大小"><span class="toc-nav-number">1.6.3.</span> <span class="toc-nav-text">ll -h &#x67E5;&#x770B;&#x6587;&#x4EF6;&#x7684;&#x5927;&#x5C0F;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#ll-rt-按时间排序"><span class="toc-nav-number">1.6.4.</span> <span class="toc-nav-text">ll -rt &#x6309;&#x65F6;&#x95F4;&#x6392;&#x5E8F;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#如何查询命令帮助"><span class="toc-nav-number">1.7.</span> <span class="toc-nav-text">&#x5982;&#x4F55;&#x67E5;&#x8BE2;&#x547D;&#x4EE4;&#x5E2E;&#x52A9;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#mkdir-创建文件夹"><span class="toc-nav-number">1.8.</span> <span class="toc-nav-text">mkdir &#x521B;&#x5EFA;&#x6587;&#x4EF6;&#x5939;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#bdamao01-softwares-mkdir-a创建一个文件夹"><span class="toc-nav-number">1.8.1.</span> <span class="toc-nav-text">[bda@mao01 softwares]$ mkdir a&#xFF08;&#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x6587;&#x4EF6;&#x5939;&#xFF09;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#bdamao01-a-mkdir-p-bcd创建一组文件夹路径"><span class="toc-nav-number">1.8.2.</span> <span class="toc-nav-text">[bda@mao01 a]$ mkdir -p b/c/d&#xFF08;&#x521B;&#x5EFA;&#x4E00;&#x7EC4;&#x6587;&#x4EF6;&#x5939;&#x8DEF;&#x5F84;&#xFF09;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#bdamao01-d-mkdir-1-2-3创建多个文件夹"><span class="toc-nav-number">1.8.3.</span> <span class="toc-nav-text">[bda@mao01 d]$ mkdir 1 2 3&#xFF08;&#x521B;&#x5EFA;&#x591A;&#x4E2A;&#x6587;&#x4EF6;&#x5939;&#xFF09;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#mv移动-始终只有1份-cp拷贝-原文件不动新增一份"><span class="toc-nav-number">1.9.</span> <span class="toc-nav-text">mv&#x79FB;&#x52A8; &#x59CB;&#x7EC8;&#x53EA;&#x6709;1&#x4EFD;  cp&#x62F7;&#x8D1D; &#x539F;&#x6587;&#x4EF6;&#x4E0D;&#x52A8;&#xFF0C;&#x65B0;&#x589E;&#x4E00;&#x4EFD;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#如何创建一个空文件-或者把一个文件设置为空"><span class="toc-nav-number">1.10.</span> <span class="toc-nav-text">&#x5982;&#x4F55;&#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x7A7A;&#x6587;&#x4EF6; &#x6216;&#x8005;&#x628A;&#x4E00;&#x4E2A;&#x6587;&#x4EF6;&#x8BBE;&#x7F6E;&#x4E3A;&#x7A7A;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#查看文件内容"><span class="toc-nav-number">1.11.</span> <span class="toc-nav-text">&#x67E5;&#x770B;&#x6587;&#x4EF6;&#x5185;&#x5BB9;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#cat-文件内容一下子全部显示"><span class="toc-nav-number">1.11.1.</span> <span class="toc-nav-text">cat &#x6587;&#x4EF6;&#x5185;&#x5BB9;&#x4E00;&#x4E0B;&#x5B50;&#x5168;&#x90E8;&#x663E;&#x793A;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#more-文件内容一页一页的往下翻按空格键往下回退不了按q退出"><span class="toc-nav-number">1.11.2.</span> <span class="toc-nav-text">more &#x6587;&#x4EF6;&#x5185;&#x5BB9;&#x4E00;&#x9875;&#x4E00;&#x9875;&#x7684;&#x5F80;&#x4E0B;&#x7FFB;&#xFF0C;&#x6309;&#x7A7A;&#x683C;&#x952E;&#x5F80;&#x4E0B;&#xFF0C;&#x56DE;&#x9000;&#x4E0D;&#x4E86;&#xFF0C;&#x6309;q&#x9000;&#x51FA;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#less-文件内容-往下-往上-按上下箭头的按键-按q键退出"><span class="toc-nav-number">1.11.3.</span> <span class="toc-nav-text">less &#x6587;&#x4EF6;&#x5185;&#x5BB9; &#x5F80;&#x4E0B; &#x5F80;&#x4E0A;  &#x6309;&#x4E0A;&#x4E0B;&#x7BAD;&#x5934;&#x7684;&#x6309;&#x952E; &#x6309;q&#x952E;&#x9000;&#x51FA;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#tail-f-xxxlog用-f新创建的就不能匹配到"><span class="toc-nav-number">1.11.4.</span> <span class="toc-nav-text">tail -f xxx.log&#xFF08;&#x7528;-f&#x65B0;&#x521B;&#x5EFA;&#x7684;&#x5C31;&#x4E0D;&#x80FD;&#x5339;&#x914D;&#x5230;&#xFF09;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#tail-f-xxxlog-就是-f-retry不断尝试存不存在"><span class="toc-nav-number">1.11.5.</span> <span class="toc-nav-text">tail -F xxx.log &#x5C31;&#x662F; -f+ retry&#xFF08;&#x4E0D;&#x65AD;&#x5C1D;&#x8BD5;&#x5B58;&#x4E0D;&#x5B58;&#x5728;&#xFF09;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#flume-exec-source-切记使用-f"><span class="toc-nav-number">1.11.6.</span> <span class="toc-nav-text">flume exec source &#x5207;&#x8BB0;&#x4F7F;&#x7528; -F</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#当error-如何定位"><span class="toc-nav-number">1.11.7.</span> <span class="toc-nav-text">&#x5F53;ERROR &#x5982;&#x4F55;&#x5B9A;&#x4F4D;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#文件内容很小-几十兆上传给window用editplus工具打开"><span class="toc-nav-number">1.11.7.1.</span> <span class="toc-nav-text">&#x6587;&#x4EF6;&#x5185;&#x5BB9;&#x5F88;&#x5C0F; &#x51E0;&#x5341;&#x5146;&#xFF0C;&#x4E0A;&#x4F20;&#x7ED9;window&#xFF0C;&#x7528;editplus&#x5DE5;&#x5177;&#x6253;&#x5F00;</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#文件内容很大-几百兆-2g"><span class="toc-nav-number">1.11.7.2.</span> <span class="toc-nav-text">&#x6587;&#x4EF6;&#x5185;&#x5BB9;&#x5F88;&#x5927; &#x51E0;&#x767E;&#x5146; 2G</span></a></li></ol></li></ol></li></ol></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Linux" title="Linux">Linux</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'rz'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+<!-- chrome Firefox 中文锚点定位失效-->
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<!-- smooth scroll behavior polyfill  -->
+<script type="text/javascript" src="/js/smoothscroll.js"></script>
+<script>
+        $('#toc').on('click','a',function(a){
+            // var isChrome = window.navigator.userAgent.indexOf("Chrome") !== -1;
+            // console.log(window.navigator.userAgent,isChrome)
+                // if(isChrome) {
+                    // console.log(a.currentTarget.outerHTML);
+                    // console.log($(a.currentTarget).attr("href"));
+                    //跳转到指定锚点
+                    // document.getElementById(a.target.innerText.toLowerCase()).scrollIntoView(true);
+                    document.getElementById($(a.currentTarget).attr("href").replace("#","")).scrollIntoView({behavior: 'smooth' });
+                // }
+        })  
+</script>
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/hackeruncle">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; MX 2019 
+                    By <a href="http://www.ruozedata.com">若泽数据，企业在职</a> | BigData
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=ruozedata&repo=Bigdata&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://yoursite.com/child/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = 'xxx';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="http://yoursite.com/child/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

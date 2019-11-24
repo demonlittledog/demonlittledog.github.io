@@ -7,16 +7,8 @@
     </url>
 
     <url>
-        <loc>http://yoursite.com/child/article/ruozedata/</loc>
-        <lastmod>2019-11-21T12:26:18.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>http://yoursite.com/child/article/hexo-theme-jepson/</loc>
-        <lastmod>2019-11-21T12:26:18.000Z</lastmod>
+        <loc>http://yoursite.com/child/article/linux1/</loc>
+        <lastmod>2019-11-24T02:23:26.538Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
