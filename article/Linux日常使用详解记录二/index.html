@@ -149,14 +149,14 @@
 
                         
                         <li>
-                            <a href="/about/">About</a>
+                            <a href="/tags/">Tags</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/tags/">Tags</a>
+                            <a href="/about/">About</a>
                         </li>
                         
                     
@@ -243,7 +243,7 @@ f.	输入 wq 保存退出</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#JAVA_HOME</span></span><br><span class="line"><span class="built_in">export</span> JAVA_HOME=/usr/java/jdk1.8.0_201</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:<span class="variable">$JAVA_HOME</span>/bin:<span class="variable">$PATH</span></span><br></pre></td></tr></table></figure>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[bda@mao01 java]# source /etc/profile</span><br><span class="line">[bda@mao01 java]# which java</span><br><span class="line">/usr/java/ jdk1.8.0_201/bin/java</span><br></pre></td></tr></table></figure>
 <p><strong><em>一定要记住常常用一下which看看装好没有</em></strong></p>
-<p>==总结： #F44336==<br>
+<p><strong><em>总结：</em></strong><br>
 <em>(1)	command not found<br>
 没有部署安装包，部署了没有配置环境变量，有可能yum一装就好了<br>
 (2)	习惯<br>
@@ -274,7 +274,7 @@ alias which='alias | /usr/bin/which --tty-only --read-alias --show-dot --show-ti
 堡垒机有一个log文件直接记录操作<br>
 （堡垒机也是A机器跳到B机器，有web界面，可以进行可视化，一般用来审计）</strong></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[bda@mao01 ~]$ history</span><br><span class="line">    1  vi /etc/hostname </span><br><span class="line">    2  source /etc/hostname </span><br><span class="line">    3  cd /</span><br><span class="line">    4  ls</span><br><span class="line">    5  cd opt/</span><br><span class="line">    6  ls</span><br><span class="line">    7  cd ../</span><br><span class="line">8  ll </span><br><span class="line">[bda@mao01 ~]$ !3    执行历史指定的命令</span><br><span class="line">cd /</span><br></pre></td></tr></table></figure>
-<p>==history 看看这个账号之前做过哪些操作，有可能发现password #F44336==</p>
+<p>***history 看看这个账号之前做过哪些操作，有可能发现password ***</p>
 <h4 id="删除">删除</h4>
 <p><strong><em>文件的创建：touch mao.log<br>
 cat /dev/null &gt; mao.log<br>
@@ -282,7 +282,7 @@ vi命令什么都不输入，直接:wq存成空文件，也会生成新文件<br
 文件夹的创建：mkdir</em></strong></p>
 <p><strong><em>rm -f mao.log  直接删除文件<br>
 rm -rf 1        直接删除文件夹</em></strong></p>
-<p>==风险： #F44336==<br>
+<p><strong><em>风险：</em></strong><br>
 <em>Linux里只有文件和文件夹这两种规格；<br>
 rm -rf /   一定不能用，高危命令，一般不会这样但是在shell脚本的时候有可能发生<br>
 K=’'首先K赋值为空<br>
