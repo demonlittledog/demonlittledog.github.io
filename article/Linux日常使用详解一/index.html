@@ -142,7 +142,7 @@
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
+                            <a href="/tags/">Tags</a>
                         </li>
                         
                     
@@ -156,7 +156,7 @@
 
                         
                         <li>
-                            <a href="/tags/">Tags</a>
+                            <a href="/archive/">Archives</a>
                         </li>
                         
                     
@@ -257,15 +257,15 @@ Linux中：     /opt/modules<br>
 <h5 id="bdamao01-d-mkdir-1-2-3创建多个文件夹">[bda@mao01 d]$ mkdir 1 2 3（创建多个文件夹）</h5>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[bda@mao01 d]$ mkdir 1 2 3</span><br><span class="line">[bda@mao01 d]$ ls</span><br><span class="line">1  2  3</span><br></pre></td></tr></table></figure>
 <h4 id="mv移动-始终只有1份-cp拷贝-原文件不动新增一份">mv移动 始终只有1份  cp拷贝 原文件不动，新增一份</h4>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[bda@mao01 d]$ touch mao.log</span><br><span class="line">[bda@mao01 d]$ echo "www.ruoze.com" &gt;&gt; mao.log</span><br><span class="line">[bda@mao01 d]$ mv mao.log 1</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[bda@mao01 d]$ touch mao.log</span><br><span class="line">[bda@mao01 d]$ echo "www.maoxin.com" &gt;&gt; mao.log</span><br><span class="line">[bda@mao01 d]$ mv mao.log 1</span><br></pre></td></tr></table></figure>
 <p><strong><em>使用tab键可以补全文件名</em></strong></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[bda@mao01 d]$ mv 1/mao.log ./</span><br><span class="line">mv ruoze.log 1/ruoze.log20191110  移动+修改名称</span><br><span class="line">[bda@mao01 d]$ mv mao.log 1/mao.log123</span><br><span class="line">[bda@mao01 d]$ cd 1</span><br><span class="line">[bda@mao01 1]$ ls</span><br><span class="line">mao.log123</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[bda@mao01 d]$ mv 1/mao.log ./</span><br><span class="line">[bda@mao01 d]$ mv mao.log 1/mao.log123      移动+修改名称</span><br><span class="line">[bda@mao01 d]$ cd 1</span><br><span class="line">[bda@mao01 1]$ ls</span><br><span class="line">mao.log123</span><br></pre></td></tr></table></figure>
 <p><strong>（移动比复制速度要快，复制和拷贝都能做修改名称）</strong></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[bda@mao01 1]$ cp mao.log123 ../</span><br><span class="line">[bda@mao01 1]$ cp mao.log123 ../mao.lpg124  拷贝+修改名称</span><br><span class="line">[bda@mao01 1]$ cd ../</span><br><span class="line">[bda@mao01 d]$ ls</span><br><span class="line">1  2  3  mao.log123  mao.lpg124</span><br></pre></td></tr></table></figure>
 <h4 id="如何创建一个空文件-或者把一个文件设置为空">如何创建一个空文件 或者把一个文件设置为空</h4>
 <p><strong>touch rz.log 创建一个空文件<br>
 echo “” &gt; rz.log1 慎用<br>
-cat /dev/null &gt; ruoze.log20191113  把一个文件设置为空</strong></p>
+cat /dev/null &gt; mao.log12  把一个文件设置为空</strong></p>
 <h4 id="查看文件内容">查看文件内容</h4>
 <h5 id="cat-文件内容一下子全部显示">cat 文件内容一下子全部显示</h5>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[bda@mao01 logs]$ cat hadoop-bda-namenode-mao01.log</span><br></pre></td></tr></table></figure>

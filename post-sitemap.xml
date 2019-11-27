@@ -7,6 +7,14 @@
     </url>
 
     <url>
+        <loc>https://github.com/demonlittledog/article/Linux%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8%E8%AF%A6%E8%A7%A3%E4%B8%80/</loc>
+        <lastmod>2019-11-27T02:51:33.030Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>https://github.com/demonlittledog/article/Linux%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8%E8%AF%A6%E8%A7%A3%E4%B8%89/</loc>
         <lastmod>2019-11-27T02:44:33.470Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -17,14 +25,6 @@
     <url>
         <loc>https://github.com/demonlittledog/article/Linux%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8%E8%AF%A6%E8%A7%A3%E4%BA%8C/</loc>
         <lastmod>2019-11-27T02:01:28.890Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://github.com/demonlittledog/article/Linux%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8%E8%AF%A6%E8%A7%A3%E4%B8%80/</loc>
-        <lastmod>2019-11-26T15:12:14.571Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
