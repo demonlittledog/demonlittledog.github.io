@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Linux日常使用详解三 - 妖精小狗@MX | Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://github.com/demonlittledog/article/Linux日常使用详解三/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/ice_rock.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Linux" title="Linux">Linux</a>
+                            
+                        </div>
+                        <h1>Linux日常使用详解三</h1>
+                        <h2 class="subheading">Linux日常使用详解三。</h2>
+                        <span class="meta">
+                            Posted by MX on
+                            2019-11-25
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">妖精小狗@MX Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h3 id="欢迎来到妖精小狗的博客">欢迎来到妖精小狗的博客</h3>
+<hr>
+<h4 id="用户-用户组">用户 用户组</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[bda@mao01 ~]$  ll /usr/sbin/user*（星号代表的是模糊匹配）</span><br><span class="line">-rwxr-x---. 1 root root 118192 11月  6 2016 /usr/sbin/useradd</span><br><span class="line">-rwxr-x---. 1 root root  80360 11月  6 2016 /usr/sbin/userdel</span><br><span class="line">-rwxr-x---. 1 root root 113840 11月  6 2016 /usr/sbin/usermod</span><br><span class="line">-rwsr-xr-x. 1 root root  11288 4月  11 2018 /usr/sbin/usernetctl </span><br><span class="line">[[bda@mao01 ~]$ ll /usr/sbin/group*</span><br><span class="line">-rwxr-x---. 1 root root 65480 11月  6 2016 /usr/sbin/groupadd</span><br><span class="line">-rwxr-x---. 1 root root 57016 11月  6 2016 /usr/sbin/groupdel</span><br><span class="line">-rwxr-x---. 1 root root 57064 11月  6 2016 /usr/sbin/groupmems</span><br><span class="line">-rwxr-x---. 1 root root 76424 11月  6 2016 /usr/sbin/groupmod</span><br></pre></td></tr></table></figure>
+<h4 id="添加用户-useradd">添加用户 （useradd）</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@mao01 bda]#  useradd ruoze</span><br><span class="line">[root@mao01 bda]#  id ruoze</span><br><span class="line">uid=1001(ruoze) gid=1001(ruoze) 组=1001(ruoze)</span><br></pre></td></tr></table></figure>
+<p><em>创建一个普通用户，默认创建这个名称的用户组ruoze，且设置这个用户主组为ruoze，且创建/home/ruoze（用户主组）<br>
+/etc/passwd （可以知道机器上有哪些用户）<br>
+/etc/group（都会在创建用户时候创建）</em></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@mao01 bda]# cd /home</span><br><span class="line">[root@mao01 home]# ll</span><br><span class="line">总用量 4</span><br><span class="line">drwx------. 3 bda      bda   4096 11月 18 23:44 bda</span><br><span class="line">drwx------. 2 ruoze    ruoze   62 11月 19 22:28 ruoze</span><br></pre></td></tr></table></figure>
+<p><strong><em>输出详解：</em></strong><br>
+<strong>drwx------. 2 ruoze    ruoze   62 11月 19 22:28 ruoze</strong></p>
+<p><em>一个文件夹或者文件：drwx------ （权限）<br>
+所属用户   所属用户组<br>
+ruoze     ruoze<br>
+				Nov 16 21:16 使用ll –rt可以用时间排序查看<br>
+				59如果认为是文件夹大小是错误的，但是如果是文件就正好是文件大小</em></p>
+<h4 id="删除用户-userdel">删除用户 （userdel）</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@mao01 home]# userdel ruoze</span><br><span class="line">[root@mao01 home]#  id ruoze</span><br><span class="line">id: ruoze: no such user</span><br><span class="line">[root@mao01 home]# userdel --help</span><br><span class="line">用法：userdel [选项] 登录</span><br><span class="line">选项：</span><br><span class="line">  -f, --force                   force some actions that would fail otherwise</span><br><span class="line">                                e.g. removal of user still logged in</span><br><span class="line">                                or files, even if not owned by the user</span><br><span class="line">  -h, --help                    显示此帮助信息并推出</span><br><span class="line">  -r, --remove                  删除主目录和邮件池</span><br><span class="line">  -R, --root CHROOT_DIR         chroot 到的目录</span><br><span class="line">  -Z, --selinux-user            为用户删除所有的 SELinux 用户映射</span><br><span class="line">[root@mao01 home]#  cat /etc/passwd | grep ruoze</span><br><span class="line">[root@mao01 home]#  cat /etc/group | grep ruoze</span><br></pre></td></tr></table></figure>
+<p><strong>虽然passwd和group都会被删除，但是用户家目录不会删除</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@mao01 home]# ll  </span><br><span class="line">总用量 4</span><br><span class="line">drwx------. 3 bda  bda  4096 11月 18 23:44 bda</span><br><span class="line">drwx------. 2 1001 1001   62 11月 19 22:28 ruoze</span><br></pre></td></tr></table></figure>
+<p><strong>因为ruoze该组只有ruoze用户，当这个用户删除时，组会校验就他自己，会自动删除</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[bda@mao01 home]$ ll</span><br><span class="line">总用量 4</span><br><span class="line">drwx------. 3 bda   bda     4096 11月 18 23:44 bda</span><br><span class="line">drwx------. 2 ruoze bigdata   83 11月 19 22:57 ruoze</span><br><span class="line">重新创建ruoze</span><br><span class="line">[root@mao01 home]# useradd ruoze</span><br><span class="line">useradd：警告：此主目录已经存在。</span><br><span class="line">不从skel目录里向其中复制任何文件。</span><br><span class="line">正在创建信箱文件: 文件已存在</span><br><span class="line"></span><br><span class="line">[root@mao01 home]#  id ruoze</span><br><span class="line">uid=1001(ruoze) gid=1001(ruoze) 组=1001(ruoze</span><br></pre></td></tr></table></figure>
+<p><strong><em>模拟切换用户丢失样式</em></strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@mao01 home]# cd ruoze/</span><br><span class="line">[root@mao01 ruoze]# ls</span><br><span class="line">[root@mao01 ruoze]# ll -a</span><br><span class="line">总用量 12</span><br><span class="line">drwx------. 2 ruoze ruoze  62 11月 19 22:28 .</span><br><span class="line">drwxr-xr-x. 4 root  root   30 11月 19 22:28 ..</span><br><span class="line">-rw-r--r--. 1 ruoze ruoze  18 4月  11 2018 .bash_logout</span><br><span class="line">-rw-r--r--. 1 ruoze ruoze 193 4月  11 2018 .bash_profile</span><br><span class="line">-rw-r--r--. 1 ruoze ruoze 231 4月  11 2018 .bashrc</span><br><span class="line">[root@mao01 ruoze]# rm -rf .bash*</span><br><span class="line">[root@mao01 ruoze]# su - ruoze</span><br><span class="line">-bash-4.2$</span><br></pre></td></tr></table></figure>
+<h4 id="这种样式虽然也可以进行操作但是这个样式是可以进行修改的下面介绍一下修改的方法">这种样式虽然也可以进行操作，但是这个样式是可以进行修改的，下面介绍一下修改的方法</h4>
+<p><strong>因为etc的skel目录下有相关文件所以拷贝过来就行</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@mao01 ruoze]# cp /etc/skel/.* /home/ruoze/  </span><br><span class="line">cp: 略过目录"/etc/skel/."</span><br><span class="line">cp: 略过目录"/etc/skel/.."</span><br><span class="line">[root@mao01 ruoze]# ll -a</span><br><span class="line">总用量 16</span><br><span class="line">drwx------. 2 ruoze ruoze  83 11月 19 22:57 .</span><br><span class="line">drwxr-xr-x. 4 root  root   30 11月 19 22:28 ..</span><br><span class="line">-rw-------. 1 ruoze ruoze   5 11月 19 22:56 .bash_history</span><br><span class="line">-rw-r--r--. 1 root  root   18 11月 19 22:57 .bash_logout</span><br><span class="line">-rw-r--r--. 1 root  root  193 11月 19 22:57 .bash_profile</span><br><span class="line">-rw-r--r--. 1 root  root  231 11月 19 22:57 .bashrc</span><br><span class="line">[root@mao01 ruoze]# chown ruoze:ruoze .bash* （更改用户和用户组权限）</span><br></pre></td></tr></table></figure>
+<p><strong><em>【以后如果出现这种问题就从其他用户把文件拷贝过来，修改用户名和用户组就可以了】</em></strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@mao01 ruoze]# ll -a</span><br><span class="line">总用量 16</span><br><span class="line">drwx------. 2 ruoze ruoze  83 11月 19 22:57 .</span><br><span class="line">drwxr-xr-x. 4 root  root   30 11月 19 22:28 ..</span><br><span class="line">-rw-------. 1 ruoze ruoze   5 11月 19 22:56 .bash_history</span><br><span class="line">-rw-r--r--. 1 ruoze ruoze  18 11月 19 22:57 .bash_logout</span><br><span class="line">-rw-r--r--. 1 ruoze ruoze 193 11月 19 22:57 .bash_profile</span><br><span class="line">-rw-r--r--. 1 ruoze ruoze 231 11月 19 22:57 .bashrc </span><br><span class="line"></span><br><span class="line">[root@mao01 ruoze]# su - ruoze</span><br><span class="line">上一次登录：二 11月 19 22:55:56 CST 2019pts/1 上</span><br></pre></td></tr></table></figure>
+<h4 id="添加ruoze用户到另外一个组bigdata-groupadd">添加ruoze用户到另外一个组bigdata （groupadd）</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">[root@mao01 ruoze]#  groupadd bigdata</span><br><span class="line">[root@mao01 ruoze]# cat /etc/group |grep bigdata</span><br><span class="line">bigdata:x:1002:</span><br><span class="line"></span><br><span class="line">[root@mao01 ruoze]# usermod --help</span><br><span class="line">用法：usermod [选项] 登录</span><br><span class="line">选项：</span><br><span class="line">  -c, --comment 注释            GECOS 字段的新值</span><br><span class="line">  -d, --home HOME_DIR           用户的新主目录</span><br><span class="line">  -e, --expiredate EXPIRE_DATE  设定帐户过期的日期为 EXPIRE_DATE</span><br><span class="line">  -f, --inactive INACTIVE       过期 INACTIVE 天数后，设定密码为失效状态</span><br><span class="line">  -g, --gid GROUP               强制使用 GROUP 为新主组</span><br><span class="line">  -G, --groups GROUPS           新的附加组列表 GROUPS</span><br><span class="line">  -a, --append GROUP            将用户追加至上边 -G 中提到的附加组中，</span><br><span class="line">                                并不从其它组中删除此用户</span><br><span class="line">  -h, --help                    显示此帮助信息并推出</span><br><span class="line">  -l, --login LOGIN             新的登录名称</span><br><span class="line">  -L, --lock                    锁定用户帐号</span><br><span class="line">  -m, --move-home               将家目录内容移至新位置 (仅于 -d 一起使用)</span><br><span class="line">  -o, --non-unique              允许使用重复的(非唯一的) UID</span><br><span class="line">  -p, --password PASSWORD       将加密过的密码 (PASSWORD) 设为新密码</span><br><span class="line">  -R, --root CHROOT_DIR         chroot 到的目录</span><br><span class="line">  -s, --shell SHELL             该用户帐号的新登录 shell</span><br><span class="line">  -u, --uid UID                 用户帐号的新 UID</span><br><span class="line">  -U, --unlock                  解锁用户帐号</span><br><span class="line">  -Z, --selinux-user  SEUSER       用户账户的新 SELinux 用户映射</span><br><span class="line">[root@mao01 ruoze]# usermod -a -G bigdata ruoze</span><br><span class="line">[root@mao01 ruoze]# id ruoze</span><br><span class="line">uid=1001(ruoze) gid=1001(ruoze) 组=1001(ruoze),1002(bigdata)</span><br></pre></td></tr></table></figure>
+<h4 id="修改bigdata为ruoze的主组-usermod-a-g">修改bigdata为ruoze的主组 （usermod -a -G）</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@mao01 ruoze]# usermod -a -G bigdata ruoze</span><br><span class="line">[root@mao01 ruoze]# id ruoze</span><br><span class="line">uid=1001(ruoze) gid=1001(ruoze) 组=1001(ruoze),1002(bigdata)</span><br><span class="line">[root@mao01 ruoze]# usermod --gid  bigdata ruoze</span><br><span class="line">[root@mao01 ruoze]#  id ruoze</span><br><span class="line">uid=1001(ruoze) gid=1002(bigdata) 组=1002(bigdata)</span><br><span class="line">[root@mao01 ruoze]# usermod -a -G ruoze ruoze</span><br><span class="line">[root@mao01 ruoze]#  id ruoze</span><br><span class="line">uid=1001(ruoze) gid=1002(bigdata) 组=1002(bigdata),1001(ruoze)</span><br></pre></td></tr></table></figure>
+<p><strong><em>【一个用户可以同时存在于两个组里】</em></strong></p>
+<h4 id="设置密码-passwd">设置密码 （passwd）</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@mao01 ruoze]# passwd ruoze</span><br><span class="line">更改用户 ruoze 的密码 。</span><br><span class="line">新的 密码：</span><br><span class="line">无效的密码： 密码少于 8 个字符</span><br><span class="line">重新输入新的 密码：</span><br><span class="line">passwd：所有的身份验证令牌已经成功更新。</span><br></pre></td></tr></table></figure>
+<h4 id="切换用户-su">切换用户 （su）</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">su ruoze</span><br><span class="line">su - ruoze</span><br></pre></td></tr></table></figure>
+<p><strong>加上-代表切换该用户的家目录，且执行环境变量文件<br>
+.bash_profile文件  su ruoze不会执行   su - ruoze 都执行<br>
+.bashrc文件       su ruoze执行       su - ruoze 都执行</strong><br>
+<strong><em>【相对.bash_profile文件环境变量配置在.bashrc文件更好】</em></strong></p>
+<h4 id="普通用户获取root的最大权限">普通用户获取root的最大权限</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/sudoers</span><br><span class="line">bda    ALL=(root)      NOPASSWD:ALL</span><br></pre></td></tr></table></figure>
+<p><em>sudo想要使用一定要在配置文件中配置上面的语句<br>
+验证sudo命令 带不带的效果</em></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[bda@mao01 ~]$ cd /root</span><br><span class="line">bash: cd: /root: 权限不够</span><br><span class="line">[bda@mao01 ~]$ sudo cd /root</span><br><span class="line">[bda@mao01 ~]$ </span><br><span class="line">[root@mao01 ~]#  echo "www.maoxin.com" &gt;&gt; rz.log</span><br><span class="line">[root@mao01 ~]# ll</span><br><span class="line">总用量 8</span><br><span class="line">-rw-------. 1 root root 1389 3月  11 2019 anaconda-ks.cfg</span><br><span class="line">-rw-r--r--. 1 root root   18 11月 21 23:46 rz.log</span><br><span class="line">[root@mao01 ~]# su bda</span><br><span class="line">[bda@mao01 root]$ ls</span><br><span class="line">ls: 无法打开目录.: 权限不够</span><br><span class="line">[bda@mao01 root]$ sudo ls -l</span><br><span class="line">总用量 8</span><br><span class="line">-rw-------. 1 root root 1389 3月  11 2019 anaconda-ks.cfg</span><br><span class="line">-rw-r--r--. 1 root root   18 11月 21 23:46 rz.log </span><br><span class="line">[bda@mao01 root]$ cat rz.log</span><br><span class="line">cat: rz.log: 权限不够</span><br><span class="line">[bda@mao01 root]$ sudo cat rz.log</span><br><span class="line">www.maoxin.com</span><br></pre></td></tr></table></figure>
+<p><strong><em>Connection 连接拒绝<br>
+Permission denied 权限问题</em></strong></p>
+<h4 id="etcpasswd">/etc/passwd</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[bda@mao01 root]$ cat /etc/passwd</span><br><span class="line">root:x:0:0:root:/root:/bin/bash</span><br><span class="line">bda:x:1000:1000:bda:/home/bda:/bin/bash</span><br><span class="line">ruoze:x:1001:1002::/home/ruoze:/bin/bash</span><br></pre></td></tr></table></figure>
+<p><strong>如果使用vi命令将ruoze的bash名字改成false<br>
+ruoze:x:1001:1002::/home/ruoze:/bin/false</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[bda@mao01 root]$ sudo vi /etc/passwd</span><br><span class="line">[bda@mao01 root]$ su ruoze</span><br><span class="line">密码：</span><br><span class="line">[bda@mao01 root]$（切换过来之后用户名没有变）</span><br></pre></td></tr></table></figure>
+<p><strong>命令将ruoze的bash名字改成/sbin/nologin</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[bda@mao01 root]$ sudo vi /etc/passwd</span><br><span class="line">[bda@mao01 root]$ su ruoze</span><br><span class="line">密码：</span><br><span class="line">This account is currently not available.</span><br></pre></td></tr></table></figure>
+<p><strong><em>说明改完/sbin/nologin和/bin/false就切不过去用户了，就去/etc/passwd文件修改用户名和用户组路径</em></strong><br>
+<em>CDH 很多的组件<br>
+hdfs组件对应的是hdfs用户<br>
+su - hdfs<br>
+对应修改为 /bin/bash<br>
+hbase组件对应的是hbase用户<br>
+	su - hbase<br>
+yarn组件对应的是yarn用户<br>
+如果切不过去就去看报错</em></p>
+<h4 id="权限">权限</h4>
+<p><em>错误: Permission denied<br>
+chmod -R 777 文件夹/文件路径<br>
+chown -R 用户:用户组 文件夹/文件路径</em></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[bda@mao01 ~]$ ll</span><br><span class="line">总用量 384464</span><br><span class="line">-rw-rw-r--. 1 bda bda  39425518 3月  20 2019 2015082818</span><br><span class="line">-rw-rw-r--. 1 bda bda   3025756 3月  20 2019 access.log</span><br><span class="line">-rw-rw-r--. 1 bda bda  20670133 3月  15 2019 bjcom.csv</span><br><span class="line">-rw-rw-r--. 1 bda bda     63187 5月   9 2019 customer_details.csv</span><br><span class="line">-rw-rw-r--. 1 bda bda     34311 4月   7 2019 df-hiveudf-1.0-SNAPSHOT.jar</span><br><span class="line">-rw-rw-r--. 1 bda bda      4269 3月  31 2019 employee_hr.txt</span><br><span class="line">-rw-rw-r--. 1 bda bda      1495 3月  31 2019 employee_id.txt</span><br><span class="line">-rw-rw-r--. 1 bda bda       230 3月  24 2019 employee.txt</span><br><span class="line">-rw-rw-r--. 1 bda bda        45 3月  31 2019 ids</span><br><span class="line">-rw-rw-r--. 1 bda bda       195 4月  17 2019 README.md</span><br><span class="line">-rw-rw-r--. 1 bda bda    215429 4月  16 2019 result.txt</span><br><span class="line">-rw-rw-r--. 1 bda bda       105 5月   9 2019 store_details.csv</span><br><span class="line">-rw-rw-r--. 1 bda bda      8832 5月   9 2019 store_review.csv</span><br><span class="line">-rw-rw-r--. 1 bda bda    462327 5月   9 2019 transaction_details.csv</span><br><span class="line">-rw-rw-r--. 1 bda bda 326802655 7月  21 11:55 user_friends.csv</span><br><span class="line">-rw-rw-r--. 1 bda bda   2757988 7月  21 11:55 users.csv</span><br><span class="line">-rw-rw-r--. 1 bda bda    174429 8月   9 18:04 zookeeper.out</span><br><span class="line">[bda@mao01 ~]$ du -sh users.csv</span><br><span class="line">2.7M	users.csv</span><br></pre></td></tr></table></figure>
+<p><strong>第一个字母：</strong><br>
+<em>d文件夹      -文件         l连接</em><br>
+<strong>剩下的字母：</strong><br>
+<em>r： read     4<br>
+w：write    2<br>
+x：执行     1<br>
+-：没权限   0<br>
+7=rwx<br>
+3=wx<br>
+5=rx<br>
+drwxr-xr-x. 43 bda bda     4096 8月   9 18:02 userlogs<br>
+rwx 第一组 7 代表文件或文件夹的用户root，读写执行<br>
+r-x 第二组 5 代表文件或文件夹的用户组root，读执行<br>
+r-x 第三组 5 代表其他组的所属用户对这个文件或文件夹的权限，读执行</em><br>
+<strong><em>chmod -R 777 文件夹/文件路径<br>
+chown -R 用户:用户组 文件夹/文件路径<br>
+777 代表任意的用户用户组 都读写执行 权限</em></strong></p>
+<p><strong><em>案例：</em></strong><br>
+<strong>/tmp 任意的</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[root@mao01 tmp]# useradd jepson</span><br><span class="line">[root@mao01 tmp]# vi rz.log </span><br><span class="line">[root@mao01 tmp]# echo "www.maoxin.com" &gt;&gt; rz.log</span><br><span class="line">[root@mao01 tmp]# ll</span><br><span class="line">总用量 24</span><br><span class="line">-rw-rw-r--. 1 bda  bda   39 11月 25 23:10 rz.log</span><br><span class="line">drwx------. 3 root root  17 11月 25 22:38 systemd-private-d82876b831a347de98213d47869b0030-chronyd.service-vE00zv</span><br><span class="line">-rw-------. 1 root root 239 11月 18 21:58 yum_save_tx.2019-11-18.21-58.xB5VLG.yumtx</span><br><span class="line">-rw-------. 1 root root 235 11月 18 22:44 yum_save_tx.2019-11-18.22-44.b6rdof.yumtx</span><br><span class="line">-rw-------. 1 root root 235 11月 18 22:53 yum_save_tx.2019-11-18.22-53.s68iyR.yumtx</span><br><span class="line">-rw-------. 1 root root 235 11月 18 23:41 yum_save_tx.2019-11-18.23-41.aniAVo.yumtx</span><br><span class="line">-rw-------. 1 root root 235 11月 19 12:59 yum_save_tx.2019-11-19.12-59._K_9Zd.yumtx</span><br><span class="line">[root@mao01 tmp]# su - jepson</span><br><span class="line">[jepson@mao01 ~]$ cd /tmp/</span><br><span class="line">[jepson@mao01 tmp]$ ll</span><br><span class="line">总用量 24</span><br><span class="line">-rw-r--r--. 1 root root  18 11月 25 23:12 rz.log</span><br><span class="line">drwx------. 3 root root  17 11月 25 22:38 systemd-private-d82876b831a347de98213d47869b0030-chronyd.service-vE00zv</span><br><span class="line">-rw-------. 1 root root 239 11月 18 21:58 yum_save_tx.2019-11-18.21-58.xB5VLG.yumtx</span><br><span class="line">-rw-------. 1 root root 235 11月 18 22:44 yum_save_tx.2019-11-18.22-44.b6rdof.yumtx</span><br><span class="line">-rw-------. 1 root root 235 11月 18 22:53 yum_save_tx.2019-11-18.22-53.s68iyR.yumtx</span><br><span class="line">-rw-------. 1 root root 235 11月 18 23:41 yum_save_tx.2019-11-18.23-41.aniAVo.yumtx</span><br><span class="line">-rw-------. 1 root root 235 11月 19 12:59 yum_save_tx.2019-11-19.12-59._K_9Zd.yumtx</span><br></pre></td></tr></table></figure>
+<p><strong><em>第一次编辑 没有权限</em></strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[jepson@mao01 tmp]$ vi rz.log </span><br><span class="line">www.maoxin.com</span><br><span class="line">~                                                                                                      </span><br><span class="line">~                                                                                                      </span><br><span class="line">~                                                                                                      </span><br><span class="line">"rz.log" [readonly] 1L, 18C </span><br><span class="line">【-- INSERT -- W10: Warning: Changing a readonly file】</span><br><span class="line">【E45: 'readonly' option is set (add ! to override)】</span><br><span class="line">ctrl+c/x/z 会产生swp文件  ll -a 删除即可 .rz.log.swp</span><br><span class="line">[jepson@mao01 tmp]$ rm -f .rz.log.swp</span><br><span class="line"></span><br><span class="line">E325: ATTENTION</span><br><span class="line">Found a swap file by the name ".rz.log.swp"</span><br><span class="line">          owned by: jepson   dated: Mon Nov 25 23:17:46 2019</span><br><span class="line">         file name: /tmp/rz.log</span><br><span class="line">          modified: YES</span><br><span class="line">         user name: jepson   host name: mao01</span><br><span class="line">        process ID: 1625 (still running)</span><br><span class="line">While opening file "rz.log"</span><br><span class="line">             dated: Mon Nov 25 23:12:09 2019</span><br></pre></td></tr></table></figure>
+<p><strong><em>第二次编辑 第三组权限（其他组）</em></strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@mao01 tmp]# chmod 646 rz.log </span><br><span class="line">[jepson@mao01 tmp]$ vi rz.log</span><br></pre></td></tr></table></figure>
+<p><strong>:q!【不保存强制退出】</strong></p>
+<hr>
+<p><em>先撤回该文件的其他组的 写权限</em></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@mao01 tmp]# chmod 644 rz.log</span><br></pre></td></tr></table></figure>
+<p><em>将jepson用户添加到root用户组</em></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@mao01 tmp]# usermod -a -G root Jepson</span><br><span class="line">[root@mao01 tmp]# su - jepson</span><br><span class="line">上一次登录：一 11月 25 23:24:31 CST 2019pts/0 上</span><br><span class="line">[jepson@mao01 ~]$ id</span><br><span class="line">uid=1002(jepson) gid=1003(jepson) 组=1003(jepson),0(root) 环境=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023</span><br></pre></td></tr></table></figure>
+<p><em>修改文件的第二组的权限：r==&gt;rw权限</em></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@mao01 tmp]# chmod 664 rz.log</span><br></pre></td></tr></table></figure>
+<p><em>重新打开一个会话窗口</em></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@mao01 tmp]# su - jepson</span><br><span class="line">[jepson@mao01 tmp]$ vi rz.log      (编辑是成功的)</span><br></pre></td></tr></table></figure>
+<h4 id="查看大小-ll-du-sh">查看大小 （ll     du -sh）</h4>
+<p><strong>文件：<br>
+ll<br>
+du -sh xxx.log</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[jepson@mao01 logs]$ du -sh yarn-bda-nodemanager-mao01.log </span><br><span class="line">2.9M	yarn-bda-nodemanager-mao01.log</span><br></pre></td></tr></table></figure>
+<p><strong>文件夹：<br>
+du -sh yyy</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[jepson@mao01 hadoop-2.7.6]$ du -sh logs</span><br><span class="line">24M     logs</span><br></pre></td></tr></table></figure>
+<h4 id="搜索-find">搜索 （find）</h4>
+<p><strong>查看历史的几种命令：<br>
+history 历史记录<br>
+ps -ef 查看进程<br>
+top 系统情况<br>
+某个组件只知道大概的名字，想知道能部署在哪里</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[jepson@mao01 hadoop-2.7.6]$ cd /opt/softwares/</span><br><span class="line">[jepson@mao01 softwares]$ mkdir 123hadoop456</span><br><span class="line">mkdir: 无法创建目录"123hadoop456": 权限不够</span><br><span class="line">[jepson@mao01 softwares]$ su root</span><br><span class="line">密码：</span><br><span class="line">[root@mao01 softwares]# mkdir 123hadoop456</span><br><span class="line">[root@mao01 softwares]# find / -name '*hadoop*'</span><br><span class="line">[root@mao01 softwares]#  find /opt/softwares/ -name '*hadoop*'</span><br><span class="line">/opt/softwares/hadoop-2.7.6.tar.gz</span><br><span class="line">/opt/softwares/spark-2.4.0-bin-hadoop2.7.tgz</span><br><span class="line">/opt/softwares/spark-2.1.0-bin-hadoop2.7.tgz</span><br><span class="line">/opt/softwares/123hadoop456</span><br></pre></td></tr></table></figure>
+<p>*<strong><em>代表模糊匹配</em></strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@mao01 softwares]# find / -name '*hadoop*' &gt; find1.log</span><br></pre></td></tr></table></figure>
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/article/Linux日常使用详解二/" data-toggle="tooltip" data-placement="top" title="Linux日常使用详解二">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share"  data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+  
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#欢迎来到妖精小狗的博客"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">&#x6B22;&#x8FCE;&#x6765;&#x5230;&#x5996;&#x7CBE;&#x5C0F;&#x72D7;&#x7684;&#x535A;&#x5BA2;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#用户-用户组"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">&#x7528;&#x6237; &#x7528;&#x6237;&#x7EC4;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#添加用户-useradd"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">&#x6DFB;&#x52A0;&#x7528;&#x6237; &#xFF08;useradd&#xFF09;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#删除用户-userdel"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">&#x5220;&#x9664;&#x7528;&#x6237; &#xFF08;userdel&#xFF09;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#这种样式虽然也可以进行操作但是这个样式是可以进行修改的下面介绍一下修改的方法"><span class="toc-nav-number">1.4.</span> <span class="toc-nav-text">&#x8FD9;&#x79CD;&#x6837;&#x5F0F;&#x867D;&#x7136;&#x4E5F;&#x53EF;&#x4EE5;&#x8FDB;&#x884C;&#x64CD;&#x4F5C;&#xFF0C;&#x4F46;&#x662F;&#x8FD9;&#x4E2A;&#x6837;&#x5F0F;&#x662F;&#x53EF;&#x4EE5;&#x8FDB;&#x884C;&#x4FEE;&#x6539;&#x7684;&#xFF0C;&#x4E0B;&#x9762;&#x4ECB;&#x7ECD;&#x4E00;&#x4E0B;&#x4FEE;&#x6539;&#x7684;&#x65B9;&#x6CD5;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#添加ruoze用户到另外一个组bigdata-groupadd"><span class="toc-nav-number">1.5.</span> <span class="toc-nav-text">&#x6DFB;&#x52A0;ruoze&#x7528;&#x6237;&#x5230;&#x53E6;&#x5916;&#x4E00;&#x4E2A;&#x7EC4;bigdata &#xFF08;groupadd&#xFF09;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#修改bigdata为ruoze的主组-usermod-a-g"><span class="toc-nav-number">1.6.</span> <span class="toc-nav-text">&#x4FEE;&#x6539;bigdata&#x4E3A;ruoze&#x7684;&#x4E3B;&#x7EC4; &#xFF08;usermod -a -G&#xFF09;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#设置密码-passwd"><span class="toc-nav-number">1.7.</span> <span class="toc-nav-text">&#x8BBE;&#x7F6E;&#x5BC6;&#x7801; &#xFF08;passwd&#xFF09;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#切换用户-su"><span class="toc-nav-number">1.8.</span> <span class="toc-nav-text">&#x5207;&#x6362;&#x7528;&#x6237; &#xFF08;su&#xFF09;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#普通用户获取root的最大权限"><span class="toc-nav-number">1.9.</span> <span class="toc-nav-text">&#x666E;&#x901A;&#x7528;&#x6237;&#x83B7;&#x53D6;root&#x7684;&#x6700;&#x5927;&#x6743;&#x9650;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#etcpasswd"><span class="toc-nav-number">1.10.</span> <span class="toc-nav-text">/etc/passwd</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#权限"><span class="toc-nav-number">1.11.</span> <span class="toc-nav-text">&#x6743;&#x9650;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#查看大小-ll-du-sh"><span class="toc-nav-number">1.12.</span> <span class="toc-nav-text">&#x67E5;&#x770B;&#x5927;&#x5C0F; &#xFF08;ll     du -sh&#xFF09;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#搜索-find"><span class="toc-nav-number">1.13.</span> <span class="toc-nav-text">&#x641C;&#x7D22; &#xFF08;find&#xFF09;</span></a></li></ol></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Linux" title="Linux">Linux</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'rz'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+<!-- chrome Firefox 中文锚点定位失效-->
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<!-- smooth scroll behavior polyfill  -->
+<script type="text/javascript" src="/js/smoothscroll.js"></script>
+<script>
+        $('#toc').on('click','a',function(a){
+            // var isChrome = window.navigator.userAgent.indexOf("Chrome") !== -1;
+            // console.log(window.navigator.userAgent,isChrome)
+                // if(isChrome) {
+                    // console.log(a.currentTarget.outerHTML);
+                    // console.log($(a.currentTarget).attr("href"));
+                    //跳转到指定锚点
+                    // document.getElementById(a.target.innerText.toLowerCase()).scrollIntoView(true);
+                    document.getElementById($(a.currentTarget).attr("href").replace("#","")).scrollIntoView({behavior: 'smooth' });
+                // }
+        })  
+</script>
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/demonlittledog">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; MX 2019 
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://github.com/demonlittledog/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = 'xxx';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://github.com/demonlittledog/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
