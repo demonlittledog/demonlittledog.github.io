@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Linux日常使用详解四 - 妖精小狗@MX | Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://github.com/demonlittledog/article/Linux日常使用详解四/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/ice_rock.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Linux" title="Linux">Linux</a>
+                            
+                        </div>
+                        <h1>Linux日常使用详解四</h1>
+                        <h2 class="subheading">Linux日常使用详解四。</h2>
+                        <span class="meta">
+                            Posted by MX on
+                            2019-11-26
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">妖精小狗@MX Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h3 id="欢迎来到妖精小狗的博客">欢迎来到妖精小狗的博客</h3>
+<hr>
+<h4 id="vi命令的用法以及坑">vi命令的用法以及坑</h4>
+<p><img src="linux4/vi.png" alt="vi逻辑"><br>
+<strong>正常编辑一个文件时：</strong><br>
+使用:wq保存退出（编辑之前一定要先备份）<br>
+<strong>但是粘贴时有坑：</strong><br>
+在编辑之前必须先按i键，进入编辑模式（如果不按i会丢东西）<br>
+<strong>找error时的巧妙用法：</strong><br>
+cat xxx.log | grep -C 10 ERROR &gt; error.log<br>
+可以使用cat、more、sz来查看<br>
+<em>还有一种方法vi进去，:进入尾行模式，然后输入/+关键词，点击回车自动匹配，之后按N键自动搜索查找下一个</em><br>
+<strong>设置行号的方法：</strong><br>
+<em>进入尾行模式:，然后输入set nu就可以看到了；而set nonu这样就可以不显示行号了</em><br>
+<strong>清空这个内容的方法：</strong><br>
+使用cat /dev/null &gt; xxx.log完美清空<br>
+使用有echo ‘’ &gt; xxx.log 存在1个字节，不是完美的</p>
+<p><strong>命令行模式常见的快捷键：</strong><br>
+dd：删除当前行<br>
+dG：删除光标当前及以下的所有行<br>
+ndd：删除光标当前及以下的n行（3dd就是删除当前行以及下面的3行）<br>
+gg：跳转到第一行的第一个字母<br>
+G：跳转到最后一行的第一个字母<br>
+shift+$：跳到行尾<br>
+gg + dG：这个命令可以直接清空所有文件中的内容</p>
+<p><strong>场景：</strong><br>
+<em>从另外一个文本拷贝内容去覆盖这个文件</em><br>
+大数据的组件都是xml文件</p>
+<ol>
+<li>linux中是官方的默认的配置文件</li>
+<li>我们一般使用window记事本，在editplus工具里编辑好对应的参数然后拷贝进去<br>
+（比如mysql的my.cnf）</li>
+</ol>
+<h4 id="系统命令">系统命令</h4>
+<p><strong>磁盘：（df -h）</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@JD ~]# df -h</span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/vda1        40G  2.4G   38G   6% /</span><br><span class="line">devtmpfs        7.8G     0  7.8G   0% /dev</span><br><span class="line">tmpfs           7.8G   16K  7.8G   1% /dev/shm</span><br><span class="line">tmpfs           7.8G   27M  7.8G   1% /run</span><br><span class="line">tmpfs           7.8G     0  7.8G   0% /sys/fs/cgroup</span><br><span class="line">tmpfs           1.6G     0  1.6G   0% /run/user/0</span><br></pre></td></tr></table></figure>
+<p><strong>内存：（free -m）</strong><br>
+<em>16G应该是16384m，但是实际是15887，是因为linux也占一定的空间</em></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@JD ~]# free -m</span><br><span class="line">              total        used        free      shared  buff/cache   available</span><br><span class="line">Mem:          15887         230       15186          26         470       15437</span><br><span class="line">Swap:             0           0           0 </span><br><span class="line">16G 16384m</span><br><span class="line">[root@JD ~]# free -g</span><br><span class="line">              total        used        free      shared  buff/cache   available</span><br><span class="line">Mem:             15           0          14           0           0          15</span><br><span class="line">Swap:             0           0           0</span><br></pre></td></tr></table></figure>
+<p><a href="http://blog.itpub.net/30089851/viewspace-2131678" target="_blank" rel="noopener">这篇博客里有详细的介绍</a></p>
+<p><strong>负载：（top）</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@JD ~]# top</span><br><span class="line">top - 21:48:48 up 3 days,  6:37,  1 user,  load average: 0.00, 0.01, 0.05</span><br><span class="line">Tasks: 110 total,   1 running, 109 sleeping,   0 stopped,   0 zombie</span><br><span class="line"><span class="meta">%</span><span class="bash">Cpu(s):  0.1 us,  0.1 sy,  0.0 ni, 99.8 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st</span></span><br><span class="line">KiB Mem : 16268360 total, 15548984 free,   237956 used,   481420 buff/cache</span><br><span class="line">KiB Swap:        0 total,        0 free,        0 used. 15805624 avail Mem </span><br><span class="line"></span><br><span class="line">  PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND                           </span><br><span class="line">    1 root      20   0  190928   3780   2484 S   0.0  0.0   0:35.29 systemd                           </span><br><span class="line">    2 root      20   0       0      0      0 S   0.0  0.0   0:00.00 kthreadd                          </span><br><span class="line">    3 root      20   0       0      0      0 S   0.0  0.0   0:00.07 ksoftirqd/0                       </span><br><span class="line">    5 root       0 -20       0      0      0 S   0.0  0.0   0:00.00 kworker/0:0H                      </span><br><span class="line">6 root      20   0       0      0      0 S   0.0  0.0   0:00.00 kworker/u8:0</span><br></pre></td></tr></table></figure>
+<p>load average:     0.00,  0.01,  0.05<br>
+1min  5min  15min<br>
+<em>经验值：不要超过10，否则认为此物理服务器</em></p>
+<p>1777 root      20   0       0      0     0 S  3908% 80%     0:34.13 hbase<br>
+出现这种情况看看xxx这个进程是做什么<br>
+有可能是夯住，有可能有问题，有可能是代码级别，有可能是硬件级别，有可能是内存条坏了<br>
+Regionserver经常出现</p>
+<h4 id="查看进程-查看端口号">查看进程 查看端口号</h4>
+<p><strong>进程：（ps -ef|grep）</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@JD ~]# ps -ef|grep ssh</span><br><span class="line">root       761     1  0 Nov25 ?        00:00:00 /usr/sbin/sshd -D</span><br><span class="line">root      5987   761  0 20:36 ?        00:00:00 sshd: root@pts/0</span><br><span class="line">root     14532  5990  0 21:58 pts/0    00:00:00 grep --color=auto ssh</span><br><span class="line">[root@JD ~]# ps -ef|grep ssh | grep -v grep</span><br><span class="line">root        761      1  0 Nov25 ?        00:00:00 /usr/sbin/sshd -D</span><br><span class="line">root        5987     761  0 20:36 ?        00:00:00 sshd: root@pts/0</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>进程用户  进程的pid 父id             进程用户的内容（进程所属的目录 log -Xmx -Xms）</p>
+</blockquote>
+<p><strong>端口号：（netstat -nlp |grep）</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@JD ~]# netstat -nlp |grep 761</span><br><span class="line">tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      761/sshd            </span><br><span class="line">tcp6       0      0 :::22                   :::*                    LISTEN      761/sshd    </span><br><span class="line">[root@JD ~]# netstat -nlp |grep ssh</span><br><span class="line">tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      761/sshd            </span><br><span class="line">tcp6       0      0 :::22                   :::*                    LISTEN      761/sshd    [root@ruozedata001 ~]#</span><br></pre></td></tr></table></figure>
+<p><strong>通过pid找port：</strong></p>
+<ol>
+<li>启动一个进程ps是必须有的</li>
+<li>可能启动一个进程port和netstat不是必须的</li>
+</ol>
+<p><strong>安装服务，打开web：</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">[root@JD ~]#  yum install httpd </span><br><span class="line">[root@JD ~]# service httpd start</span><br><span class="line">Redirecting to /bin/systemctl start  httpd.service</span><br><span class="line">[root@JD ~]# systemctl start httpd</span><br><span class="line">[root@JD ~]# systemctl status httpd</span><br><span class="line">● httpd.service - The Apache HTTP Server</span><br><span class="line">   Loaded: loaded (/usr/lib/systemd/system/httpd.service; disabled; vendor preset: disabled)</span><br><span class="line">   Active: active (running) since Thu 2019-11-28 22:13:04 CST; 29s ago</span><br><span class="line">     Docs: man:httpd(8)</span><br><span class="line">           man:apachectl(8)</span><br><span class="line"> Main PID: 16108 (httpd)</span><br><span class="line">   Status: "Total requests: 0; Current requests/sec: 0; Current traffic:   0 B/sec"</span><br><span class="line">   CGroup: /system.slice/httpd.service</span><br><span class="line">           ├─16108 /usr/sbin/httpd -DFOREGROUND</span><br><span class="line">           ├─16109 /usr/sbin/httpd -DFOREGROUND</span><br><span class="line">           ├─16110 /usr/sbin/httpd -DFOREGROUND</span><br><span class="line">           ├─16111 /usr/sbin/httpd -DFOREGROUND</span><br><span class="line">           ├─16112 /usr/sbin/httpd -DFOREGROUND</span><br><span class="line">           └─16113 /usr/sbin/httpd -DFOREGROUND</span><br><span class="line"></span><br><span class="line">Nov 28 22:13:04 JD systemd[1]: Starting The Apache HTTP Server...</span><br><span class="line">Nov 28 22:13:04 JD httpd[16108]: AH00558: httpd: Could not reliably determine the server's fully...sage</span><br><span class="line">Nov 28 22:13:04 JD systemd[1]: Started The Apache HTTP Server.</span><br><span class="line">Hint: Some lines were ellipsized, use -l to show in full.</span><br></pre></td></tr></table></figure>
+<p><em>centos6.x 7.x都可以使用的命令：</em><br>
+service httpd start<br>
+service httpd sshd status（不合法）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@JD ~]# service httpd sshd status</span><br><span class="line">The service command supports only basic LSB actions (start, stop, restart, try-restart, reload, force-reload, status). For other actions, please try to use systemctl.</span><br></pre></td></tr></table></figure>
+<p><em>centos7.x使用的命令：</em><br>
+systemctl start httpd<br>
+systemctl status httpd sshd</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@JD ~]# ps -ef|grep http</span><br><span class="line">root     16108     1  0 22:13 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND</span><br><span class="line">apache   16109 16108  0 22:13 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND</span><br><span class="line">apache   16110 16108  0 22:13 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND</span><br><span class="line">apache   16111 16108  0 22:13 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND</span><br><span class="line">apache   16112 16108  0 22:13 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND</span><br><span class="line">apache   16113 16108  0 22:13 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND</span><br><span class="line">apache   16449 16108  0 22:14 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND</span><br><span class="line">apache   16451 16108  0 22:14 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND</span><br><span class="line">apache   16452 16108  0 22:14 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND</span><br><span class="line">root     16775  5990  0 22:17 pts/0    00:00:00 grep --color=auto http</span><br></pre></td></tr></table></figure>
+<p><a href="http://114.67.228.91:80/" target="_blank" rel="noopener">http://114.67.228.91:80/</a><br>
+<a href="http://114.67.228.91/%EF%BC%88%E4%BC%9A%E8%87%AA%E5%8A%A8%E5%8E%BB%E6%8E%8980%EF%BC%89" target="_blank" rel="noopener">http://114.67.228.91/（会自动去掉80）</a><br>
+<em>http协议  80<br>
+https协议 443</em><br>
+<strong>场景：</strong><br>
+在centos部署大数据组件，发现一个错误Connection refused，有可能是防火墙问题，或者web拒绝，或者iptables问题<br>
+<em>排查错误要使用：</em><br>
+ping ip：测试ip<br>
+telnet ip port：测试ip和端口号</p>
+<p><strong>部署telnet命令的方法</strong><br>
+<em>Window中的cmd黑窗口是不带telnet命令的，需要安装一下，然后重启电脑</em><br>
+<img src="linux4/windows_telnet.png" alt="windows安装telnet"><br>
+<em>Linux要安装telnet：</em></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@JD ~]# yum install -y telnet</span><br><span class="line">[root@JD ~]# which telnet</span><br><span class="line">/usr/bin/telnet</span><br><span class="line">[root@JD ~]# telnet 114.67.228.91 80</span><br><span class="line">Trying 114.67.228.91...</span><br><span class="line">Connected to 114.67.228.91.</span><br><span class="line">Escape character is '^]'.</span><br></pre></td></tr></table></figure>
+<p><em>（说明是通的，端口号通的，IP一定是通的）</em></p>
+<p><strong>面试题：</strong><br>
+老板说去A服务器login，打开xxx软件的web界面？<br>
+<em>找到端口号的方法：</em><br>
+ps -ef|grep xxx<br>
+netstat -nlp |grep pid ==》port<br>
+<em>找到IP的方法：</em><br>
+window：ipconfig<br>
+linux：ifconfig<br>
+<em>注意：</em></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@JD ~]# netstat -nlp |grep  ssh</span><br><span class="line">tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      761/sshd            </span><br><span class="line">tcp6       0      0 :::22                   :::*                    LISTEN      761/sshd</span><br></pre></td></tr></table></figure>
+<p>0.0.0.0:22 当前的ip<br>
+:::22      当前的ip<br>
+192.168.0.3:22 当前的ip<br>
+<em>（这三种IP都是可以的）</em><br>
+<em>但是127.0.0.1:22只能本地自己访问自己，window和其他服务器无法进行访问</em><br>
+localhost:22</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@JD ~]# netstat -nlp|grep http</span><br><span class="line">tcp6       0      0 :::80                   :::*                    LISTEN      16108/httpd</span><br></pre></td></tr></table></figure>
+<h4 id="高危的">高危的</h4>
+<p><strong>1.	rm -rf /（全部删除了一定不能用）</strong><br>
+<strong>2.	vi编辑生产配置文件之后保存==&gt;一定要提前做备份：</strong><br>
+cp xxx.xml xxx.xml20191117</p>
+<p><strong>3.	如果有ps进程，top命令查询夯住的，用kill来杀死进程</strong><br>
+kill -9 进程pid<br>
+kill -9 进程pid 进程pid 进程pid<br>
+kill -9 $(pgrep -f 匹配关键词)</p>
+<h4 id="kill-9-pgrep-f-匹配关键词有可能把别人的进程杀了">kill -9 $(pgrep -f 匹配关键词)（有可能把别人的进程杀了）</h4>
+<p><em>杀进程之前，先ps 找到相关的进程，搞清楚，哪些是你要杀的，不然造成生产事故</em></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[root@JD ~]#  ps -ef|grep http</span><br><span class="line">root     18899     1  0 22:37 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND</span><br><span class="line">apache   18900 18899  0 22:37 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND</span><br><span class="line">apache   18901 18899  0 22:37 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND</span><br><span class="line">apache   18902 18899  0 22:37 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND</span><br><span class="line">apache   18903 18899  0 22:37 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND</span><br><span class="line">apache   18904 18899  0 22:37 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND</span><br><span class="line">root     18912  5990  0 22:38 pts/0    00:00:00 grep --color=auto http</span><br><span class="line">[root@JD ~]# kill 18900</span><br><span class="line">[root@JD ~]#  ps -ef|grep http</span><br><span class="line">root     18899     1  0 22:37 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND</span><br><span class="line">apache   18901 18899  0 22:37 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND</span><br><span class="line">apache   18902 18899  0 22:37 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND</span><br><span class="line">apache   18903 18899  0 22:37 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND</span><br><span class="line">apache   18904 18899  0 22:37 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND</span><br><span class="line">apache   19022 18899  0 22:39 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND</span><br><span class="line">root     19053  5990  0 22:39 pts/0    00:00:00 grep --color=auto http</span><br></pre></td></tr></table></figure>
+<p><strong>如果想全部杀死 （kill -9 $(pgrep -f XXXX)）</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@JD ~]# echo $(pgrep -f http)</span><br><span class="line">18899 18900 18901 18902 18903 18904 </span><br><span class="line">[root@JD ~]# pgrep -f http</span><br><span class="line">18899</span><br><span class="line">18901</span><br><span class="line">18902</span><br><span class="line">18903</span><br><span class="line">18904</span><br><span class="line">19022 </span><br><span class="line">[root@JD ~]#  kill -9 $(pgrep -f http)</span><br><span class="line">[root@JD ~]# pgrep -f http</span><br><span class="line">[root@JD ~]#  ps -ef|grep http</span><br><span class="line">root     19263  5990  0 22:41 pts/0    00:00:00 grep --color=auto http</span><br></pre></td></tr></table></figure>
+<h4 id="安装yum软件">安装yum软件</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></td><td class="code"><pre><span class="line">[root@JD ~]# yum help</span><br><span class="line">Loaded plugins: fastestmirror</span><br><span class="line">Usage: yum [options] COMMAND</span><br><span class="line"></span><br><span class="line">List of Commands:</span><br><span class="line"></span><br><span class="line">check          Check for problems in the rpmdb</span><br><span class="line">check-update   Check for available package updates</span><br><span class="line">clean          Remove cached data</span><br><span class="line">deplist        List a package's dependencies</span><br><span class="line">distribution-synchronization Synchronize installed packages to the latest available versions</span><br><span class="line">downgrade      downgrade a package</span><br><span class="line">erase          Remove a package or packages from your system</span><br><span class="line">fs             Acts on the filesystem data of the host, mainly for removing docs/lanuages for minimal hosts.</span><br><span class="line">fssnapshot     Creates filesystem snapshots, or lists/deletes current snapshots.</span><br><span class="line">groups         Display, or use, the groups information</span><br><span class="line">help           Display a helpful usage message</span><br><span class="line">history        Display, or use, the transaction history</span><br><span class="line">info           Display details about a package or group of packages</span><br><span class="line">install        Install a package or packages on your system</span><br><span class="line">list           List a package or groups of packages</span><br><span class="line">load-transaction load a saved transaction from filename</span><br><span class="line">makecache      Generate the metadata cache</span><br><span class="line">provides       Find what package provides the given value</span><br><span class="line">reinstall      reinstall a package</span><br><span class="line">repo-pkgs      Treat a repo. as a group of packages, so we can install/remove all of them</span><br><span class="line">repolist       Display the configured software repositories</span><br><span class="line">search         Search package details for the given string</span><br><span class="line">shell          Run an interactive yum shell</span><br><span class="line">swap           Simple way to swap packages, instead of using shell</span><br><span class="line">update         Update a package or packages on your system</span><br><span class="line">update-minimal Works like upgrade, but goes to the 'newest' package match which fixes a problem that affects your system</span><br><span class="line">updateinfo     Acts on repository update information</span><br><span class="line">upgrade        Update packages taking obsoletes into account</span><br><span class="line">version        Display a version for the machine and/or available repos.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Options:</span><br><span class="line">  -h, --help            show this help message and exit</span><br><span class="line">  -t, --tolerant        be tolerant of errors</span><br><span class="line">  -C, --cacheonly       run entirely from system cache, don't update cache</span><br><span class="line">  -c [config file], --config=[config file]</span><br><span class="line">                        config file location</span><br><span class="line">  -R [minutes], --randomwait=[minutes]</span><br><span class="line">                        maximum command wait time</span><br><span class="line">  -d [debug level], --debuglevel=[debug level]</span><br><span class="line">                        debugging output level</span><br><span class="line">  --showduplicates      show duplicates, in repos, in list/search commands</span><br><span class="line">  -e [error level], --errorlevel=[error level]</span><br><span class="line">                        error output level</span><br><span class="line">  --rpmverbosity=[debug level name]</span><br><span class="line">                        debugging output level for rpm</span><br><span class="line">  -q, --quiet           quiet operation</span><br><span class="line">  -v, --verbose         verbose operation</span><br><span class="line">  -y, --assumeyes       answer yes for all questions</span><br><span class="line">  --assumeno            answer no for all questions</span><br><span class="line">  --version             show Yum version and exit</span><br><span class="line">  --installroot=[path]  set install root</span><br><span class="line">  --enablerepo=[repo]   enable one or more repositories (wildcards allowed)</span><br><span class="line">  --disablerepo=[repo]  disable one or more repositories (wildcards allowed)</span><br><span class="line">  -x [package], --exclude=[package]</span><br><span class="line">                        exclude package(s) by name or glob</span><br><span class="line">  --disableexcludes=[repo]</span><br><span class="line">                        disable exclude from main, for a repo or for</span><br><span class="line">                        everything</span><br><span class="line">  --disableincludes=[repo]</span><br><span class="line">                        disable includepkgs for a repo or for everything</span><br><span class="line">  --obsoletes           enable obsoletes processing during updates</span><br><span class="line">  --noplugins           disable Yum plugins</span><br><span class="line">  --nogpgcheck          disable gpg signature checking</span><br><span class="line">  --disableplugin=[plugin]</span><br><span class="line">                        disable plugins by name</span><br><span class="line">  --enableplugin=[plugin]</span><br><span class="line">                        enable plugins by name</span><br><span class="line">  --skip-broken         skip packages with depsolving problems</span><br><span class="line">  --color=COLOR         control whether color is used</span><br><span class="line">  --releasever=RELEASEVER</span><br><span class="line">                        set value of $releasever in yum config and repo files</span><br><span class="line">  --downloadonly        don't update, just download</span><br><span class="line">  --downloaddir=DLDIR   specifies an alternate directory to store packages</span><br><span class="line">  --setopt=SETOPTS      set arbitrary config and repo options</span><br><span class="line">  --bugfix              Include bugfix relevant packages, in updates</span><br><span class="line">  --security            Include security relevant packages, in updates</span><br><span class="line">  --advisory=ADVS, --advisories=ADVS</span><br><span class="line">                        Include packages needed to fix the given advisory, in</span><br><span class="line">                        updates</span><br><span class="line">  --bzs=BZS             Include packages needed to fix the given BZ, in</span><br><span class="line">                        updates</span><br><span class="line">  --cves=CVES           Include packages needed to fix the given CVE, in</span><br><span class="line">                        updates</span><br><span class="line">  --sec-severity=SEVS, --secseverity=SEVS</span><br><span class="line">                        Include security relevant packages matching the</span><br><span class="line">                        severity, in updates</span><br><span class="line"></span><br><span class="line">  Plugin Options:</span><br></pre></td></tr></table></figure>
+<p><strong>另一个查看命令帮助的命令：man</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line">[root@JD ~]# man yum</span><br><span class="line">NAME</span><br><span class="line">       yum - Yellowdog Updater Modified</span><br><span class="line"></span><br><span class="line">SYNOPSIS</span><br><span class="line">       yum [options] [command] [package ...]</span><br><span class="line"></span><br><span class="line">DESCRIPTION</span><br><span class="line">       yum  is  an  interactive,  rpm  based,  package  manager. It can automatically perform system</span><br><span class="line">       updates, including dependency analysis and obsolete processing based  on  "repository"  meta‐</span><br><span class="line">       data.  It  can also perform installation of new packages, removal of old packages and perform</span><br><span class="line">       queries on the installed and/or available packages among many  other  commands/services  (see</span><br><span class="line">       below). yum is similar to other high level package managers like apt-get and smart.</span><br><span class="line"></span><br><span class="line">       While  there  are  some  graphical interfaces directly to the yum code, more recent graphical</span><br><span class="line">       interface development is happening with PackageKit and the gnome-packagekit application.</span><br><span class="line"></span><br><span class="line">       command is one of:</span><br><span class="line">        * install package1 [package2] [...]</span><br><span class="line">        * update [package1] [package2] [...]</span><br><span class="line">        * update-to [package1] [package2] [...]</span><br><span class="line">        * update-minimal [package1] [package2] [...]</span><br><span class="line">        * check-update</span><br><span class="line">        * upgrade [package1] [package2] [...]</span><br><span class="line">        * upgrade-to [package1] [package2] [...]</span><br><span class="line">        * distribution-synchronization [package1] [package2] [...]</span><br><span class="line">        * remove | erase package1 [package2] [...]</span><br><span class="line">        * autoremove [package1] [...]</span><br><span class="line">        * list [...]</span><br><span class="line">        * info [...]</span><br><span class="line">        * provides | whatprovides feature1 [feature2] [...]</span><br><span class="line">        * clean [ packages | metadata | expire-cache | rpmdb | plugins | all ]</span><br><span class="line">        * makecache [fast]</span><br><span class="line">        * groups [...]</span><br><span class="line">        * search string1 [string2] [...]</span><br><span class="line">        * shell [filename]</span><br><span class="line">        * resolvedep dep1 [dep2] [...]</span><br><span class="line">           (maintained for legacy reasons only - use repoquery or yum provides)</span><br><span class="line">        * localinstall rpmfile1 [rpmfile2] [...]</span><br><span class="line">           (maintained for legacy reasons only - use install)</span><br><span class="line">        * localupdate rpmfile1 [rpmfile2] [...]</span><br><span class="line">           (maintained for legacy reasons only - use update)</span><br><span class="line">        * reinstall package1 [package2] [...]</span><br><span class="line">        * downgrade package1 [package2] [...]</span><br><span class="line">        * deplist package1 [package2] [...]</span><br><span class="line">        * repolist [all|enabled|disabled]</span><br><span class="line">        * repoinfo [all|enabled|disabled]</span><br><span class="line">        * repository-packages &lt;enabled-repoid&gt; &lt;install|remove|remove-or-reinstall|remove-or-distri‐</span><br><span class="line">       bution-synchronization&gt; [package2] [...]</span><br><span class="line">        * version [ all | installed | available | group-* | nogroups* | grouplist | groupinfo ]</span><br><span class="line">           *    history    [info|list|packages-list|packages-info|summary|addon-info|redo|undo|roll‐</span><br><span class="line">       back|new|sync|stats]</span><br><span class="line">        * load-transaction [txfile]</span><br><span class="line">        * updateinfo [summary | list | info |  remove-pkgs-ts  |  exclude-updates  |  exclude-all  |</span><br><span class="line">       check-running-kernel]</span><br><span class="line">        * fssnapshot [summary | list | have-space | create | delete]</span><br><span class="line">        * fs [filters | refilter | refilter-cleanup | du]</span><br><span class="line">        * check</span><br><span class="line">        * help [command]</span><br><span class="line"></span><br><span class="line">       Unless the --help or -h option is given, one of the above commands must be present.</span><br><span class="line"></span><br><span class="line">       Repository configuration is honored in all operations.</span><br></pre></td></tr></table></figure>
+<p><strong><em>yum search xxx<br>
+yum install -y xxx-yyy<br>
+yum remove xxx-yyy</em></strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@JD ~]# rpm -qa | grep http</span><br><span class="line">httpd-2.4.6-90.el7.centos.x86_64</span><br><span class="line">httpd-tools-2.4.6-90.el7.centos.x86_64</span><br><span class="line">[root@JD ~]# rpm -e httpd-tools-2.4.6-90.el7.centos.x86_64</span><br><span class="line">error: Failed dependencies:</span><br><span class="line">	httpd-tools = 2.4.6-90.el7.centos is needed by (installed) httpd-2.4.6-90.el7.centos.x86_64</span><br></pre></td></tr></table></figure>
+<p><strong>先删除httpd-2.4.6-90.el7.centos.x86_64<br>
+再删除httpd-tools-2.4.6-90.el7.centos.x86_64</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@JD ~]# rpm -e httpd-2.4.6-90.el7.centos.x86_64</span><br><span class="line">[root@JD ~]# rpm -qa | grep http</span><br><span class="line">httpd-tools-2.4.6-90.el7.centos.x86_64</span><br><span class="line">[root@JD ~]# rpm -e httpd-tools-2.4.6-90.el7.centos.x86_64</span><br></pre></td></tr></table></figure>
+<p><strong>使用—nodeps可以不校验，直接删除</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@JD ~]# rpm -e httpd-tools-2.4.6-90.el7.centos.x86_64</span><br><span class="line">error: Failed dependencies:</span><br><span class="line">	httpd-tools = 2.4.6-90.el7.centos is needed by (installed) httpd-2.4.6-90.el7.centos.x86_64</span><br><span class="line">[root@JD ~]# rpm -e  --nodeps     httpd-tools-2.4.6-90.el7.centos.x86_64</span><br><span class="line">[root@JD ~]# rpm -qa | grep http</span><br><span class="line">httpd-2.4.6-90.el7.centos.x86_64</span><br></pre></td></tr></table></figure>
+<h4 id="wget下载安装包">wget下载安装包</h4>
+<p>wget <a href="http://archive.cloudera.com/cdh5/cdh/5/hadoop-2.6.0-cdh5.16.2.tar.gz" target="_blank" rel="noopener">http://archive.cloudera.com/cdh5/cdh/5/hadoop-2.6.0-cdh5.16.2.tar.gz</a></p>
+<h4 id="压缩解压">压缩解压</h4>
+<p><strong>zip：</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@JD software]# which zip unzip</span><br><span class="line">/usr/bin/which: no zip in (/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin)</span><br><span class="line">/usr/bin/which: no unzip in (/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin)</span><br><span class="line">[root@JD software]# yum install zip unzip</span><br><span class="line">Loaded plugins: fastestmirror</span><br><span class="line">Loading mirror speeds from cached hostfile</span><br><span class="line">Resolving Dependencies</span><br></pre></td></tr></table></figure>
+<p><em>查看命令帮助：</em></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[root@JD software]# zip --help</span><br><span class="line">Copyright (c) 1990-2008 Info-ZIP - Type 'zip "-L"' for software license.</span><br><span class="line">Zip 3.0 (July 5th 2008). Usage:</span><br><span class="line">zip [-options] [-b path] [-t mmddyyyy] [-n suffixes] [zipfile list] [-xi list]</span><br><span class="line">  The default action is to add or replace zipfile entries from list, which</span><br><span class="line">  can include the special name - to compress standard input.</span><br><span class="line">  If zipfile and list are omitted, zip compresses stdin to stdout.</span><br><span class="line">  -f   freshen: only changed files  -u   update: only changed or new files</span><br><span class="line">  -d   delete entries in zipfile    -m   move into zipfile (delete OS files)</span><br><span class="line">  -r   recurse into directories     -j   junk (don't record) directory names</span><br><span class="line">  -0   store only                   -l   convert LF to CR LF (-ll CR LF to LF)</span><br><span class="line">  -1   compress faster              -9   compress better</span><br><span class="line">  -q   quiet operation              -v   verbose operation/print version info</span><br><span class="line">  -c   add one-line comments        -z   add zipfile comment</span><br><span class="line">  -@   read names from stdin        -o   make zipfile as old as latest entry</span><br><span class="line">  -x   exclude the following names  -i   include only the following names</span><br><span class="line">  -F   fix zipfile (-FF try harder) -D   do not add directory entries</span><br><span class="line">  -A   adjust self-extracting exe   -J   junk zipfile prefix (unzipsfx)</span><br><span class="line">  -T   test zipfile integrity       -X   eXclude eXtra file attributes</span><br><span class="line">  -y   store symbolic links as the link instead of the referenced file</span><br><span class="line">  -e   encrypt                      -n   don't compress these suffixes</span><br><span class="line">  -h2  show more help</span><br></pre></td></tr></table></figure>
+<p><em><em>zip -r 1.zip ./</em> （表示当前光标在文件夹里面）<br>
+zip -r 2.zip test/</em> （表示在文件夹外面压缩更好）<br>
+unzip 1.zip （表示解压缩）**</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">[root@JD software]# zip 1.zip ./*</span><br><span class="line">  adding: hadoop-2.6.0-cdh5.16.2.tar.gz (deflated 0%)</span><br><span class="line">  adding: mao01.log (deflated 100%)</span><br><span class="line">  adding: mao.log (deflated 100%)</span><br><span class="line">[root@JD test]# unzip 1.zip </span><br><span class="line">Archive:  1.zip</span><br><span class="line">  inflating: hadoop-2.6.0-cdh5.16.2.tar.gz  </span><br><span class="line">  inflating: mao01.log               </span><br><span class="line">  inflating: mao.log                 </span><br><span class="line">[root@JD test]# ll</span><br><span class="line">total 1128</span><br><span class="line">-rw-r--r-- 1 root root 235291 Nov 29 19:27 1.zip</span><br><span class="line">-rw-r--r-- 1 root root 232628 Nov 29 19:23 hadoop-2.6.0-cdh5.16.2.tar.gz</span><br><span class="line">-rw-r--r-- 1 root root 101510 Nov 29 19:27 mao01.log</span><br><span class="line">-rw-r--r-- 1 root root 578665 Nov 29 19:25 mao.log</span><br><span class="line">[root@JD software]# zip -r 3.zip test/*</span><br><span class="line">  adding: test/1.zip (stored 0%)</span><br><span class="line">  adding: test/hadoop-2.6.0-cdh5.16.2.tar.gz (deflated 0%)</span><br><span class="line">  adding: test/mao01.log (deflated 100%)</span><br><span class="line">  adding: test/mao.log (deflated 100%)</span><br><span class="line">[root@JD software]# ll</span><br><span class="line">total 1356</span><br><span class="line">-rw-r--r-- 1 root root 470760 Nov 29 19:34 3.zip</span><br><span class="line">-rw-r--r-- 1 root root 232628 Nov 29 19:23 hadoop-2.6.0-cdh5.16.2.tar.gz</span><br><span class="line">-rw-r--r-- 1 root root 101510 Nov 29 19:27 mao01.log</span><br><span class="line">-rw-r--r-- 1 root root 578665 Nov 29 19:25 mao.log</span><br><span class="line">drwxr-xr-x 2 root root     84 Nov 29 19:29 test</span><br><span class="line">[root@JD software]# rm -r test/</span><br><span class="line">[root@JD software]# ll</span><br><span class="line">total 1356</span><br><span class="line">-rw-r--r-- 1 root root 470760 Nov 29 19:34 3.zip</span><br><span class="line">-rw-r--r-- 1 root root 232628 Nov 29 19:23 hadoop-2.6.0-cdh5.16.2.tar.gz</span><br><span class="line">-rw-r--r-- 1 root root 101510 Nov 29 19:27 mao01.log</span><br><span class="line">-rw-r--r-- 1 root root 578665 Nov 29 19:25 mao.log</span><br><span class="line">[root@JD software]# unzip 3.zip </span><br><span class="line">Archive:  3.zip</span><br><span class="line"> extracting: test/1.zip              </span><br><span class="line">  inflating: test/hadoop-2.6.0-cdh5.16.2.tar.gz  </span><br><span class="line">  inflating: test/mao01.log          </span><br><span class="line">  inflating: test/mao.log            </span><br><span class="line">[root@JD software]# ll</span><br><span class="line">total 1356</span><br><span class="line">-rw-r--r-- 1 root root 470760 Nov 29 19:34 3.zip</span><br><span class="line">-rw-r--r-- 1 root root 232628 Nov 29 19:23 hadoop-2.6.0-cdh5.16.2.tar.gz</span><br><span class="line">-rw-r--r-- 1 root root 101510 Nov 29 19:27 mao01.log</span><br><span class="line">-rw-r--r-- 1 root root 578665 Nov 29 19:25 mao.log</span><br><span class="line">drwxr-xr-x 2 root root     84 Nov 29 19:35 test</span><br></pre></td></tr></table></figure>
+<p><strong>tar：</strong><br>
+<strong>大数据组件的压缩包几乎都是后缀 tar.gz</strong><br>
+<strong>压缩：</strong><br>
+tar -xzvf hadoop-2.6.0-cdh5.16.2.tar.gz<br>
+<strong>解压缩：</strong><br>
+tar -czvf hadoop-2.6.0-cdh5.16.2.tar.gz  hadoop-2.6.0-cdh5.16.2/*<br>
+<em>先看帮助文档：</em></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br></pre></td><td class="code"><pre><span class="line">[root@JD software]# tar --help</span><br><span class="line">Usage: tar [OPTION...] [FILE]...</span><br><span class="line">GNU `tar' saves many files together into a single tape or disk archive, and can</span><br><span class="line">restore individual files from the archive.</span><br><span class="line"></span><br><span class="line">Examples:</span><br><span class="line">  tar -cf archive.tar foo bar  # Create archive.tar from files foo and bar.</span><br><span class="line">  tar -tvf archive.tar         # List all files in archive.tar verbosely.</span><br><span class="line">  tar -xf archive.tar          # Extract all files from archive.tar.</span><br><span class="line"></span><br><span class="line"> Main operation mode:</span><br><span class="line"></span><br><span class="line">  -A, --catenate, --concatenate   append tar files to an archive</span><br><span class="line">  -c, --create               create a new archive</span><br><span class="line">  -d, --diff, --compare      find differences between archive and file system</span><br><span class="line">      --delete               delete from the archive (not on mag tapes!)</span><br><span class="line">  -r, --append               append files to the end of an archive</span><br><span class="line">  -t, --list                 list the contents of an archive</span><br><span class="line">      --test-label           test the archive volume label and exit</span><br><span class="line">  -u, --update               only append files newer than copy in archive</span><br><span class="line">  -x, --extract, --get       extract files from an archive</span><br><span class="line"></span><br><span class="line"> Operation modifiers:</span><br><span class="line"></span><br><span class="line">      --check-device         check device numbers when creating incremental</span><br><span class="line">                             archives (default)</span><br><span class="line">  -g, --listed-incremental=FILE   handle new GNU-format incremental backup</span><br><span class="line">  -G, --incremental          handle old GNU-format incremental backup</span><br><span class="line">      --ignore-failed-read   do not exit with nonzero on unreadable files</span><br><span class="line">      --level=NUMBER         dump level for created listed-incremental archive</span><br><span class="line">  -n, --seek                 archive is seekable</span><br><span class="line">      --no-check-device      do not check device numbers when creating</span><br><span class="line">                             incremental archives</span><br><span class="line">      --no-seek              archive is not seekable</span><br><span class="line">      --occurrence[=NUMBER]  process only the NUMBERth occurrence of each file</span><br><span class="line">                             in the archive; this option is valid only in</span><br><span class="line">                             conjunction with one of the subcommands --delete,</span><br><span class="line">                             --diff, --extract or --list and when a list of</span><br><span class="line">                             files is given either on the command line or via</span><br><span class="line">                             the -T option; NUMBER defaults to 1</span><br><span class="line">      --sparse-version=MAJOR[.MINOR]</span><br><span class="line">                             set version of the sparse format to use (implies</span><br><span class="line">                             --sparse)</span><br><span class="line">  -S, --sparse               handle sparse files efficiently</span><br><span class="line"></span><br><span class="line"> Overwrite control:</span><br><span class="line"></span><br><span class="line">  -k, --keep-old-files       don't replace existing files when extracting,</span><br><span class="line">                             treat them as errors</span><br><span class="line">      --keep-directory-symlink   preserve existing symlinks to directories when</span><br><span class="line">                             extracting</span><br><span class="line">      --keep-newer-files     don't replace existing files that are newer than</span><br><span class="line">                             their archive copies</span><br><span class="line">      --no-overwrite-dir     preserve metadata of existing directories</span><br><span class="line">      --overwrite            overwrite existing files when extracting</span><br><span class="line">      --overwrite-dir        overwrite metadata of existing directories when</span><br><span class="line">                             extracting (default)</span><br><span class="line">      --recursive-unlink     empty hierarchies prior to extracting directory</span><br><span class="line">      --remove-files         remove files after adding them to the archive</span><br><span class="line">      --skip-old-files       don't replace existing files when extracting,</span><br><span class="line">                             silently skip over them</span><br><span class="line">  -U, --unlink-first         remove each file prior to extracting over it</span><br><span class="line">  -W, --verify               attempt to verify the archive after writing it</span><br><span class="line"></span><br><span class="line"> Select output stream:</span><br><span class="line"></span><br><span class="line">      --ignore-command-error ignore exit codes of children</span><br><span class="line">      --no-ignore-command-error   treat non-zero exit codes of children as</span><br><span class="line">                             error</span><br><span class="line">  -O, --to-stdout            extract files to standard output</span><br><span class="line">      --to-command=COMMAND   pipe extracted files to another program</span><br><span class="line"></span><br><span class="line"> Handling of file attributes:</span><br><span class="line"></span><br><span class="line">      --atime-preserve[=METHOD]   preserve access times on dumped files, either</span><br><span class="line">                             by restoring the times after reading</span><br><span class="line">                             (METHOD='replace'; default) or by not setting the</span><br><span class="line">                             times in the first place (METHOD='system')</span><br><span class="line">      --delay-directory-restore   delay setting modification times and</span><br><span class="line">                             permissions of extracted directories until the end</span><br><span class="line">                             of extraction</span><br><span class="line">      --group=NAME           force NAME as group for added files</span><br><span class="line">      --mode=CHANGES         force (symbolic) mode CHANGES for added files</span><br><span class="line">      --mtime=DATE-OR-FILE   set mtime for added files from DATE-OR-FILE</span><br><span class="line">  -m, --touch                don't extract file modified time</span><br><span class="line">      --no-delay-directory-restore</span><br><span class="line">                             cancel the effect of --delay-directory-restore</span><br><span class="line">                             option</span><br><span class="line">      --no-same-owner        extract files as yourself (default for ordinary</span><br><span class="line">                             users)</span><br><span class="line">      --no-same-permissions  apply the user's umask when extracting permissions</span><br><span class="line">                             from the archive (default for ordinary users)</span><br><span class="line">      --numeric-owner        always use numbers for user/group names</span><br><span class="line">      --owner=NAME           force NAME as owner for added files</span><br><span class="line">  -p, --preserve-permissions, --same-permissions</span><br><span class="line">                             extract information about file permissions</span><br><span class="line">                             (default for superuser)</span><br><span class="line">      --preserve             same as both -p and -s</span><br><span class="line">      --same-owner           try extracting files with the same ownership as</span><br><span class="line">                             exists in the archive (default for superuser)</span><br><span class="line">  -s, --preserve-order, --same-order</span><br><span class="line">                             member arguments are listed in the same order as</span><br><span class="line">                             the files in the archive</span><br><span class="line"></span><br><span class="line"> Handling of extended file attributes:</span><br><span class="line"></span><br><span class="line">      --acls                 Enable the POSIX ACLs support</span><br><span class="line">      --no-acls              Disable the POSIX ACLs support</span><br><span class="line">      --no-selinux           Disable the SELinux context support</span><br><span class="line">      --no-xattrs            Disable extended attributes support</span><br><span class="line">      --selinux              Enable the SELinux context support</span><br><span class="line">      --xattrs               Enable extended attributes support</span><br><span class="line">      --xattrs-exclude=MASK  specify the exclude pattern for xattr keys</span><br><span class="line">      --xattrs-include=MASK  specify the include pattern for xattr keys</span><br><span class="line"></span><br><span class="line"> Device selection and switching:</span><br><span class="line"></span><br><span class="line">  -f, --file=ARCHIVE         use archive file or device ARCHIVE</span><br><span class="line">      --force-local          archive file is local even if it has a colon</span><br><span class="line">  -F, --info-script=NAME, --new-volume-script=NAME</span><br><span class="line">                             run script at end of each tape (implies -M)</span><br><span class="line">  -L, --tape-length=NUMBER   change tape after writing NUMBER x 1024 bytes</span><br><span class="line">  -M, --multi-volume         create/list/extract multi-volume archive</span><br><span class="line">      --rmt-command=COMMAND  use given rmt COMMAND instead of rmt</span><br><span class="line">      --rsh-command=COMMAND  use remote COMMAND instead of rsh</span><br><span class="line">      --volno-file=FILE      use/update the volume number in FILE</span><br><span class="line"></span><br><span class="line"> Device blocking:</span><br><span class="line"></span><br><span class="line">  -b, --blocking-factor=BLOCKS   BLOCKS x 512 bytes per record</span><br><span class="line">  -B, --read-full-records    reblock as we read (for 4.2BSD pipes)</span><br><span class="line">  -i, --ignore-zeros         ignore zeroed blocks in archive (means EOF)</span><br><span class="line">      --record-size=NUMBER   NUMBER of bytes per record, multiple of 512</span><br><span class="line"></span><br><span class="line"> Archive format selection:</span><br><span class="line"></span><br><span class="line">  -H, --format=FORMAT        create archive of the given format</span><br><span class="line"></span><br><span class="line"> FORMAT is one of the following:</span><br><span class="line"></span><br><span class="line">    gnu                      GNU tar 1.13.x format</span><br><span class="line">    oldgnu                   GNU format as per tar &lt;= 1.12</span><br><span class="line">    pax                      POSIX 1003.1-2001 (pax) format</span><br><span class="line">    posix                    same as pax</span><br><span class="line">    ustar                    POSIX 1003.1-1988 (ustar) format</span><br><span class="line">    v7                       old V7 tar format</span><br><span class="line"></span><br><span class="line">      --old-archive, --portability</span><br><span class="line">                             same as --format=v7</span><br><span class="line">      --pax-option=keyword[[:]=value][,keyword[[:]=value]]...</span><br><span class="line">                             control pax keywords</span><br><span class="line">      --posix                same as --format=posix</span><br><span class="line">  -V, --label=TEXT           create archive with volume name TEXT; at</span><br><span class="line">                             list/extract time, use TEXT as a globbing pattern</span><br><span class="line">                             for volume name</span><br><span class="line"></span><br><span class="line"> Compression options:</span><br><span class="line"></span><br><span class="line">  -a, --auto-compress        use archive suffix to determine the compression</span><br><span class="line">                             program</span><br><span class="line">  -I, --use-compress-program=PROG</span><br><span class="line">                             filter through PROG (must accept -d)</span><br><span class="line">  -j, --bzip2                filter the archive through bzip2</span><br><span class="line">  -J, --xz                   filter the archive through xz</span><br><span class="line">      --lzip                 filter the archive through lzip</span><br><span class="line">      --lzma                 filter the archive through lzma</span><br><span class="line">      --lzop</span><br><span class="line">      --no-auto-compress     do not use archive suffix to determine the</span><br><span class="line">                             compression program</span><br><span class="line">  -z, --gzip, --gunzip, --ungzip   filter the archive through gzip</span><br><span class="line">  -Z, --compress, --uncompress   filter the archive through compress</span><br><span class="line"></span><br><span class="line"> Local file selection:</span><br><span class="line"></span><br><span class="line">      --add-file=FILE        add given FILE to the archive (useful if its name</span><br><span class="line">                             starts with a dash)</span><br><span class="line">      --backup[=CONTROL]     backup before removal, choose version CONTROL</span><br><span class="line">  -C, --directory=DIR        change to directory DIR</span><br><span class="line">      --exclude=PATTERN      exclude files, given as a PATTERN</span><br><span class="line">      --exclude-backups      exclude backup and lock files</span><br><span class="line">      --exclude-caches       exclude contents of directories containing</span><br><span class="line">                             CACHEDIR.TAG, except for the tag file itself</span><br><span class="line">      --exclude-caches-all   exclude directories containing CACHEDIR.TAG</span><br><span class="line">      --exclude-caches-under exclude everything under directories containing</span><br><span class="line">                             CACHEDIR.TAG</span><br><span class="line">      --exclude-tag=FILE     exclude contents of directories containing FILE,</span><br><span class="line">                             except for FILE itself</span><br><span class="line">      --exclude-tag-all=FILE exclude directories containing FILE</span><br><span class="line">      --exclude-tag-under=FILE   exclude everything under directories</span><br><span class="line">                             containing FILE</span><br><span class="line">      --exclude-vcs          exclude version control system directories</span><br><span class="line">  -h, --dereference          follow symlinks; archive and dump the files they</span><br><span class="line">                             point to</span><br><span class="line">      --hard-dereference     follow hard links; archive and dump the files they</span><br><span class="line">                             refer to</span><br><span class="line">  -K, --starting-file=MEMBER-NAME</span><br><span class="line">                             begin at member MEMBER-NAME when reading the</span><br><span class="line">                             archive</span><br><span class="line">      --newer-mtime=DATE     compare date and time when data changed only</span><br><span class="line">      --no-null              disable the effect of the previous --null option</span><br><span class="line">      --no-recursion         avoid descending automatically in directories</span><br><span class="line">      --no-unquote           do not unquote filenames read with -T</span><br><span class="line">      --null                 -T reads null-terminated names, disable -C</span><br><span class="line">  -N, --newer=DATE-OR-FILE, --after-date=DATE-OR-FILE</span><br><span class="line">                             only store files newer than DATE-OR-FILE</span><br><span class="line">      --one-file-system      stay in local file system when creating archive</span><br><span class="line">  -P, --absolute-names       don't strip leading `/'s from file names</span><br><span class="line">      --recursion            recurse into directories (default)</span><br><span class="line">      --suffix=STRING        backup before removal, override usual suffix ('~'</span><br><span class="line">                             unless overridden by environment variable</span><br><span class="line">                             SIMPLE_BACKUP_SUFFIX)</span><br><span class="line">  -T, --files-from=FILE      get names to extract or create from FILE</span><br><span class="line">      --unquote              unquote filenames read with -T (default)</span><br><span class="line">  -X, --exclude-from=FILE    exclude patterns listed in FILE</span><br></pre></td></tr></table></figure>
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/article/Linux日常使用详解三/" data-toggle="tooltip" data-placement="top" title="Linux日常使用详解三">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share"  data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+  
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#欢迎来到妖精小狗的博客"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">&#x6B22;&#x8FCE;&#x6765;&#x5230;&#x5996;&#x7CBE;&#x5C0F;&#x72D7;&#x7684;&#x535A;&#x5BA2;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#vi命令的用法以及坑"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">vi&#x547D;&#x4EE4;&#x7684;&#x7528;&#x6CD5;&#x4EE5;&#x53CA;&#x5751;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#系统命令"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">&#x7CFB;&#x7EDF;&#x547D;&#x4EE4;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#查看进程-查看端口号"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">&#x67E5;&#x770B;&#x8FDB;&#x7A0B; &#x67E5;&#x770B;&#x7AEF;&#x53E3;&#x53F7;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#高危的"><span class="toc-nav-number">1.4.</span> <span class="toc-nav-text">&#x9AD8;&#x5371;&#x7684;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#kill-9-pgrep-f-匹配关键词有可能把别人的进程杀了"><span class="toc-nav-number">1.5.</span> <span class="toc-nav-text">kill -9 $(pgrep -f &#x5339;&#x914D;&#x5173;&#x952E;&#x8BCD;)&#xFF08;&#x6709;&#x53EF;&#x80FD;&#x628A;&#x522B;&#x4EBA;&#x7684;&#x8FDB;&#x7A0B;&#x6740;&#x4E86;&#xFF09;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#安装yum软件"><span class="toc-nav-number">1.6.</span> <span class="toc-nav-text">&#x5B89;&#x88C5;yum&#x8F6F;&#x4EF6;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#wget下载安装包"><span class="toc-nav-number">1.7.</span> <span class="toc-nav-text">wget&#x4E0B;&#x8F7D;&#x5B89;&#x88C5;&#x5305;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#压缩解压"><span class="toc-nav-number">1.8.</span> <span class="toc-nav-text">&#x538B;&#x7F29;&#x89E3;&#x538B;</span></a></li></ol></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Linux" title="Linux">Linux</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'rz'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+<!-- chrome Firefox 中文锚点定位失效-->
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<!-- smooth scroll behavior polyfill  -->
+<script type="text/javascript" src="/js/smoothscroll.js"></script>
+<script>
+        $('#toc').on('click','a',function(a){
+            // var isChrome = window.navigator.userAgent.indexOf("Chrome") !== -1;
+            // console.log(window.navigator.userAgent,isChrome)
+                // if(isChrome) {
+                    // console.log(a.currentTarget.outerHTML);
+                    // console.log($(a.currentTarget).attr("href"));
+                    //跳转到指定锚点
+                    // document.getElementById(a.target.innerText.toLowerCase()).scrollIntoView(true);
+                    document.getElementById($(a.currentTarget).attr("href").replace("#","")).scrollIntoView({behavior: 'smooth' });
+                // }
+        })  
+</script>
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/demonlittledog">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; MX 2019 
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://github.com/demonlittledog/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = 'xxx';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://github.com/demonlittledog/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
