@@ -149,14 +149,14 @@
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
+                            <a href="/tags/">Tags</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/tags/">Tags</a>
+                            <a href="/archive/">Archives</a>
                         </li>
                         
                     
@@ -244,9 +244,9 @@ rundeck  B站  作业  部署</em></p>
 nohup ./test.sh &amp;</em><br>
 手动启动脚本，可以看日志，主要用于开发维护，测试<br>
 <em>nohup ./test.sh &gt; /root/test.log 2&gt;&amp;1 &amp;</em><br>
-生产上主要这么用（一定要记住前后都要加nohup和&amp;）一定要定期处理<br>
-<strong>软连接：</strong><br>
-<em>示例：</em></p>
+生产上主要这么用（一定要记住前后都要加nohup和&amp;）一定要定期处理</p>
+<h4 id="软连接">软连接：</h4>
+<p><em>示例：</em></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@ruozedata001 ~]# ll</span><br><span class="line">total 4</span><br><span class="line">drwxr-xr-x 2 root root   6 Nov 20 21:33 mysql5.6  低版本部署</span><br><span class="line">drwxr-xr-x 2 root root   6 Nov 20 21:33 mysql5.7  高版本</span><br><span class="line">drwxr-xr-x 3 root root  44 Nov 17 23:13 ruozedata</span><br><span class="line">-rw-r--r-- 1 root root 846 Nov 17 23:12 ruozedata.zip</span><br></pre></td></tr></table></figure>
 <p><em>ln -s 原path 目标path</em><br>
 <strong><em>注意：</em></strong><br>
@@ -339,7 +339,7 @@ ln -s /data01/log/hbase /var/log/hbase<br>
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#欢迎来到妖精小狗的博客"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">&#x6B22;&#x8FCE;&#x6765;&#x5230;&#x5996;&#x7CBE;&#x5C0F;&#x72D7;&#x7684;&#x535A;&#x5BA2;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#调度工具"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">&#x8C03;&#x5EA6;&#x5DE5;&#x5177;</span></a></li></ol></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#欢迎来到妖精小狗的博客"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">&#x6B22;&#x8FCE;&#x6765;&#x5230;&#x5996;&#x7CBE;&#x5C0F;&#x72D7;&#x7684;&#x535A;&#x5BA2;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#调度工具"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">&#x8C03;&#x5EA6;&#x5DE5;&#x5177;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#软连接"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">&#x8F6F;&#x8FDE;&#x63A5;&#xFF1A;</span></a></li></ol></li></ol>
         
         </div>
       </aside>
