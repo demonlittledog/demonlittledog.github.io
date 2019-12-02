@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Hadoop伪分布式安装教程，以及基本命令 - 妖精小狗@MX | Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://github.com/demonlittledog/article/Hadoop伪分布式安装教程/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/green.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Hadoop" title="Hadoop">Hadoop</a>
+                            
+                              <a class="tag" href="/tags/#安装部署" title="安装部署">安装部署</a>
+                            
+                        </div>
+                        <h1>Hadoop伪分布式安装教程，以及基本命令</h1>
+                        <h2 class="subheading">Hadoop伪分布式安装教程，以及基本命令。</h2>
+                        <span class="meta">
+                            Posted by MX on
+                            2019-11-30
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">妖精小狗@MX Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h3 id="欢迎来到妖精小狗的博客">欢迎来到妖精小狗的博客</h3>
+<hr>
+<h4 id="hadoop">hadoop</h4>
+<p><em>hadoop官网：<a href="http://hadoop.apache.org" target="_blank" rel="noopener">hadoop.apache.org</a></em><br>
+Apache组件官网网址一般都是：<br>
+<a href="http://xxx.apache.org" target="_blank" rel="noopener">xxx.apache.org</a><br>
+<a href="http://spark.apache.org" target="_blank" rel="noopener">spark.apache.org</a><br>
+<a href="http://kafka.apache.org" target="_blank" rel="noopener">kafka.apache.org</a><br>
+<strong>Hadoop的定义：</strong><br>
+<em>广义：</em><br>
+apache hadoop软件为主的生态圈（hive sqoop flume spark flink hbase 。。。。）<br>
+<em>狭义：</em><br>
+apache hadoop软件，开源的</p>
+<p><em>apache hadoop软件的版本：</em><br>
+1.x 基本不用<br>
+2.x 企业主流 ==&gt; CDH5.x系列<br>
+3.x 尝试使用 ==&gt; CDH6.x系列<br>
+<em>下载路径：</em><br>
+<a href="http://archive.cloudera.com/cdh5/cdh/5/" target="_blank" rel="noopener">http://archive.cloudera.com/cdh5/cdh/5/</a><br>
+<a href="http://archive.cloudera.com/cdh5/cdh/5/hadoop-2.6.0-cdh5.16.2.tar.gz" target="_blank" rel="noopener">http://archive.cloudera.com/cdh5/cdh/5/hadoop-2.6.0-cdh5.16.2.tar.gz</a></p>
+<p>hadoop-2.6.0-cdh5.16.2.tar.gz<br>
+apache hadoop2.6.0 + 以后的hadoop版本都是patch==apache hadoop2.9<br>
+CDH5.14.0 hadoop-2.6.0<br>
+CDH5.16.2 hadoop-2.6.0<br>
+<em>CDH版本的改变日志网址：</em><br>
+<a href="http://archive.cloudera.com/cdh5/cdh/5/hadoop-2.6.0-cdh5.16.2-changes.log" target="_blank" rel="noopener">http://archive.cloudera.com/cdh5/cdh/5/hadoop-2.6.0-cdh5.16.2-changes.log</a><br>
+<a href="http://archive.cloudera.com/cdh5/cdh/5/hbase-1.2.0-cdh5.16.2-changes.log" target="_blank" rel="noopener">http://archive.cloudera.com/cdh5/cdh/5/hbase-1.2.0-cdh5.16.2-changes.log</a><br>
+一般都用cloudera公司的组件<br>
+选择cdh的好处：不必考虑版本兼容性，只要注意后面的小版本就好</p>
+<h4 id="hadoop软件">hadoop软件</h4>
+<p><strong>Hdfs：</strong><br>
+主要用于存储<br>
+<strong>Mapreduce：</strong><br>
+做计算，使用作业，挖掘出有价值的数据主要用于数据挖掘<br>
+==&gt; 由于开发难度高、代码量大、维护困难、计算慢，所以大家基本不会使用MR，都使用hive sql、spark、flink<br>
+<strong>Yarn：</strong><br>
+资源（内存是VCORE） + 作业调度<br>
+海量的数据 1000台（通过yarn来进行分布式计算）<br>
+<strong>本笔记使用的CDH版本：</strong><br>
+hadoop-2.6.0-cdh5.16.2.tar.gz<br>
+wget  <a href="http://archive.cloudera.com/cdh5/cdh/5/hadoop-2.6.0-cdh5.16.2.tar.gz" target="_blank" rel="noopener">http://archive.cloudera.com/cdh5/cdh/5/hadoop-2.6.0-cdh5.16.2.tar.gz</a></p>
+<h4 id="部署">部署</h4>
+<h5 id="创建用户目录">创建用户，目录</h5>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[root@JD ~]# useradd mao</span><br><span class="line">[root@JD ~]# id mao</span><br><span class="line">uid=1001(mao) gid=1001(mao) groups=1001(mao)</span><br><span class="line">[root@JD ~]# useradd -g mao hadoop</span><br><span class="line">[root@JD ~]# id mao</span><br><span class="line">uid=1001(mao) gid=1001(mao) groups=1001(mao)</span><br><span class="line">[root@JD ~]# su - mao</span><br><span class="line">[mao@JD ~]$ mkdir app software sourcecode log tmp data lib</span><br><span class="line">[mao@JD ~]$ ll</span><br><span class="line">total 0</span><br><span class="line">drwxrwxr-x 2 mao mao 6 Dec  1 17:31 app         解压的文件夹  软连接</span><br><span class="line">drwxrwxr-x 2 mao mao 6 Dec  1 17:31 data        数据</span><br><span class="line">drwxrwxr-x 2 mao mao 6 Dec  1 17:31 lib         第三方的jar</span><br><span class="line">drwxrwxr-x 2 mao mao 6 Dec  1 17:31 log         日志文件夹</span><br><span class="line">drwxrwxr-x 2 mao mao 6 Dec  1 17:31 software    压缩包</span><br><span class="line">drwxrwxr-x 2 mao mao 6 Dec  1 17:31 sourcecode  源代码编译</span><br><span class="line">drwxrwxr-x 2 mao mao 6 Dec  1 17:31 tmp       临时文件夹</span><br></pre></td></tr></table></figure>
+<p><strong>注：</strong><br>
+为什么系统中有tmp文件，还要在用户文件夹下创建tmp文件</p>
+<h5 id="上传压缩包">上传压缩包</h5>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD ~]$ mv /opt/software/hadoop-2.6.0-cdh5.16.2.tar.gz /home/mao/software/</span><br><span class="line">mv: cannot move ‘/opt/software/hadoop-2.6.0-cdh5.16.2.tar.gz’ to ‘/home/mao/software/hadoop-2.6.0-cdh5.16.2.tar.gz’: Permission denied</span><br></pre></td></tr></table></figure>
+<p><em>没有权限，使用root用户进行操作：</em></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@JD ~]# mv /opt/software/hadoop-2.6.0-cdh5.16.2.tar.gz /home/mao/software/</span><br><span class="line">[root@JD ~]#  chown hadoop:mao /home/mao/software/* </span><br><span class="line">[mao@JD software]$ ll</span><br><span class="line">total 424176</span><br><span class="line">-rw-r--r-- 1 hadoop mao 434354462 Dec  1 17:35 hadoop-2.6.0-cdh5.16.2.tar.gz</span><br></pre></td></tr></table></figure>
+<h5 id="解压">解压</h5>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD software]$  tar -xzvf hadoop-2.6.0-cdh5.16.2.tar.gz -C ../app/ </span><br><span class="line">[mao@JD software]$ cd ../app/</span><br><span class="line">[mao@JD app]$ ll</span><br><span class="line">total 4</span><br><span class="line">drwxr-xr-x 14 mao mao 4096 Jun  3 19:11 hadoop-2.6.0-cdh5.16.2 </span><br><span class="line">[mao@JD app]$ ln -s hadoop-2.6.0-cdh5.16.2 hadoop</span><br><span class="line">[mao@JD app]$ ll</span><br><span class="line">total 4</span><br><span class="line">lrwxrwxrwx  1 mao mao   22 Dec  1 17:49 hadoop -&gt; hadoop-2.6.0-cdh5.16.2</span><br><span class="line">drwxr-xr-x 14 mao mao 4096 Jun  3 19:11 hadoop-2.6.0-cdh5.16.2</span><br></pre></td></tr></table></figure>
+<p>部署方法网址：<br>
+<a href="https://hadoop.apache.org/docs/r2.10.0/hadoop-project-dist/hadoop-common/SingleCluster.html" target="_blank" rel="noopener">https://hadoop.apache.org/docs/r2.10.0/hadoop-project-dist/hadoop-common/SingleCluster.html</a><br>
+<a href="http://archive.cloudera.com/cdh5/cdh/5/hadoop-2.6.0-cdh5.16.2/hadoop-project-dist/hadoop-common/SingleCluster.html" target="_blank" rel="noopener">http://archive.cloudera.com/cdh5/cdh/5/hadoop-2.6.0-cdh5.16.2/hadoop-project-dist/hadoop-common/SingleCluster.html</a></p>
+<h5 id="环境要求">环境要求</h5>
+<p><strong>需要的软件：</strong></p>
+<h6 id="java">java</h6>
+<p>mkdir /usr/java<br>
+cd /usr/java<br>
+rz上传   jdk-8u45-linux-x64.gz包</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@JD java]# tar -xzvf jdk-8u201-linux-x64.tar.gz -C /usr/java/ </span><br><span class="line">[root@JD java]# ll</span><br><span class="line">total 4</span><br><span class="line">drwxr-xr-x 7 root root 4096 Dec 16  2018 jdk1.8.0_201 </span><br><span class="line">[root@JD java]#  chown -R root:root jdk1.8.0_201</span><br><span class="line">[root@JD java]# ll</span><br><span class="line">total 4</span><br><span class="line">drwxr-xr-x 7 root root 4096 Dec 16  2018 jdk1.8.0_201 </span><br><span class="line">[root@JD java]# vi /etc/profile</span><br><span class="line">export JAVA_HOME=/usr/java/jdk1.8.0_201</span><br><span class="line">export PATH=$JAVA_HOME/bin:$PATH</span><br><span class="line"></span><br><span class="line">[root@JD java]# source /etc/profile#java</span><br><span class="line">[root@JD java]# which java</span><br><span class="line">/usr/java/jdk1.8.0_201/bin/java</span><br></pre></td></tr></table></figure>
+<p><em>官方就安装到/usr/java的目录下</em></p>
+<h6 id="ssh-必须安装">ssh 必须安装</h6>
+<p><strong>通过Xshell连接一定安装了SSH</strong></p>
+<h5 id="java_home-显性配置">JAVA_HOME 显性配置</h5>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">[root@JD hadoop]# cd /home/mao/app/hadoop/etc/hadoop</span><br><span class="line">[root@JD hadoop]# ll</span><br><span class="line">total 156</span><br><span class="line">-rw-r--r-- 1 mao mao  4436 Jun  3 19:04 capacity-scheduler.xml</span><br><span class="line">-rw-r--r-- 1 mao mao  1335 Jun  3 19:04 configuration.xsl</span><br><span class="line">-rw-r--r-- 1 mao mao   318 Jun  3 19:04 container-executor.cfg</span><br><span class="line">-rw-r--r-- 1 mao mao   774 Jun  3 19:04 core-site.xml</span><br><span class="line">-rw-r--r-- 1 mao mao  3670 Jun  3 19:04 hadoop-env.cmd</span><br><span class="line">-rw-r--r-- 1 mao mao  4234 Dec  1 23:36 hadoop-env.sh</span><br><span class="line">-rw-r--r-- 1 mao mao  2598 Jun  3 19:04 hadoop-metrics2.properties</span><br><span class="line">-rw-r--r-- 1 mao mao  2490 Jun  3 19:04 hadoop-metrics.properties</span><br><span class="line">-rw-r--r-- 1 mao mao  9683 Jun  3 19:04 hadoop-policy.xml</span><br><span class="line">-rw-r--r-- 1 mao mao   775 Jun  3 19:04 hdfs-site.xml</span><br><span class="line">-rw-r--r-- 1 mao mao  2230 Jun  3 19:04 httpfs-env.sh</span><br><span class="line">-rw-r--r-- 1 mao mao  1657 Jun  3 19:04 httpfs-log4j.properties</span><br><span class="line">-rw-r--r-- 1 mao mao    21 Jun  3 19:04 httpfs-signature.secret</span><br><span class="line">-rw-r--r-- 1 mao mao   620 Jun  3 19:04 httpfs-site.xml</span><br><span class="line">-rw-r--r-- 1 mao mao  3523 Jun  3 19:04 kms-acls.xml</span><br><span class="line">-rw-r--r-- 1 mao mao  3139 Jun  3 19:04 kms-env.sh</span><br><span class="line">-rw-r--r-- 1 mao mao  1788 Jun  3 19:04 kms-log4j.properties</span><br><span class="line">-rw-r--r-- 1 mao mao  5933 Jun  3 19:04 kms-site.xml</span><br><span class="line">-rw-r--r-- 1 mao mao 12601 Jun  3 19:04 log4j.properties</span><br><span class="line">-rw-r--r-- 1 mao mao   938 Jun  3 19:04 mapred-env.cmd</span><br><span class="line">-rw-r--r-- 1 mao mao  1383 Jun  3 19:04 mapred-env.sh</span><br><span class="line">-rw-r--r-- 1 mao mao  4113 Jun  3 19:04 mapred-queues.xml.template</span><br><span class="line">-rw-r--r-- 1 mao mao   758 Jun  3 19:04 mapred-site.xml.template</span><br><span class="line">-rw-r--r-- 1 mao mao    10 Jun  3 19:04 slaves</span><br><span class="line">-rw-r--r-- 1 mao mao  2316 Jun  3 19:04 ssl-client.xml.example</span><br><span class="line">-rw-r--r-- 1 mao mao  2697 Jun  3 19:04 ssl-server.xml.example</span><br><span class="line">-rw-r--r-- 1 mao mao  2237 Jun  3 19:04 yarn-env.cmd</span><br><span class="line">-rw-r--r-- 1 mao mao  4567 Jun  3 19:04 yarn-env.sh</span><br><span class="line">-rw-r--r-- 1 mao mao   690 Jun  3 19:04 yarn-site.xml</span><br><span class="line">[root@JD hadoop]# vi hadoop-env.sh</span><br><span class="line">``` </span><br><span class="line">***之后将JAVA_HOME修改成：export JAVA_HOME=/usr/java/ jdk1.8.0_201***</span><br><span class="line"></span><br><span class="line">**可以通过下面三种模式启动Hadoop集群：**</span><br><span class="line">*Local (Standalone) Mode 本地模式：*</span><br><span class="line">一般不用，运行非分布式，运行一个java进程</span><br><span class="line">*Pseudo-Distributed Mode 伪分布式模式：*</span><br><span class="line">一般用于学习、测试、一般1台</span><br><span class="line">*Fully-Distributed Mode  分布式模型：*</span><br><span class="line">一般是集群模式，用于生产</span><br><span class="line">**要配置hosts文件：**</span><br><span class="line">``` shell</span><br><span class="line">[root@JD hadoop]# vi /etc/hosts</span><br><span class="line"></span><br><span class="line">127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4</span><br><span class="line">::1         localhost localhost.localdomain localhost6 localhost6.localdomain6</span><br><span class="line"></span><br><span class="line">192.168.0.3 JD</span><br></pre></td></tr></table></figure>
+<h5 id="配置文件">配置文件</h5>
+<p><em>vi core-site.xml：</em></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>fs.defaultFS<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>hdfs://JD:9000<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><em>vi hdfs-site.xml:</em></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.replication<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>1<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><em>注释的表示方法：</em></p>
+<!-- xxxx  yyy-->
+<h5 id="ssh无密码信任关系">ssh无密码信任关系</h5>
+<p><strong>cd 切到用户的家目录，使用ll –a查看一下有没有.ssh，如果没有就使用ssh-keygen生成秘钥</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD ~]$ ll -a</span><br><span class="line">total 20</span><br><span class="line">drwx------  10 mao  mao  4096 Dec  1 23:51 .</span><br><span class="line">drwxr-xr-x.  5 root root   42 Dec  1 17:28 ..</span><br><span class="line">drwxrwxr-x   3 mao  mao    48 Dec  1 17:49 app</span><br><span class="line">-rw-------   1 mao  mao   448 Dec  1 17:58 .bash_history</span><br><span class="line">-rw-r--r--   1 mao  mao    18 Apr 11  2018 .bash_logout</span><br><span class="line">-rw-r--r--   1 mao  mao   193 Apr 11  2018 .bash_profile</span><br><span class="line">-rw-r--r--   1 mao  mao   231 Apr 11  2018 .bashrc</span><br><span class="line">drwxrwxr-x   2 mao  mao     6 Dec  1 17:31 data</span><br><span class="line">drwxrwxr-x   2 mao  mao     6 Dec  1 17:31 lib</span><br><span class="line">drwxrwxr-x   2 mao  mao     6 Dec  1 17:31 log</span><br><span class="line">drwxrwxr-x   2 mao  mao    42 Dec  1 17:39 software</span><br><span class="line">drwxrwxr-x   2 mao  mao     6 Dec  1 17:31 sourcecode</span><br><span class="line">drwx------   2 mao  mao    36 Dec  1 23:52 .ssh</span><br><span class="line">drwxrwxr-x   2 mao  mao     6 Dec  1 17:31 tmp</span><br><span class="line">[mao@JD ~]$ cd .ssh/</span><br><span class="line">[mao@JD .ssh]$ ll</span><br><span class="line">total 8</span><br><span class="line">-rw------- 1 mao mao 1679 Dec  1 23:52 id_rsa</span><br><span class="line">-rw-r--r-- 1 mao mao  388 Dec  1 23:52 id_rsa.pub</span><br><span class="line">[mao@JD .ssh]$ cat ~/.ssh/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys</span><br><span class="line">[mao@JD .ssh]$ chmod 0600 ~/.ssh/authorized_keys</span><br></pre></td></tr></table></figure>
+<p><em>使用ssh JD date来验证</em><br>
+<strong>注：</strong><br>
+如果使用root用户，600权限没关系，有没有都可以<br>
+如果是其他用户就一定要设置600权限<br>
+<strong>一定要看的文档：</strong><br>
+<a href="http://blog.itpub.net/30089851/viewspace-2127102/" target="_blank" rel="noopener">如果设置600之后出现故障</a><br>
+<a href="http://blog.itpub.net/30089851/viewspace-1992210/" target="_blank" rel="noopener">ssh多台的部署的方法</a></p>
+<h5 id="环境变量-hadoop">环境变量 hadoop</h5>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD ~]$ vi .bashrc</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># .bashrc</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Source global definitions</span></span><br><span class="line"><span class="keyword">if</span> [ -f /etc/bashrc ]; <span class="keyword">then</span></span><br><span class="line">        . /etc/bashrc</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Uncomment the following line if you don't like systemctl's auto-paging feature:</span></span><br><span class="line"><span class="comment"># export SYSTEMD_PAGER=</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># User specific aliases and functions</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> HADOOP_HOME=/home/mao/app/hadoop</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$&#123;HADOOP_HOME&#125;</span>/bin:<span class="variable">$&#123;HADOOP_HOME&#125;</span>/sbin:<span class="variable">$PATH</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD ~]$ source .bashrc </span><br><span class="line">[mao@JD ~]$ which hadoop</span><br><span class="line">~/app/hadoop/bin/hadoop</span><br></pre></td></tr></table></figure>
+<h5 id="格式化">格式化</h5>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD ~]$ hdfs namenode –format</span><br></pre></td></tr></table></figure>
+<p><em>如果出现：has been successfully formatted.表示成功</em></p>
+<h5 id="第一次启动">第一次启动</h5>
+<p><em>第一次启动要输入两个yes</em></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD ~]$ start-dfs.sh</span><br><span class="line">19/12/02 00:23:22 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable</span><br><span class="line">Starting namenodes on [JD]</span><br><span class="line">JD: starting namenode, logging to /home/mao/app/hadoop-2.6.0-cdh5.16.2/logs/hadoop-mao-namenode-JD.out</span><br><span class="line">The authenticity of host 'localhost (::1)' can't be established.</span><br><span class="line">ECDSA key fingerprint is SHA256:OLqoaMxlGFbCq4sC9pYgF+FdbcXHbEbtSrnMiGGFbVw.</span><br><span class="line">ECDSA key fingerprint is MD5:d3:5b:4a:ef:8e:00:41:a0:5e:80:ef:75:76:8a:a3:49.</span><br><span class="line">Are you sure you want to continue connecting (yes/no)? yes</span><br><span class="line">localhost: Warning: Permanently added 'localhost' (ECDSA) to the list of known hosts.</span><br><span class="line">localhost: starting datanode, logging to /home/mao/app/hadoop-2.6.0-cdh5.16.2/logs/hadoop-mao-datanode-JD.out</span><br><span class="line">Starting secondary namenodes [0.0.0.0]</span><br><span class="line">The authenticity of host '0.0.0.0 (0.0.0.0)' can't be established.</span><br><span class="line">ECDSA key fingerprint is SHA256:OLqoaMxlGFbCq4sC9pYgF+FdbcXHbEbtSrnMiGGFbVw.</span><br><span class="line">ECDSA key fingerprint is MD5:d3:5b:4a:ef:8e:00:41:a0:5e:80:ef:75:76:8a:a3:49.</span><br><span class="line">Are you sure you want to continue connecting (yes/no)? yes</span><br><span class="line">0.0.0.0: Warning: Permanently added '0.0.0.0' (ECDSA) to the list of known hosts.</span><br><span class="line">0.0.0.0: starting secondarynamenode, logging to /home/mao/app/hadoop-2.6.0-cdh5.16.2/logs/hadoop-mao-secondarynamenode-JD.out</span><br><span class="line">19/12/02 00:23:50 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable</span><br><span class="line">[mao@JD ~]$ jps</span><br><span class="line">19652 SecondaryNameNode</span><br><span class="line">19940 Jps</span><br><span class="line">19481 DataNode</span><br><span class="line">19325 NameNode</span><br></pre></td></tr></table></figure>
+<p><strong>要注意的坑:</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD ~]$ cd .ssh/</span><br><span class="line">[mao@JD .ssh]$ cat known_hosts</span><br></pre></td></tr></table></figure>
+<p><em>有可能known_hosts中的密钥不一样，如果提示密钥有问题，就来known_hosts找到记录，删掉，然后启动一下就可以了</em></p>
+<blockquote>
+<p>jd,192.168.0.3 ecdsa-sha2-nistp256<br>
+AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBG9N5IGRTqwqGGHZcyNJ2i7lG54isK19GMq+Zw3VDIr64dS2sqoZ79n+8Ibz8ZJsU1aNiaJJTzYUvuxZv5W4iHQ=<br>
+localhost ecdsa-sha2-nistp256<br>
+AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBG9N5IGRTqwqGGHZcyNJ2i7lG54isK19GMq+Zw3VDIr64dS2sqoZ79n+8Ibz8ZJsU1aNiaJJTzYUvuxZv5W4iHQ=<br>
+0.0.0.0 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBG9N5IGRTqwqGGHZcyNJ2i7lG54isK19GMq+Zw3VDIr64dS2sqoZ79n+8Ibz8ZJsU1aNiaJJTzYUvuxZv5W4iHQ=</p>
+</blockquote>
+<h5 id="dn-snn都以jd启动">DN SNN都以JD启动</h5>
+<p><strong>NN：</strong><br>
+JD是用过core-site.xml 文件中的fs.defaultFS控制的<br>
+<strong>DN：</strong><br>
+slaves文件<br>
+将里面的localhost改为机器名字<br>
+<strong>SNN：</strong><br>
+要修改hdfs-site.xml配置文件中的内容</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD hadoop]$ vi hdfs-site.xml</span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.secondary.http-address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">value</span>&gt;</span>JD:50090<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.secondary.https-address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">value</span>&gt;</span>JD:50091<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD hadoop]$ jps</span><br><span class="line">19652 SecondaryNameNode</span><br><span class="line">21477 Jps</span><br><span class="line">19481 DataNode</span><br><span class="line">19325 NameNode</span><br><span class="line">[mao@JD hadoop]$ netstat -nlp | grep 19652</span><br><span class="line">(Not all processes could be identified, non-owned process info</span><br><span class="line"> will not be shown, you would have to be root to see it all.)</span><br><span class="line">tcp        0      0 0.0.0.0:50090           0.0.0.0:*               LISTEN      19652/java</span><br></pre></td></tr></table></figure>
+<p><strong><em>端口是50090</em></strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD hadoop]$ start-dfs.sh</span><br><span class="line">19/12/02 00:40:32 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable</span><br><span class="line">Starting namenodes on [JD]</span><br><span class="line">JD: starting namenode, logging to /home/mao/app/hadoop-2.6.0-cdh5.16.2/logs/hadoop-mao-namenode-JD.out</span><br><span class="line">JD: starting datanode, logging to /home/mao/app/hadoop-2.6.0-cdh5.16.2/logs/hadoop-mao-datanode-JD.out</span><br><span class="line">Starting secondary namenodes [JD]</span><br><span class="line">JD: starting secondarynamenode, logging to /home/mao/app/hadoop-2.6.0-cdh5.16.2/logs/hadoop-mao-secondarynamenode-JD.out</span><br><span class="line">19/12/02 00:40:46 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable</span><br></pre></td></tr></table></figure>
+<h5 id="官网的参数文件在哪里找">官网的参数文件在哪里找？</h5>
+<p><em>将hadoop官网https://hadoop.apache.org/docs/r2.10.0/ 拉到最下面查看configuration</em><br>
+<img src="/img/article/hadoop1/config.jpg" alt="hadoop配置文件"></p>
+<h5 id="节点介绍">节点介绍</h5>
+<p><strong>namenode</strong><br>
+名称节点是老大，作用是读写请求先经过它，被称为主节点<br>
+<strong>datanode</strong><br>
+数据节点是小弟作用是存储数据、检索数据，被称为从节点<br>
+<strong>secondarynamenode</strong><br>
+第二名称节点是老二，恢复机制是h+1只能恢复一个小时之前的，单点的问题。<br>
+<strong><em>注：<br>
+大数据组件基本都是主从架构：hdfs、yarn、hbase<br>
+但是Hbase读写请求不经过老大master进程</em></strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD hadoop]$ jps</span><br><span class="line">22704 NameNode</span><br><span class="line">22834 DataNode</span><br><span class="line">24310 Jps</span><br><span class="line">23003 SecondaryNameNode</span><br><span class="line">[mao@JD hadoop]$ netstat -nlp | grep 22704</span><br><span class="line">(Not all processes could be identified, non-owned process info</span><br><span class="line"> will not be shown, you would have to be root to see it all.)</span><br><span class="line">tcp        0      0 192.168.0.3:9000        0.0.0.0:*               LISTEN      22704/java          </span><br><span class="line">tcp        0      0 0.0.0.0:50070           0.0.0.0:*               LISTEN      22704/java</span><br></pre></td></tr></table></figure>
+<p><em>外部界面端口是50070打开一下：<a href="http://JD:50070" target="_blank" rel="noopener">http://JD:50070</a></em><br>
+<img src="/img/article/hadoop1/hadoop_web.jpg" alt="hadoop网页信息"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD hadoop]$ df -h</span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/vda1        40G  4.2G   36G  11% /</span><br><span class="line">devtmpfs        7.8G     0  7.8G   0% /dev</span><br><span class="line">tmpfs           7.8G   16K  7.8G   1% /dev/shm</span><br><span class="line">tmpfs           7.8G  116M  7.7G   2% /run</span><br><span class="line">tmpfs           7.8G     0  7.8G   0% /sys/fs/cgroup</span><br><span class="line">tmpfs           1.6G     0  1.6G   0% /run/user/0</span><br><span class="line">tmpfs           1.6G     0  1.6G   0% /run/user/1001</span><br></pre></td></tr></table></figure>
+<h5 id="hadoop用到的命令">Hadoop用到的命令</h5>
+<p><em>先查看帮助文档</em></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD hadoop]$ hadoop</span><br><span class="line">Usage: hadoop [--config confdir] COMMAND</span><br><span class="line">       where COMMAND is one of:</span><br><span class="line">  fs                   run a generic filesystem user client</span><br><span class="line">  version              print the version</span><br><span class="line">  jar &lt;jar&gt;            run a jar file</span><br><span class="line">  checknative [-a|-h]  check native hadoop and compression libraries availability</span><br><span class="line">  distcp &lt;srcurl&gt; &lt;desturl&gt; copy file or directories recursively</span><br><span class="line">  archive -archiveName NAME -p &lt;parent path&gt; &lt;src&gt;* &lt;dest&gt; create a hadoop archive</span><br><span class="line">  classpath            prints the class path needed to get the</span><br><span class="line">  credential           interact with credential providers</span><br><span class="line">                       Hadoop jar and the required libraries</span><br><span class="line">  daemonlog            get/set the log level for each daemon</span><br><span class="line">  s3guard              manage data on S3</span><br><span class="line">  trace                view and modify Hadoop tracing settings</span><br><span class="line"> or</span><br><span class="line">  CLASSNAME            run the class named CLASSNAME</span><br><span class="line"></span><br><span class="line">Most commands print help when invoked w/o parameters.</span><br></pre></td></tr></table></figure>
+<p>具体命令详解：<br>
+<img src="/img/article/hadoop1/hdfs.png" alt="hadoop文件系统"></p>
+<table>
+<thead>
+<tr>
+<th>hdfs dfs -mkdir  -p /user/data</th>
+<th>在hdfs中创建路径</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>hadoop fs -mkdir -p /user/data</td>
+<td></td>
+</tr>
+<tr>
+<td>hdfs dfs -ls /user/data</td>
+<td>显示路径中的文件清单</td>
+</tr>
+<tr>
+<td>hadoop fs -ls /user/data</td>
+<td></td>
+</tr>
+<tr>
+<td>hdfs dfs -put log.txt /user/data</td>
+<td>把log.txt放进/user/data中</td>
+</tr>
+<tr>
+<td>hadoop fs -put log.txt /user/data</td>
+<td></td>
+</tr>
+<tr>
+<td>hdfs dfs -cat /user/data/log.txt</td>
+<td>head</td>
+</tr>
+<tr>
+<td>hadoop fs -cat /user/data/log.txt</td>
+<td>head</td>
+</tr>
+<tr>
+<td>hdfs dfs -get /user/data/log.txt</td>
+<td>从hdfs中取出文件到当地</td>
+</tr>
+<tr>
+<td>hadoop fs -get  /user/data/log.txt</td>
+<td></td>
+</tr>
+<tr>
+<td>hdfs dfs -rm /user/data/log.txt</td>
+<td>删除文件，放到一个地方</td>
+</tr>
+<tr>
+<td>hadoop fs -rm  /user/data/log.txt</td>
+<td></td>
+</tr>
+<tr>
+<td>hdfs dfs -rm –skipTrash /user/data/log.txt</td>
+<td>直接删除文件</td>
+</tr>
+<tr>
+<td>hdfs dfs -rm -r -skipTrash /folder_name</td>
+<td>删除文件夹</td>
+</tr>
+<tr>
+<td>hdfs dfs -test /user/data/log.txt</td>
+<td></td>
+</tr>
+<tr>
+<td>echo $?</td>
+<td>查看存不存在</td>
+</tr>
+<tr>
+<td>hdfs fsck /</td>
+<td>查看集群的详细信息</td>
+</tr>
+<tr>
+<td>hdfs dfs -df -h</td>
+<td>查看集群的硬盘空间情况</td>
+</tr>
+<tr>
+<td>hdfs dfs -du /</td>
+<td>查看每一个目录的硬盘使用情况</td>
+</tr>
+<tr>
+<td>hdfs dfs –copyFromLocal t.txt</td>
+<td></td>
+</tr>
+<tr>
+<td>hdfs://localhost/user/data</td>
+<td>从本地复制文件</td>
+</tr>
+<tr>
+<td>hdfs dfs -copyToLocal /user/data/t.txt tt.txt</td>
+<td>把文件复制到本地</td>
+</tr>
+<tr>
+<td>hdfs dfsadmin -report</td>
+<td>查看当前节点的使用情况</td>
+</tr>
+</tbody>
+</table>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/article/Linux日常使用详解五/" data-toggle="tooltip" data-placement="top" title="Linux日常使用详解五">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share"  data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+  
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#欢迎来到妖精小狗的博客"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">&#x6B22;&#x8FCE;&#x6765;&#x5230;&#x5996;&#x7CBE;&#x5C0F;&#x72D7;&#x7684;&#x535A;&#x5BA2;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#hadoop"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">hadoop</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#hadoop软件"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">hadoop&#x8F6F;&#x4EF6;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#部署"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">&#x90E8;&#x7F72;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#创建用户目录"><span class="toc-nav-number">1.3.1.</span> <span class="toc-nav-text">&#x521B;&#x5EFA;&#x7528;&#x6237;&#xFF0C;&#x76EE;&#x5F55;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#上传压缩包"><span class="toc-nav-number">1.3.2.</span> <span class="toc-nav-text">&#x4E0A;&#x4F20;&#x538B;&#x7F29;&#x5305;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#解压"><span class="toc-nav-number">1.3.3.</span> <span class="toc-nav-text">&#x89E3;&#x538B;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#环境要求"><span class="toc-nav-number">1.3.4.</span> <span class="toc-nav-text">&#x73AF;&#x5883;&#x8981;&#x6C42;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#java"><span class="toc-nav-number">1.3.4.1.</span> <span class="toc-nav-text">java</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#ssh-必须安装"><span class="toc-nav-number">1.3.4.2.</span> <span class="toc-nav-text">ssh &#x5FC5;&#x987B;&#x5B89;&#x88C5;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#java_home-显性配置"><span class="toc-nav-number">1.3.5.</span> <span class="toc-nav-text">JAVA_HOME &#x663E;&#x6027;&#x914D;&#x7F6E;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#配置文件"><span class="toc-nav-number">1.3.6.</span> <span class="toc-nav-text">&#x914D;&#x7F6E;&#x6587;&#x4EF6;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#ssh无密码信任关系"><span class="toc-nav-number">1.3.7.</span> <span class="toc-nav-text">ssh&#x65E0;&#x5BC6;&#x7801;&#x4FE1;&#x4EFB;&#x5173;&#x7CFB;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#环境变量-hadoop"><span class="toc-nav-number">1.3.8.</span> <span class="toc-nav-text">&#x73AF;&#x5883;&#x53D8;&#x91CF; hadoop</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#格式化"><span class="toc-nav-number">1.3.9.</span> <span class="toc-nav-text">&#x683C;&#x5F0F;&#x5316;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#第一次启动"><span class="toc-nav-number">1.3.10.</span> <span class="toc-nav-text">&#x7B2C;&#x4E00;&#x6B21;&#x542F;&#x52A8;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#dn-snn都以jd启动"><span class="toc-nav-number">1.3.11.</span> <span class="toc-nav-text">DN SNN&#x90FD;&#x4EE5;JD&#x542F;&#x52A8;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#官网的参数文件在哪里找"><span class="toc-nav-number">1.3.12.</span> <span class="toc-nav-text">&#x5B98;&#x7F51;&#x7684;&#x53C2;&#x6570;&#x6587;&#x4EF6;&#x5728;&#x54EA;&#x91CC;&#x627E;&#xFF1F;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#节点介绍"><span class="toc-nav-number">1.3.13.</span> <span class="toc-nav-text">&#x8282;&#x70B9;&#x4ECB;&#x7ECD;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#hadoop用到的命令"><span class="toc-nav-number">1.3.14.</span> <span class="toc-nav-text">Hadoop&#x7528;&#x5230;&#x7684;&#x547D;&#x4EE4;</span></a></li></ol></li></ol></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Hadoop" title="Hadoop">Hadoop</a>
+                        
+                          <a class="tag" href="/tags/#安装部署" title="安装部署">安装部署</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'rz'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+<!-- chrome Firefox 中文锚点定位失效-->
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<!-- smooth scroll behavior polyfill  -->
+<script type="text/javascript" src="/js/smoothscroll.js"></script>
+<script>
+        $('#toc').on('click','a',function(a){
+            // var isChrome = window.navigator.userAgent.indexOf("Chrome") !== -1;
+            // console.log(window.navigator.userAgent,isChrome)
+                // if(isChrome) {
+                    // console.log(a.currentTarget.outerHTML);
+                    // console.log($(a.currentTarget).attr("href"));
+                    //跳转到指定锚点
+                    // document.getElementById(a.target.innerText.toLowerCase()).scrollIntoView(true);
+                    document.getElementById($(a.currentTarget).attr("href").replace("#","")).scrollIntoView({behavior: 'smooth' });
+                // }
+        })  
+</script>
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/demonlittledog">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; MX 2019 
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://github.com/demonlittledog/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = 'xxx';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://github.com/demonlittledog/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
