@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Yarn安装部署，以及JPS的正确使用 - 妖精小狗@MX | Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://github.com/demonlittledog/article/Yarn伪分布式安装教程/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/green.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#安装部署" title="安装部署">安装部署</a>
+                            
+                              <a class="tag" href="/tags/#Yarn" title="Yarn">Yarn</a>
+                            
+                              <a class="tag" href="/tags/#jps" title="jps">jps</a>
+                            
+                        </div>
+                        <h1>Yarn安装部署，以及JPS的正确使用</h1>
+                        <h2 class="subheading">Yarn安装部署，JPS的使用，oom-kill的实践，/tmp目录的clean机制以及解决方法。</h2>
+                        <span class="meta">
+                            Posted by MX on
+                            2019-12-01
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">妖精小狗@MX Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h3 id="欢迎来到妖精小狗的博客">欢迎来到妖精小狗的博客</h3>
+<hr>
+<h4 id="yarn伪分布式部署单点部署主从架构">yarn伪分布式部署：单点部署，主从架构</h4>
+<p>ResourceManager<br>
+NodeManager<br>
+<strong>复制出来配置文件：</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD hadoop]$ cp mapred-site.xml.template mapred-site.xml</span><br><span class="line">[mao@JD hadoop]$ vi mapred-site.xml</span><br></pre></td></tr></table></figure>
+<p><strong>添加下面的参数：</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.framework.name<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>yarn<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD hadoop]$ vi yarn-site.xml</span><br></pre></td></tr></table></figure>
+<p><strong>添加参数：</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.aux-services<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>mapreduce_shuffle<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.resourcemanager.webapp.address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>JD:38088<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>注：</strong><br>
+云主机经常出现挖矿、病毒问题，经常攻击yarn的8088端口，为了防止被挖矿，修改端口。<br>
+web界面防火墙开放38088、50070这两个端口，就可以查看网页信息。</p>
+<h4 id="启动yarn">启动yarn</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD hadoop]$  start-yarn.sh</span><br><span class="line">starting yarn daemons</span><br><span class="line">starting resourcemanager, logging to /home/mao/app/hadoop-2.6.0-cdh5.16.2/logs/yarn-mao-resourcemanager-JD.out</span><br><span class="line">JD: starting nodemanager, logging to /home/mao/app/hadoop-2.6.0-cdh5.16.2/logs/yarn-mao-nodemanager-JD.out</span><br><span class="line">[mao@JD hadoop]$ jps</span><br><span class="line">22704 NameNode</span><br><span class="line">22834 DataNode</span><br><span class="line">6051 ResourceManager</span><br><span class="line">6532 Jps</span><br><span class="line">6266 NodeManager</span><br><span class="line">23003 SecondaryNameNode</span><br><span class="line">[mao@JD hadoop]$ netstat -nlp|grep 6051</span><br><span class="line">(Not all processes could be identified, non-owned process info</span><br><span class="line"> will not be shown, you would have to be root to see it all.)</span><br><span class="line">tcp6       0      0 192.168.0.3:38088       :::*                    LISTEN      6051/java           </span><br><span class="line">tcp6       0      0 :::8030                 :::*                    LISTEN      6051/java           </span><br><span class="line">tcp6       0      0 :::8031                 :::*                    LISTEN      6051/java           </span><br><span class="line">tcp6       0      0 :::8032                 :::*                    LISTEN      6051/java           </span><br><span class="line">tcp6       0      0 :::8033                 :::*                    LISTEN      6051/java</span><br></pre></td></tr></table></figure>
+<p><strong><em>打开web界面：JD:38088</em></strong></p>
+<h4 id="wordcount-单词统计">wordcount 单词统计</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD app]$  find ./ -name '*example*.jar'</span><br><span class="line">./hadoop-2.6.0-cdh5.16.2/share/hadoop/mapreduce1/hadoop-examples-2.6.0-mr1-cdh5.16.2.jar</span><br><span class="line">./hadoop-2.6.0-cdh5.16.2/share/hadoop/mapreduce2/sources/hadoop-mapreduce-examples-2.6.0-cdh5.16.2-test-sources.jar</span><br><span class="line">./hadoop-2.6.0-cdh5.16.2/share/hadoop/mapreduce2/sources/hadoop-mapreduce-examples-2.6.0-cdh5.16.2-sources.jar</span><br><span class="line">./hadoop-2.6.0-cdh5.16.2/share/hadoop/mapreduce2/hadoop-mapreduce-examples-2.6.0-cdh5.16.2.jar </span><br><span class="line">[mao@JD hadoop]$ hadoop jar ./share/hadoop/mapreduce2/hadoop-mapreduce-examples-2.6.0-cdh5.16.2.jar </span><br><span class="line">An example program must be given as the first argument.</span><br><span class="line">Valid program names are:</span><br><span class="line">  aggregatewordcount: An Aggregate based map/reduce program that counts the words in the input files.</span><br><span class="line">  aggregatewordhist: An Aggregate based map/reduce program that computes the histogram of the words in the input files.</span><br><span class="line">  bbp: A map/reduce program that uses Bailey-Borwein-Plouffe to compute exact digits of Pi.</span><br><span class="line">  dbcount: An example job that count the pageview counts from a database.</span><br><span class="line">  distbbp: A map/reduce program that uses a BBP-type formula to compute exact bits of Pi.</span><br><span class="line">  grep: A map/reduce program that counts the matches of a regex in the input.</span><br><span class="line">  join: A job that effects a join over sorted, equally partitioned datasets</span><br><span class="line">  multifilewc: A job that counts words from several files.</span><br><span class="line">  pentomino: A map/reduce tile laying program to find solutions to pentomino problems.</span><br><span class="line">  pi: A map/reduce program that estimates Pi using a quasi-Monte Carlo method.</span><br><span class="line">  randomtextwriter: A map/reduce program that writes 10GB of random textual data per node.</span><br><span class="line">  randomwriter: A map/reduce program that writes 10GB of random data per node.</span><br><span class="line">  secondarysort: An example defining a secondary sort to the reduce.</span><br><span class="line">  sort: A map/reduce program that sorts the data written by the random writer.</span><br><span class="line">  sudoku: A sudoku solver.</span><br><span class="line">  teragen: Generate data for the terasort</span><br><span class="line">  terasort: Run the terasort</span><br><span class="line">  teravalidate: Checking results of terasort</span><br><span class="line">  wordcount: A map/reduce program that counts the words in the input files.</span><br><span class="line">  wordmean: A map/reduce program that counts the average length of the words in the input files.</span><br><span class="line">  wordmedian: A map/reduce program that counts the median length of the words in the input files.</span><br><span class="line">  wordstandarddeviation: A map/reduce program that counts the standard deviation of the length of the words in the input files. </span><br><span class="line">[mao@JD hadoop]$ hadoop jar ./share/hadoop/mapreduce2/hadoop-mapreduce-examples-2.6.0-cdh5.16.2.jar wordcount</span><br><span class="line">Usage: wordcount &lt;in&gt; [&lt;in&gt;...] &lt;out&gt;</span><br><span class="line">[mao@JD data]$ vi 1.log</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">ruozedata</span><br><span class="line">ruoze</span><br><span class="line">jepson</span><br><span class="line">huhu</span><br><span class="line">ye</span><br><span class="line">tunan</span><br><span class="line">afei</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">3</span><br><span class="line">2</span><br><span class="line">1</span><br><span class="line">a b c a a aaaa bcd</span><br><span class="line">ruoze jepson</span><br><span class="line">~</span><br><span class="line">~</span><br><span class="line"><span class="string">"1.log"</span> [New] 15L, 86C written</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD data]$ hdfs dfs -mkdir /wordcount/input</span><br><span class="line">19/12/02 19:34:32 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable</span><br><span class="line">mkdir: `/wordcount/input': No such file or directory</span><br><span class="line">[mao@JD data]$ hdfs dfs -mkdir-p /wordcount/input</span><br><span class="line">-mkdir-p: Unknown command</span><br><span class="line">[mao@JD data]$ hdfs dfs -mkdir -p /wordcount/input</span><br><span class="line">19/12/02 19:34:50 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable</span><br><span class="line">[mao@JD data]$ hdfs dfs -put 1.log /wordcount/input</span><br><span class="line">19/12/02 19:35:38 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable</span><br><span class="line">[mao@JD data]$ hdfs dfs -ls /wordcount/input</span><br><span class="line">19/12/02 19:35:47 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable</span><br><span class="line">Found 1 items</span><br><span class="line">-rw-r--r--   1 mao supergroup         87 2019-12-02 19:35 /wordcount/input/1.log</span><br></pre></td></tr></table></figure>
+<p><strong>执行命令：</strong><br>
+hadoop jar /home/mao/app/hadoop/share/hadoop/mapreduce2/hadoop-mapreduce-examples-2.6.0-cdh5.16.2.jar wordcount /wordcount/input /wordcount/output1<br>
+<img src="/img/article/hadoop2/yarn_web.jpg" alt="yarn网页"><br>
+<em>RUNNING	        UNDEFINED<br>
+FINISHED	            SUCCEEDED<br>
+这些标识符一定要记住</em></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD data]$ hadoop fs -ls /wordcount/output1</span><br><span class="line">19/12/02 19:43:39 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable</span><br><span class="line">Found 2 items</span><br><span class="line">-rw-r--r--   1 mao supergroup          0 2019-12-02 19:40 /wordcount/output1/_SUCCESS</span><br><span class="line">-rw-r--r--   1 mao supergroup         93 2019-12-02 19:40 /wordcount/output1/part-r-00000 </span><br><span class="line">[mao@JD data]$ hadoop fs -cat  /wordcount/output1/part-r-00000</span><br><span class="line">19/12/02 19:44:24 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable</span><br><span class="line">1	2</span><br><span class="line">2	2</span><br><span class="line">3	2</span><br><span class="line">a	3</span><br><span class="line">aaaa	1</span><br><span class="line">afei	1</span><br><span class="line">b	1</span><br><span class="line">bcd	1</span><br><span class="line">c	1</span><br><span class="line">huhu	1</span><br><span class="line">jepson	2</span><br><span class="line">ruoze	2</span><br><span class="line">ruozedata	1</span><br><span class="line">tunan	1</span><br><span class="line">ye	1</span><br></pre></td></tr></table></figure>
+<h4 id="以前的大数据的框架">以前的大数据的框架：</h4>
+<p><strong>HDFS：</strong><br>
+进行存储，计算结果又返回存储HDFS<br>
+<strong>MR jar包：</strong><br>
+包含计算逻辑<br>
+<strong>Yarn：</strong><br>
+负责资源+作业调度</p>
+<h4 id="现在的大数据的框架">现在的大数据的框架</h4>
+<p><strong>存储：</strong><br>
+HDFS分布式文件系统：Hive、HBase、Kudu、Cassandra（就可以看成MapReduce）<br>
+<strong>计算：</strong><br>
+MR、Hivesql、Spark、Flink<br>
+<strong>资源+作业调度 ：</strong><br>
+Yarn（1家）</p>
+<h4 id="修改机器名称hostnamectl">修改机器名称（hostnamectl）</h4>
+<p><strong>centos7.x：</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD data]$ hostnamectl</span><br><span class="line">   Static hostname: JD</span><br><span class="line">         Icon name: computer-vm</span><br><span class="line">           Chassis: vm</span><br><span class="line">        Machine ID: 983e7d6ed0624a2499003862230af382</span><br><span class="line">           Boot ID: 4feac454bca443919df14197cf52aa92</span><br><span class="line">    Virtualization: kvm</span><br><span class="line">  Operating System: CentOS Linux 7 (Core)</span><br><span class="line">       CPE OS Name: cpe:/o:centos:centos:7</span><br><span class="line">            Kernel: Linux 3.10.0-327.el7.x86_64</span><br><span class="line">      Architecture: x86-64</span><br><span class="line">[mao@JD data]$ hostnamectl --help</span><br><span class="line">hostnamectl [OPTIONS...] COMMAND ...</span><br><span class="line"></span><br><span class="line">Query or change system hostname.</span><br><span class="line"></span><br><span class="line">  -h --help              Show this help</span><br><span class="line">     --version           Show package version</span><br><span class="line">     --no-ask-password   Do not prompt for password</span><br><span class="line">  -H --host=[USER@]HOST  Operate on remote host</span><br><span class="line">  -M --machine=CONTAINER Operate on local container</span><br><span class="line">     --transient         Only set transient hostname</span><br><span class="line">     --static            Only set static hostname</span><br><span class="line">     --pretty            Only set pretty hostname</span><br><span class="line"></span><br><span class="line">Commands:</span><br><span class="line">  status                 Show current hostname settings</span><br><span class="line">  set-hostname NAME      Set system hostname</span><br><span class="line">  set-icon-name NAME     Set icon name for host</span><br><span class="line">  set-chassis NAME       Set chassis type for host</span><br><span class="line">  set-deployment NAME    Set deployment environment for host</span><br><span class="line">  set-location NAME      Set location for host</span><br><span class="line">[root@JD data]$ hostnamectl set-hostname mao01</span><br><span class="line">[root@mao01~]# cat /etc/hostname </span><br><span class="line">mao01</span><br><span class="line">[root@mao01~]# vi /etc/hosts</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4</span><br><span class="line">::1         localhost localhost.localdomain localhost6 localhost6.localdomain6</span><br><span class="line"></span><br><span class="line">192.168.0.3 mao01</span><br></pre></td></tr></table></figure>
+<h4 id="jps真正使用">jps真正使用</h4>
+<h5 id="位置在哪">位置在哪</h5>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD data]$ which jps</span><br><span class="line">/usr/java/jdk1.8.0_201/bin/jps </span><br><span class="line">[mao@JD data]$ jps</span><br><span class="line">22704 NameNode</span><br><span class="line">22834 DataNode</span><br><span class="line">6051 ResourceManager</span><br><span class="line">6266 NodeManager</span><br><span class="line">23003 SecondaryNameNode</span><br><span class="line">1375 Jps </span><br><span class="line">[mao@JD data]$ jps --help</span><br><span class="line">illegal argument: --help</span><br><span class="line">usage: jps [-help]</span><br><span class="line">       jps [-q] [-mlvV] [&lt;hostid&gt;]</span><br><span class="line"></span><br><span class="line">Definitions:</span><br><span class="line">    &lt;hostid&gt;:      &lt;hostname&gt;[:&lt;port&gt;]</span><br><span class="line">[mao@JD data]$ jps -l</span><br><span class="line">22704 org.apache.hadoop.hdfs.server.namenode.NameNode</span><br><span class="line">22834 org.apache.hadoop.hdfs.server.datanode.DataNode</span><br><span class="line">6051 org.apache.hadoop.yarn.server.resourcemanager.ResourceManager</span><br><span class="line">1511 sun.tools.jps.Jps</span><br><span class="line">6266 org.apache.hadoop.yarn.server.nodemanager.NodeManager</span><br><span class="line">23003 org.apache.hadoop.hdfs.server.namenode.SecondaryNameNode</span><br></pre></td></tr></table></figure>
+<h5 id="对应的进程的标识文件在哪">对应的进程的标识文件在哪？</h5>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">[root@JD ~]# cd /tmp/</span><br><span class="line">[root@JD tmp]# ll</span><br><span class="line">total 20</span><br><span class="line">drwxrwxr-x 4 mao  mao  35 Dec  2 13:18 hadoop-mao</span><br><span class="line">-rw-rw-r-- 1 mao  mao   6 Dec  2 00:40 hadoop-mao-datanode.pid</span><br><span class="line">-rw-rw-r-- 1 mao  mao   6 Dec  2 00:40 hadoop-mao-namenode.pid</span><br><span class="line">-rw-rw-r-- 1 mao  mao   6 Dec  2 00:40 hadoop-mao-secondarynamenode.pid</span><br><span class="line">drwxr-xr-x 2 mao  mao  64 Dec  2 19:56 hsperfdata_mao</span><br><span class="line">drwxrwxr-x 4 mao  mao  30 Dec  2 00:40 Jetty_0_0_0_0_50070_hdfs____w2cu08</span><br><span class="line">drwxrwxr-x 4 mao  mao  30 Dec  2 00:23 Jetty_0_0_0_0_50090_secondary____y6aanv</span><br><span class="line">drwxrwxr-x 5 mao  mao  43 Dec  2 13:18 Jetty_0_0_0_0_8042_node____19tj0x</span><br><span class="line">drwxrwxr-x 5 mao  mao  43 Dec  2 13:18 Jetty_JD_38088_cluster____.c3kytf</span><br><span class="line">drwxrwxr-x 4 mao  mao  30 Dec  2 00:40 Jetty_JD_50090_secondary____.fxwz26</span><br><span class="line">drwxrwxr-x 4 mao  mao  30 Dec  2 00:40 Jetty_localhost_37412_datanode____dbgau0</span><br><span class="line">drwxrwxr-x 4 mao  mao  30 Dec  2 00:23 Jetty_localhost_44428_datanode____njy8kh</span><br><span class="line">---x-wx--- 1 root root  0 Aug  8  2018 pcap_compile.lock</span><br><span class="line">---------- 1 root root  0 Aug  9  2018 signal.lock</span><br><span class="line">drwx------ 3 root root 16 Nov 25 15:11 systemd-private-4feac454bca443919df14197cf52aa92-ntpd.service-Fs0KHF</span><br><span class="line">-rw-rw-r-- 1 mao  mao   5 Dec  2 13:18 yarn-mao-nodemanager.pid</span><br><span class="line">-rw-rw-r-- 1 mao  mao   5 Dec  2 13:18 yarn-mao-resourcemanager.pid</span><br><span class="line">[root@JD tmp]# cd hsperfdata_mao/</span><br><span class="line">[root@JD hsperfdata_mao]# ll</span><br><span class="line">total 160</span><br><span class="line">-rw------- 1 mao mao 32768 Dec  2 19:58 22704</span><br><span class="line">-rw------- 1 mao mao 32768 Dec  2 19:58 22834</span><br><span class="line">-rw------- 1 mao mao 32768 Dec  2 19:58 23003</span><br><span class="line">-rw------- 1 mao mao 32768 Dec  2 19:58 6051</span><br><span class="line">-rw------- 1 mao mao 32768 Dec  2 19:59 6266</span><br></pre></td></tr></table></figure>
+<p><strong><em>进程是mao用户启动的所以存放在/tmp/hsperfdata_mao<br>
+所以进程都是存放在对应用户的/tmp/hsperfdata_username文件夹下</em></strong></p>
+<h5 id="作用">作用</h5>
+<p><strong>查询 pid 进程名称</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD data]$ jps</span><br><span class="line">22704 NameNode</span><br><span class="line">22834 DataNode</span><br><span class="line">6051 ResourceManager</span><br><span class="line">6266 NodeManager</span><br><span class="line">23003 SecondaryNameNode</span><br><span class="line">1375 Jps </span><br><span class="line">[root@JD hsperfdata_mao]# cat 22704 </span><br><span class="line">˾@󿿊𼀠󈂂0sun.rt._sync_Inflations.8J0sun.rt._sync_Deflations'@J8sun.rt._sync_ContendedLockAttempts]8J0sun.rt._sync_FutileWakeups0J(sun.rt._sync_Parks.@J8sun.rt._sync_EmptyNotifications8J0sun.rt._sync_Notificationsց8J0sun.rt._sync_SlowEnter8J0sun.rt._sync_SlowExit8J0sun.rt._sync_SlowNotify8J0sun.rt._sync_SlowNotifyAll8J0sun.rt._sync_FailedSpins@J8sun.rt._sync_SuccessfulSpins8J0sun.rt._sync_PrivateA8J0sun.rt._sync_PrivateB@J8sun.rt._sync_MonInCirculation8J0sun.rt._sync_MonScavenged8J0sun.rt._sync_MonExtant8J0sun.rt.createVmBeginTime4ʕn8J0sun.rt.createVmEndTimeaʕn8J0sun.rt.vmInitDoneTimeLʕn8J0java.threads.started0J(java.threads.live$8J0java.threads.livePeak)0J(java.threads.daemon8J0sun.rt.safepointSyncTime0J(sun.rt.sa8J0sun.rt</span><br></pre></td></tr></table></figure>
+<h5 id="process-information-unavailablecdh中经常出现">process information unavailable（CDH中经常出现）</h5>
+<p><strong>进程所属的用户去执行jps命令，只显示自己的相关的进程信息</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@JD hsperfdata_mao]# su ruoze</span><br><span class="line">[ruoze@JD hsperfdata_mao]$ jps</span><br><span class="line">2894 Jps</span><br></pre></td></tr></table></figure>
+<p><strong>root用户看所有的，但是显示不可用</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@JD hsperfdata_mao]# jps</span><br><span class="line">22704  process information unavailable</span><br><span class="line">3073  process information unavailable</span><br><span class="line">22834  process information unavailable</span><br><span class="line">6051  process information unavailable</span><br><span class="line">6266  process information unavailable</span><br><span class="line">23003  process information unavailable</span><br></pre></td></tr></table></figure>
+<p><strong><em>以后在生产中，一定要用任务所属的用户来查看进程，如果不知道执行的人就使用sudo来执行。</em></strong></p>
+<h5 id="真假判断ps-ef-grep-xxxx-grep-v-grep-wc-l来查看有几条">真假判断（ps -ef | grep XXXX | grep -v grep | wc –l来查看有几条）</h5>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD ~]$ ps -ef | grep 31488</span><br><span class="line">mao      23775 23690  0 22:23 pts/0    00:00:00 grep --color=auto 31488</span><br><span class="line">[mao@JD ~]$ ps -ef|grep 31488 | grep -v grep | wc -l</span><br><span class="line">0</span><br><span class="line">[mao@JD ~]$ ps -ef|grep 22704 | grep -v grep | wc -l</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<h5 id="tmphsperfdata_username文件夹中的文件的增删不影响进程的启动和停止">/tmp/hsperfdata_username文件夹中的文件的增删，不影响进程的启动和停止</h5>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD ~]$ jps</span><br><span class="line">22704 NameNode</span><br><span class="line">22834 DataNode</span><br><span class="line">6051 ResourceManager</span><br><span class="line">6266 NodeManager</span><br><span class="line">23003 SecondaryNameNode</span><br><span class="line">23711 Jps</span><br><span class="line">[mao@JD ~]$ cd /tmp/</span><br><span class="line">[mao@JD tmp]$ cd hsperfdata_mao/</span><br><span class="line">[mao@JD hsperfdata_mao]$ ll</span><br><span class="line">total 160</span><br><span class="line">-rw------- 1 mao mao 32768 Dec  2 22:27 22704</span><br><span class="line">-rw------- 1 mao mao 32768 Dec  2 22:27 22834</span><br><span class="line">-rw------- 1 mao mao 32768 Dec  2 22:27 23003</span><br><span class="line">-rw------- 1 mao mao 32768 Dec  2 22:27 6051</span><br><span class="line">-rw------- 1 mao mao 32768 Dec  2 22:27 6266</span><br><span class="line">[mao@JD hsperfdata_mao]$ rm -r -f 22704 </span><br><span class="line">[mao@JD hsperfdata_mao]$ jps</span><br><span class="line">22834 DataNode</span><br><span class="line">6051 ResourceManager</span><br><span class="line">6266 NodeManager</span><br><span class="line">23003 SecondaryNameNode</span><br><span class="line">24508 Jps</span><br></pre></td></tr></table></figure>
+<p><em>移走/tmp/hsperfdata_mao/中的一个文件夹，使用jps发现删除的那个文件夹代表的jps进程丢失，说明jps就是读相应的文件，说明用jps维护shell脚本是不好用的，尽量使用ps。<br>
+而且关闭hdfs的命令使用正常，说明jps并不影响进程的正常使用。</em></p>
+<h5 id="linux机制-oom-kill机制">Linux机制 oom-kill机制</h5>
+<p><strong>free -m 查看机器的内存情况</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD hsperfdata_mao]$ free -m</span><br><span class="line">              total        used        free      shared  buff/cache   available</span><br><span class="line">Mem:          15887        2236       10941         163        2708       13228</span><br><span class="line">Swap:             0           0           0</span><br></pre></td></tr></table></figure>
+<p><strong>某个进程memory使用过高，机器为了保护自己，放置夯住，就会去杀死内存使用最多的进程。</strong><br>
+<em>然而大数据使用内存情况很多。</em></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD hsperfdata_mao]$ top</span><br><span class="line">top - 22:44:25 up 7 days,  7:32,  1 user,  load average: 0.00, 0.01, 0.05</span><br><span class="line">Tasks: 127 total,   1 running, 126 sleeping,   0 stopped,   0 zombie</span><br><span class="line"><span class="meta">%</span><span class="bash">Cpu(s):  0.1 us,  0.1 sy,  0.0 ni, 99.8 id,  0.0 wa,  0.0 hi,  0.1 si,  0.0 st</span></span><br><span class="line">KiB Mem : 16268360 total, 11190956 free,  2303464 used,  2773940 buff/cache</span><br><span class="line">KiB Swap:        0 total,        0 free,        0 used. 13532516 avail Mem </span><br><span class="line"></span><br><span class="line">  PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND                           </span><br><span class="line"> 6051 mao       20   0 3009724 477872  19372 S   0.3  2.9   2:05.68 java                              </span><br><span class="line">22704 mao       20   0 2838788 465924  19280 S   0.3  2.9   1:06.79 java                              </span><br><span class="line">23003 mao       20   0 2793340 259872  19208 S   0.3  1.6   0:38.38 java                              </span><br><span class="line">    1 root      20   0  190928   3816   2520 S   0.0  0.0   1:32.09 systemd                           </span><br><span class="line">    2 root      20   0       0      0      0 S   0.0  0.0   0:00.04 kthreadd                          </span><br><span class="line">[mao@JD hsperfdata_mao]$ ps -ef|grep 23003</span><br><span class="line">mao      23003     1  0 00:40 ?        00:00:38 /usr/java/jdk1.8.0_201/bin/java -Dproc_secondarynamenode -Xmx1000m -Djava.net.preferIPv4Stack=true -Dhadoop.log.dir=/home/mao/app/hadoop-2.6.0-cdh5.16.2/logs -Dhadoop.log.file=hadoop.log -Dhadoop.home.dir=/home/mao/app/hadoop-2.6.0-cdh5.16.2 -Dhadoop.id.str=mao -Dhadoop.root.logger=INFO,console -Djava.library.path=/home/mao/app/hadoop-2.6.0-cdh5.16.2/lib/native -Dhadoop.policy.file=hadoop-policy.xml -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Stack=true -Dhadoop.log.dir=/home/mao/app/hadoop-2.6.0-cdh5.16.2/logs -Dhadoop.log.file=hadoop-mao-secondarynamenode-JD.log -Dhadoop.home.dir=/home/mao/app/hadoop-2.6.0-cdh5.16.2 -Dhadoop.id.str=mao -Dhadoop.root.logger=INFO,RFA -Djava.library.path=/home/mao/app/hadoop-2.6.0-cdh5.16.2/lib/native -Dhadoop.policy.file=hadoop-policy.xml -Djava.net.preferIPv4Stack=true -Dhadoop.security.logger=INFO,RFAS -Dhdfs.audit.logger=INFO,NullAppender -Dhadoop.security.logger=INFO,RFAS -Dhdfs.audit.logger=INFO,NullAppender -Dhadoop.security.logger=INFO,RFAS -Dhdfs.audit.logger=INFO,NullAppender -Dhadoop.security.logger=INFO,RFAS org.apache.hadoop.hdfs.server.namenode.SecondaryNameNode</span><br><span class="line">mao      26850 23690  0 22:44 pts/0    00:00:00 grep --color=auto 23003</span><br></pre></td></tr></table></figure>
+<p><strong>kill log info 断了，cat log找error</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD hsperfdata_mao]$ kill -9 23003</span><br></pre></td></tr></table></figure>
+<p><em>使用jps发现服务已经停了</em></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD hsperfdata_mao]$ jps</span><br><span class="line">22834 DataNode</span><br><span class="line">27154 Jps</span><br><span class="line">6051 ResourceManager</span><br><span class="line">6266 NodeManager</span><br></pre></td></tr></table></figure>
+<p><em>但是查看tmp文件夹发现hadoop-mao-secondarynamenode.pid还在</em></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD hsperfdata_mao]$ cd /tmp/</span><br><span class="line">[mao@JD tmp]$ ll</span><br><span class="line">total 20</span><br><span class="line">drwxrwxr-x 4 mao   mao   35 Dec  2 13:18 hadoop-mao</span><br><span class="line">-rw-rw-r-- 1 mao   mao    6 Dec  2 00:40 hadoop-mao-datanode.pid</span><br><span class="line">-rw-rw-r-- 1 mao   mao    6 Dec  2 00:40 hadoop-mao-namenode.pid</span><br><span class="line">-rw-rw-r-- 1 mao   mao    6 Dec  2 00:40 hadoop-mao-secondarynamenode.pid</span><br><span class="line">drwxr-xr-x 2 mao   mao   40 Dec  2 22:47 hsperfdata_mao</span><br><span class="line">drwxr-xr-x 2 root  root   6 Dec  2 22:15 hsperfdata_root</span><br><span class="line">drwxr-xr-x 2 ruoze ruoze  6 Dec  2 20:05 hsperfdata_ruoze</span><br><span class="line">drwxrwxr-x 4 mao   mao   30 Dec  2 00:40 Jetty_0_0_0_0_50070_hdfs____w2cu08</span><br><span class="line">drwxrwxr-x 4 mao   mao   30 Dec  2 00:23 Jetty_0_0_0_0_50090_secondary____y6aanv</span><br><span class="line">drwxrwxr-x 5 mao   mao   43 Dec  2 13:18 Jetty_0_0_0_0_8042_node____19tj0x</span><br><span class="line">drwxrwxr-x 5 mao   mao   43 Dec  2 13:18 Jetty_JD_38088_cluster____.c3kytf</span><br><span class="line">drwxrwxr-x 4 mao   mao   30 Dec  2 00:40 Jetty_JD_50090_secondary____.fxwz26</span><br><span class="line">drwxrwxr-x 4 mao   mao   30 Dec  2 00:40 Jetty_localhost_37412_datanode____dbgau0</span><br><span class="line">drwxrwxr-x 4 mao   mao   30 Dec  2 00:23 Jetty_localhost_44428_datanode____njy8kh</span><br><span class="line">---x-wx--- 1 root  root   0 Aug  8  2018 pcap_compile.lock</span><br><span class="line">---------- 1 root  root   0 Aug  9  2018 signal.lock</span><br><span class="line">drwx------ 3 root  root  16 Nov 25 15:11 systemd-private-4feac454bca443919df14197cf52aa92-ntpd.service-Fs0KHF</span><br><span class="line">-rw-rw-r-- 1 mao   mao    5 Dec  2 13:18 yarn-mao-nodemanager.pid</span><br><span class="line">-rw-rw-r-- 1 mao   mao    5 Dec  2 13:18 yarn-mao-resourcemanager.pid</span><br></pre></td></tr></table></figure>
+<p><em>进入相应的用户文件夹下，发现文件也在</em></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD tmp]$ cd hsperfdata_mao/</span><br><span class="line">[mao@JD hsperfdata_mao]$ ll</span><br><span class="line">total 160</span><br><span class="line">-rw------- 1 mao mao 32768 Dec  2 22:27 22704</span><br><span class="line">-rw------- 1 mao mao 32768 Dec  2 22:27 22834</span><br><span class="line">-rw------- 1 mao mao 32768 Dec  2 22:27 23003</span><br><span class="line">-rw------- 1 mao mao 32768 Dec  2 22:27 6051</span><br><span class="line">-rw------- 1 mao mao 32768 Dec  2 22:27 6266</span><br></pre></td></tr></table></figure>
+<p><em>再次启动HDFS</em></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD tmp]$ start-dfs.sh</span><br><span class="line">19/12/02 22:52:23 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable</span><br><span class="line">Starting namenodes on [JD]</span><br><span class="line">JD: namenode running as process 22704. Stop it first.</span><br><span class="line">JD: datanode running as process 22834. Stop it first.</span><br><span class="line">Starting secondary namenodes [JD]</span><br><span class="line">JD: starting secondarynamenode, logging to /home/mao/app/hadoop-2.6.0-cdh5.16.2/logs/hadoop-mao-secondarynamenode-JD.out</span><br><span class="line">19/12/02 22:52:29 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable</span><br></pre></td></tr></table></figure>
+<p><em>使用jps发现pid改变了</em></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD tmp]$ jps</span><br><span class="line">28320 SecondaryNameNode</span><br><span class="line">22834 DataNode</span><br><span class="line">6051 ResourceManager</span><br><span class="line">28870 Jps</span><br><span class="line">6266 NodeManager</span><br></pre></td></tr></table></figure>
+<p><em>但是此时日志文件并没有记录；以后如果发现进程kill了一定要想到linux的oom机制</em><br>
+<strong>意识：</strong><br>
+<em>一个进程被kill，此时的log日志就断了；如果我们去查看log日志就会发现没有错误信息<br>
+free –m<br>
+所以我们应该查看的文件是/var/log/messages<br>
+cat /var/log/messages | grep oom</em></p>
+<h5 id="linux的tmp清理机制">linux的/tmp清理机制</h5>
+<p><strong>在Linux系统中/tmp文件夹里是存放临时文件的，在一定的时间内会被清理。默认是30天/etc/cron.daily/tmpwatch这个文件的作用就是删除/tmp目录下非规则且没有访问的文件文件夹。<br>
+所以我们一般把tmp的文件不放到系统的文件夹下，在用户的文件夹中新建一个文件夹，放日志文件</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD hadoop]$ vi hadoop-env.sh </span><br><span class="line">export HADOOP_PID_DIR=/home/mao/tmp</span><br><span class="line">[mao@JD hadoop]$ vi yarn-env.sh </span><br><span class="line">export YARN_PID_DIR=/home/mao/tmp</span><br></pre></td></tr></table></figure>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/article/Hadoop伪分布式安装教程/" data-toggle="tooltip" data-placement="top" title="Hadoop伪分布式安装教程，以及基本命令">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share"  data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+  
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#欢迎来到妖精小狗的博客"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">&#x6B22;&#x8FCE;&#x6765;&#x5230;&#x5996;&#x7CBE;&#x5C0F;&#x72D7;&#x7684;&#x535A;&#x5BA2;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#yarn伪分布式部署单点部署主从架构"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">yarn&#x4F2A;&#x5206;&#x5E03;&#x5F0F;&#x90E8;&#x7F72;&#xFF1A;&#x5355;&#x70B9;&#x90E8;&#x7F72;&#xFF0C;&#x4E3B;&#x4ECE;&#x67B6;&#x6784;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#启动yarn"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">&#x542F;&#x52A8;yarn</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#wordcount-单词统计"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">wordcount &#x5355;&#x8BCD;&#x7EDF;&#x8BA1;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#以前的大数据的框架"><span class="toc-nav-number">1.4.</span> <span class="toc-nav-text">&#x4EE5;&#x524D;&#x7684;&#x5927;&#x6570;&#x636E;&#x7684;&#x6846;&#x67B6;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#现在的大数据的框架"><span class="toc-nav-number">1.5.</span> <span class="toc-nav-text">&#x73B0;&#x5728;&#x7684;&#x5927;&#x6570;&#x636E;&#x7684;&#x6846;&#x67B6;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#修改机器名称hostnamectl"><span class="toc-nav-number">1.6.</span> <span class="toc-nav-text">&#x4FEE;&#x6539;&#x673A;&#x5668;&#x540D;&#x79F0;&#xFF08;hostnamectl&#xFF09;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#jps真正使用"><span class="toc-nav-number">1.7.</span> <span class="toc-nav-text">jps&#x771F;&#x6B63;&#x4F7F;&#x7528;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#位置在哪"><span class="toc-nav-number">1.7.1.</span> <span class="toc-nav-text">&#x4F4D;&#x7F6E;&#x5728;&#x54EA;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#对应的进程的标识文件在哪"><span class="toc-nav-number">1.7.2.</span> <span class="toc-nav-text">&#x5BF9;&#x5E94;&#x7684;&#x8FDB;&#x7A0B;&#x7684;&#x6807;&#x8BC6;&#x6587;&#x4EF6;&#x5728;&#x54EA;&#xFF1F;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#作用"><span class="toc-nav-number">1.7.3.</span> <span class="toc-nav-text">&#x4F5C;&#x7528;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#process-information-unavailablecdh中经常出现"><span class="toc-nav-number">1.7.4.</span> <span class="toc-nav-text">process information unavailable&#xFF08;CDH&#x4E2D;&#x7ECF;&#x5E38;&#x51FA;&#x73B0;&#xFF09;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#真假判断ps-ef-grep-xxxx-grep-v-grep-wc-l来查看有几条"><span class="toc-nav-number">1.7.5.</span> <span class="toc-nav-text">&#x771F;&#x5047;&#x5224;&#x65AD;&#xFF08;ps -ef | grep XXXX | grep -v grep | wc &#x2013;l&#x6765;&#x67E5;&#x770B;&#x6709;&#x51E0;&#x6761;&#xFF09;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#tmphsperfdata_username文件夹中的文件的增删不影响进程的启动和停止"><span class="toc-nav-number">1.7.6.</span> <span class="toc-nav-text">/tmp/hsperfdata_username&#x6587;&#x4EF6;&#x5939;&#x4E2D;&#x7684;&#x6587;&#x4EF6;&#x7684;&#x589E;&#x5220;&#xFF0C;&#x4E0D;&#x5F71;&#x54CD;&#x8FDB;&#x7A0B;&#x7684;&#x542F;&#x52A8;&#x548C;&#x505C;&#x6B62;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#linux机制-oom-kill机制"><span class="toc-nav-number">1.7.7.</span> <span class="toc-nav-text">Linux&#x673A;&#x5236; oom-kill&#x673A;&#x5236;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#linux的tmp清理机制"><span class="toc-nav-number">1.7.8.</span> <span class="toc-nav-text">linux&#x7684;/tmp&#x6E05;&#x7406;&#x673A;&#x5236;</span></a></li></ol></li></ol></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#安装部署" title="安装部署">安装部署</a>
+                        
+                          <a class="tag" href="/tags/#Yarn" title="Yarn">Yarn</a>
+                        
+                          <a class="tag" href="/tags/#jps" title="jps">jps</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'rz'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+<!-- chrome Firefox 中文锚点定位失效-->
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<!-- smooth scroll behavior polyfill  -->
+<script type="text/javascript" src="/js/smoothscroll.js"></script>
+<script>
+        $('#toc').on('click','a',function(a){
+            // var isChrome = window.navigator.userAgent.indexOf("Chrome") !== -1;
+            // console.log(window.navigator.userAgent,isChrome)
+                // if(isChrome) {
+                    // console.log(a.currentTarget.outerHTML);
+                    // console.log($(a.currentTarget).attr("href"));
+                    //跳转到指定锚点
+                    // document.getElementById(a.target.innerText.toLowerCase()).scrollIntoView(true);
+                    document.getElementById($(a.currentTarget).attr("href").replace("#","")).scrollIntoView({behavior: 'smooth' });
+                // }
+        })  
+</script>
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/demonlittledog">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; MX 2019 
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://github.com/demonlittledog/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = 'xxx';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://github.com/demonlittledog/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
