@@ -18,7 +18,7 @@
         
     </title>
 
-    <link rel="canonical" href="https://github.com/demonlittledog/article/Yarn伪分布式安装教程/">
+    <link rel="canonical" href="https://github.com/demonlittledog/article/10. Yarn伪分布式安装教程/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -88,9 +88,9 @@
                     <div class="post-heading">
                         <div class="tags">
                             
-                              <a class="tag" href="/tags/#安装部署" title="安装部署">安装部署</a>
-                            
                               <a class="tag" href="/tags/#Yarn" title="Yarn">Yarn</a>
+                            
+                              <a class="tag" href="/tags/#安装部署" title="安装部署">安装部署</a>
                             
                               <a class="tag" href="/tags/#jps" title="jps">jps</a>
                             
@@ -313,6 +313,13 @@ cat /var/log/messages | grep oom</em></p>
 <p><strong>在Linux系统中/tmp文件夹里是存放临时文件的，在一定的时间内会被清理。默认是30天/etc/cron.daily/tmpwatch这个文件的作用就是删除/tmp目录下非规则且没有访问的文件文件夹。<br>
 所以我们一般把tmp的文件不放到系统的文件夹下，在用户的文件夹中新建一个文件夹，放日志文件</strong></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD hadoop]$ vi hadoop-env.sh </span><br><span class="line">export HADOOP_PID_DIR=/home/mao/tmp</span><br><span class="line">[mao@JD hadoop]$ vi yarn-env.sh </span><br><span class="line">export YARN_PID_DIR=/home/mao/tmp</span><br></pre></td></tr></table></figure>
+<p><strong>具体实践：</strong><br>
+<em>HDFS的存储目录/tmp有定时清理机制，为了防止被清理使用如下方法</em><br>
+首先创建/home/mao/tmp<br>
+修改权限成为chmod -R 777 /home/mao/tmp<br>
+复制文件mv /tmp/hadoop-ruoze/dfs /home/ruoze/tmp/<br>
+去core-site.xml配置文件中修改hadoop.tmp.dir的参数/home/ruoze/tmp<br>
+重新启动hdfs</p>
 
                 
 
@@ -320,9 +327,13 @@ cat /var/log/messages | grep oom</em></p>
                 <!-- Pager -->
                 <ul class="pager">
                     
+                        <li class="previous">
+                            <a href="/article/11. hdfs架构/" data-toggle="tooltip" data-placement="top" title="Hadoop block概念与HDFS架构，NN和SNN交互与CheckPoint流程">&larr; Previous Post</a>
+                        </li>
+                    
                     
                         <li class="next">
-                            <a href="/article/Hadoop伪分布式安装教程/" data-toggle="tooltip" data-placement="top" title="Hadoop伪分布式安装教程，以及基本命令">Next Post &rarr;</a>
+                            <a href="/article/9. Hadoop伪分布式安装教程/" data-toggle="tooltip" data-placement="top" title="Hadoop伪分布式安装教程，以及基本命令">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -392,9 +403,9 @@ cat /var/log/messages | grep oom</em></p>
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
-                          <a class="tag" href="/tags/#安装部署" title="安装部署">安装部署</a>
-                        
                           <a class="tag" href="/tags/#Yarn" title="Yarn">Yarn</a>
+                        
+                          <a class="tag" href="/tags/#安装部署" title="安装部署">安装部署</a>
                         
                           <a class="tag" href="/tags/#jps" title="jps">jps</a>
                         
