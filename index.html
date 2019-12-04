@@ -134,7 +134,7 @@
 
                         
                         <li>
-                            <a href="/tags/">Tags</a>
+                            <a href="/about/">About</a>
                         </li>
                         
                     
@@ -148,7 +148,7 @@
 
                         
                         <li>
-                            <a href="/about/">About</a>
+                            <a href="/tags/">Tags</a>
                         </li>
                         
                     
@@ -211,7 +211,7 @@
 
 <div class="post-preview">
 
-    <a href="/article/11. hdfs架构/">
+    <a href="/article/12. hdfs架构/">
         <h2 class="post-title">
                                  
             Hadoop block概念与HDFS架构，NN和SNN交互与CheckPoint流程
@@ -254,7 +254,7 @@ p1 128ml 装满（复制，连带自己3份）p1  p1  图中蓝......
 
 <div class="post-preview">
 
-    <a href="/article/10. Yarn伪分布式安装教程/">
+    <a href="/article/11. Yarn伪分布式安装教程/">
         <h2 class="post-title">
                                  
             Yarn安装部署，以及JPS的正确使用
@@ -281,11 +281,47 @@ NodeManager
         </p>
         <div class="tags">
             
-              <a href="/tags/#Yarn" title="Yarn">Yarn</a>
-            
               <a href="/tags/#安装部署" title="安装部署">安装部署</a>
             
+              <a href="/tags/#Yarn" title="Yarn">Yarn</a>
+            
               <a href="/tags/#jps" title="jps">jps</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/article/10. 数据重刷/">
+        <h2 class="post-title">
+                                 
+            数据重刷机制—待新增
+        </h2>
+        <h3 class="post-subtitle">
+            数据冲刷机制的应用场景，使用方法以及注意事项。
+        </h3>
+        <div class="post-content-preview">
+            欢迎来到妖精小狗的博客
+
+数据重刷机制背景：
+在大数据处理、分析中存储一直都是基石，但是有一个问题是即使存储不挂，数据也不一定就是准确的；如果存储挂了，数据一定不准确，此时就需要校验数据是否正确，并且将数据修改正确正确的机制。
+注：
+常用的组件sqoop抽数据，无error丢数据的概率很小
+数据质量校验：
+需要注意数据量校验分成令部分校验count是否相同，在count相同的基础上查看内容是......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by MX on
+            2019-11-30
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#数据重刷" title="数据重刷">数据重刷</a>
             
         </div>
     
@@ -326,9 +362,9 @@ a......
         </p>
         <div class="tags">
             
-              <a href="/tags/#安装部署" title="安装部署">安装部署</a>
-            
               <a href="/tags/#Hadoop" title="Hadoop">Hadoop</a>
+            
+              <a href="/tags/#安装部署" title="安装部署">安装部署</a>
             
         </div>
     
@@ -556,18 +592,6 @@ echo 打印
             
         
             
-            <a href="/tags/#Yarn" title="Yarn" rel="1">Yarn</a>
-            
-        
-            
-            <a href="/tags/#安装部署" title="安装部署" rel="2">安装部署</a>
-            
-        
-            
-            <a href="/tags/#jps" title="jps" rel="1">jps</a>
-            
-        
-            
             <a href="/tags/#HDFS" title="HDFS" rel="1">HDFS</a>
             
         
@@ -580,7 +604,23 @@ echo 打印
             
         
             
+            <a href="/tags/#数据重刷" title="数据重刷" rel="1">数据重刷</a>
+            
+        
+            
             <a href="/tags/#Hadoop" title="Hadoop" rel="1">Hadoop</a>
+            
+        
+            
+            <a href="/tags/#安装部署" title="安装部署" rel="2">安装部署</a>
+            
+        
+            
+            <a href="/tags/#Yarn" title="Yarn" rel="1">Yarn</a>
+            
+        
+            
+            <a href="/tags/#jps" title="jps" rel="1">jps</a>
             
         
     </div>
@@ -636,11 +676,15 @@ echo 打印
     <ul>
       
         <li>
-          <a href="/article/11. hdfs架构/">Hadoop block概念与HDFS架构，NN和SNN交互与CheckPoint流程</a>
+          <a href="/article/12. hdfs架构/">Hadoop block概念与HDFS架构，NN和SNN交互与CheckPoint流程</a>
         </li>
       
         <li>
-          <a href="/article/10. Yarn伪分布式安装教程/">Yarn安装部署，以及JPS的正确使用</a>
+          <a href="/article/11. Yarn伪分布式安装教程/">Yarn安装部署，以及JPS的正确使用</a>
+        </li>
+      
+        <li>
+          <a href="/article/10. 数据重刷/">数据重刷机制—待新增</a>
         </li>
       
         <li>
@@ -649,10 +693,6 @@ echo 打印
       
         <li>
           <a href="/article/5. Linux日常使用详解五/">Linux日常使用详解五</a>
-        </li>
-      
-        <li>
-          <a href="/article/4. Linux日常使用详解四/">Linux日常使用详解四</a>
         </li>
       
     </ul>
@@ -667,7 +707,7 @@ echo 打印
         
     <h5>ARCHIVES</h5>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">6</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">7</span></li></ul>
     </div>
 
         <hr>

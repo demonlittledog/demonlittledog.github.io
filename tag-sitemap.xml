@@ -16,14 +16,14 @@
     </url>
 
     <url>
-        <loc>https://github.com/demonlittledog/tags/Yarn/</loc>
+        <loc>https://github.com/demonlittledog/tags/%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/</loc>
         <lastmod>2019-12-04T05:28:24.809Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>https://github.com/demonlittledog/tags/%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/</loc>
+        <loc>https://github.com/demonlittledog/tags/Yarn/</loc>
         <lastmod>2019-12-04T05:28:24.809Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
@@ -53,6 +53,13 @@
     <url>
         <loc>https://github.com/demonlittledog/tags/CheckPoint/</loc>
         <lastmod>2019-12-04T05:41:09.789Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://github.com/demonlittledog/tags/%E6%95%B0%E6%8D%AE%E9%87%8D%E5%88%B7/</loc>
+        <lastmod>2019-12-04T13:10:39.477Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
