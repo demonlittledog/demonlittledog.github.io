@@ -17,21 +17,42 @@
 
     <url>
         <loc>https://github.com/demonlittledog/tags/Yarn/</loc>
-        <lastmod>2019-12-04T05:35:22.399Z</lastmod>
+        <lastmod>2019-12-04T05:28:24.809Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
         <loc>https://github.com/demonlittledog/tags/%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/</loc>
-        <lastmod>2019-12-04T05:35:22.399Z</lastmod>
+        <lastmod>2019-12-04T05:28:24.809Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
         <loc>https://github.com/demonlittledog/tags/jps/</loc>
-        <lastmod>2019-12-04T05:35:22.399Z</lastmod>
+        <lastmod>2019-12-04T05:28:24.809Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://github.com/demonlittledog/tags/HDFS/</loc>
+        <lastmod>2019-12-04T05:41:09.789Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://github.com/demonlittledog/tags/NN-SNN/</loc>
+        <lastmod>2019-12-04T05:41:09.789Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://github.com/demonlittledog/tags/CheckPoint/</loc>
+        <lastmod>2019-12-04T05:41:09.789Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
