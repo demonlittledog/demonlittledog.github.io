@@ -134,7 +134,7 @@
 
                         
                         <li>
-                            <a href="/about/">About</a>
+                            <a href="/tags/">Tags</a>
                         </li>
                         
                     
@@ -148,7 +148,7 @@
 
                         
                         <li>
-                            <a href="/tags/">Tags</a>
+                            <a href="/about/">About</a>
                         </li>
                         
                     
@@ -211,6 +211,48 @@
 
 <div class="post-preview">
 
+    <a href="/article/13. hdfs读写流程/">
+        <h2 class="post-title">
+                                 
+            HDFS读写流程以及多节点，单节点磁盘均衡
+        </h2>
+        <h3 class="post-subtitle">
+            HDFS副本放置策略，HDFS读写流程，文件系统多节点、单节点磁盘均衡，HDFS安全模式进入和离开。
+        </h3>
+        <div class="post-content-preview">
+            欢迎来到妖精小狗的博客
+
+副本放置策略
+生产上建议3个副本。
+
+第一个副本：
+假如上传节点为DN节点，优先放置本节点；否则就随机挑选一台磁盘不太慢，CPU不太繁忙的节点。
+第二个副本：
+放置在于第一个副本的不同的机架的节点上
+第三个副本：
+放置于第二个副本相同机架的不同节点上
+正常很多公司单独选择一个节点，作为client node，没有DN和NN，只有集群的XML文件，可以做通信，能知道数......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by MX on
+            2019-12-06
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#Hadoop" title="Hadoop">Hadoop</a>
+            
+              <a href="/tags/#HDFS" title="HDFS">HDFS</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/article/12. hdfs架构/">
         <h2 class="post-title">
                                  
@@ -239,6 +281,8 @@ p1 128ml 装满（复制，连带自己3份）p1  p1  图中蓝......
             2019-12-02
         </p>
         <div class="tags">
+            
+              <a href="/tags/#Hadoop" title="Hadoop">Hadoop</a>
             
               <a href="/tags/#HDFS" title="HDFS">HDFS</a>
             
@@ -281,9 +325,11 @@ NodeManager
         </p>
         <div class="tags">
             
-              <a href="/tags/#安装部署" title="安装部署">安装部署</a>
+              <a href="/tags/#Hadoop" title="Hadoop">Hadoop</a>
             
               <a href="/tags/#Yarn" title="Yarn">Yarn</a>
+            
+              <a href="/tags/#安装部署" title="安装部署">安装部署</a>
             
               <a href="/tags/#jps" title="jps">jps</a>
             
@@ -322,6 +368,10 @@ NodeManager
         <div class="tags">
             
               <a href="/tags/#数据重刷" title="数据重刷">数据重刷</a>
+            
+              <a href="/tags/#Hadoop" title="Hadoop">Hadoop</a>
+            
+              <a href="/tags/#MySQL" title="MySQL">MySQL</a>
             
         </div>
     
@@ -588,11 +638,31 @@ echo 打印
     <div class="tags">
         
             
-            <a href="/tags/#Linux" title="Linux" rel="5">Linux</a>
+            <a href="/tags/#数据重刷" title="数据重刷" rel="1">数据重刷</a>
             
         
             
-            <a href="/tags/#HDFS" title="HDFS" rel="1">HDFS</a>
+            <a href="/tags/#Hadoop" title="Hadoop" rel="5">Hadoop</a>
+            
+        
+            
+            <a href="/tags/#MySQL" title="MySQL" rel="1">MySQL</a>
+            
+        
+            
+            <a href="/tags/#Yarn" title="Yarn" rel="1">Yarn</a>
+            
+        
+            
+            <a href="/tags/#安装部署" title="安装部署" rel="2">安装部署</a>
+            
+        
+            
+            <a href="/tags/#jps" title="jps" rel="1">jps</a>
+            
+        
+            
+            <a href="/tags/#HDFS" title="HDFS" rel="2">HDFS</a>
             
         
             
@@ -604,23 +674,7 @@ echo 打印
             
         
             
-            <a href="/tags/#数据重刷" title="数据重刷" rel="1">数据重刷</a>
-            
-        
-            
-            <a href="/tags/#Hadoop" title="Hadoop" rel="1">Hadoop</a>
-            
-        
-            
-            <a href="/tags/#安装部署" title="安装部署" rel="2">安装部署</a>
-            
-        
-            
-            <a href="/tags/#Yarn" title="Yarn" rel="1">Yarn</a>
-            
-        
-            
-            <a href="/tags/#jps" title="jps" rel="1">jps</a>
+            <a href="/tags/#Linux" title="Linux" rel="5">Linux</a>
             
         
     </div>
@@ -676,6 +730,10 @@ echo 打印
     <ul>
       
         <li>
+          <a href="/article/13. hdfs读写流程/">HDFS读写流程以及多节点，单节点磁盘均衡</a>
+        </li>
+      
+        <li>
           <a href="/article/12. hdfs架构/">Hadoop block概念与HDFS架构，NN和SNN交互与CheckPoint流程</a>
         </li>
       
@@ -691,10 +749,6 @@ echo 打印
           <a href="/article/9. Hadoop伪分布式安装教程/">Hadoop伪分布式安装教程，以及基本命令</a>
         </li>
       
-        <li>
-          <a href="/article/5. Linux日常使用详解五/">Linux日常使用详解五</a>
-        </li>
-      
     </ul>
   </div>
 
@@ -707,7 +761,7 @@ echo 打印
         
     <h5>ARCHIVES</h5>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">7</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">7</span></li></ul>
     </div>
 
         <hr>
