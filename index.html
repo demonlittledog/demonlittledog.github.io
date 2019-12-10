@@ -211,7 +211,46 @@
 
 <div class="post-preview">
 
-    <a href="/article/13. hdfs读写流程/">
+    <a href="/article/数据的存储格式与压缩格式/">
+        <h2 class="post-title">
+                                 
+            大数据中数据的存储格式与压缩格式
+        </h2>
+        <h3 class="post-subtitle">
+            大数据中数据的存储格式TEXTFILE 、SEQUENCEFILE、ORC、PARQUET与压缩格式gzip、lzo、snappy、bzip2。
+        </h3>
+        <div class="post-content-preview">
+            欢迎来到妖精小狗的博客
+
+文件存储格式
+Hive支持的存储数的格式主要有：TEXTFILE 、SEQUENCEFILE、ORC、PARQUET。
+
+上图左边为逻辑表，右边第一个为行式存储，第二个为列式存储。
+行存储的特点：
+查询满足条件的一整行数据的时候，列存储则需要去每个聚集的字段找到对应的每个列的值，行存储只需要找到其中一个值，其余的值都在相邻地方，所以此时行存储查询的速度更快。
+列存储......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by MX on
+            2019-12-07
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#存储格式" title="存储格式">存储格式</a>
+            
+              <a href="/tags/#压缩格式" title="压缩格式">压缩格式</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/article/hdfs读写流程/">
         <h2 class="post-title">
                                  
             HDFS读写流程以及多节点，单节点磁盘均衡
@@ -253,7 +292,7 @@
 
 <div class="post-preview">
 
-    <a href="/article/12. hdfs架构/">
+    <a href="/article/hdfs架构/">
         <h2 class="post-title">
                                  
             Hadoop block概念与HDFS架构，NN和SNN交互与CheckPoint流程
@@ -298,7 +337,7 @@ p1 128ml 装满（复制，连带自己3份）p1  p1  图中蓝......
 
 <div class="post-preview">
 
-    <a href="/article/11. Yarn伪分布式安装教程/">
+    <a href="/article/Yarn伪分布式安装教程/">
         <h2 class="post-title">
                                  
             Yarn安装部署，以及JPS的正确使用
@@ -327,9 +366,9 @@ NodeManager
             
               <a href="/tags/#Hadoop" title="Hadoop">Hadoop</a>
             
-              <a href="/tags/#Yarn" title="Yarn">Yarn</a>
-            
               <a href="/tags/#安装部署" title="安装部署">安装部署</a>
+            
+              <a href="/tags/#Yarn" title="Yarn">Yarn</a>
             
               <a href="/tags/#jps" title="jps">jps</a>
             
@@ -341,47 +380,7 @@ NodeManager
 
 <div class="post-preview">
 
-    <a href="/article/10. 数据重刷/">
-        <h2 class="post-title">
-                                 
-            数据重刷机制—待新增
-        </h2>
-        <h3 class="post-subtitle">
-            数据冲刷机制的应用场景，使用方法以及注意事项。
-        </h3>
-        <div class="post-content-preview">
-            欢迎来到妖精小狗的博客
-
-数据重刷机制背景：
-在大数据处理、分析中存储一直都是基石，但是有一个问题是即使存储不挂，数据也不一定就是准确的；如果存储挂了，数据一定不准确，此时就需要校验数据是否正确，并且将数据修改正确正确的机制。
-注：
-常用的组件sqoop抽数据，无error丢数据的概率很小
-数据质量校验：
-需要注意数据量校验分成令部分校验count是否相同，在count相同的基础上查看内容是......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by MX on
-            2019-12-01
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#数据重刷" title="数据重刷">数据重刷</a>
-            
-              <a href="/tags/#Hadoop" title="Hadoop">Hadoop</a>
-            
-              <a href="/tags/#MySQL" title="MySQL">MySQL</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/article/9. Hadoop伪分布式安装教程/">
+    <a href="/article/Hadoop伪分布式安装教程/">
         <h2 class="post-title">
                                  
             Hadoop伪分布式安装教程，以及基本命令
@@ -424,7 +423,47 @@ a......
 
 <div class="post-preview">
 
-    <a href="/article/6. MySQL部署/">
+    <a href="/article/数据重刷/">
+        <h2 class="post-title">
+                                 
+            数据重刷机制—待新增
+        </h2>
+        <h3 class="post-subtitle">
+            数据冲刷机制的应用场景，使用方法以及注意事项。
+        </h3>
+        <div class="post-content-preview">
+            欢迎来到妖精小狗的博客
+
+数据重刷机制背景：
+在大数据处理、分析中存储一直都是基石，但是有一个问题是即使存储不挂，数据也不一定就是准确的；如果存储挂了，数据一定不准确，此时就需要校验数据是否正确，并且将数据修改正确正确的机制。
+注：
+常用的组件sqoop抽数据，无error丢数据的概率很小
+数据质量校验：
+需要注意数据量校验分成令部分校验count是否相同，在count相同的基础上查看内容是......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by MX on
+            2019-12-01
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#Hadoop" title="Hadoop">Hadoop</a>
+            
+              <a href="/tags/#MySQL" title="MySQL">MySQL</a>
+            
+              <a href="/tags/#数据重刷" title="数据重刷">数据重刷</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/article/MySQL部署/">
         <h2 class="post-title">
                                  
             MySQL安装部署
@@ -463,7 +502,7 @@ hbase服务 --&gt; hbase用户
 
 <div class="post-preview">
 
-    <a href="/article/5. Linux日常使用详解五/">
+    <a href="/article/Linux日常使用详解五/">
         <h2 class="post-title">
                                  
             Linux日常使用详解五
@@ -499,7 +538,7 @@ linux 自带crontab
 
 <div class="post-preview">
 
-    <a href="/article/4. Linux日常使用详解四/">
+    <a href="/article/Linux日常使用详解四/">
         <h2 class="post-title">
                                  
             Linux日常使用详解四
@@ -539,7 +578,7 @@ cat xxx.log | grep -C 10 ERROR &gt; error.log
 
 <div class="post-preview">
 
-    <a href="/article/3. Linux日常使用详解三/">
+    <a href="/article/Linux日常使用详解三/">
         <h2 class="post-title">
                                  
             Linux日常使用详解三
@@ -569,40 +608,6 @@ cat xxx.log | grep -C 10 ERROR &gt; error.log
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/article/2. Linux日常使用详解二/">
-        <h2 class="post-title">
-                                 
-            Linux日常使用详解二
-        </h2>
-        <h3 class="post-subtitle">
-            Linux日常使用详解二。
-        </h3>
-        <div class="post-content-preview">
-            欢迎来到妖精小狗的博客
-
-echo 打印
-12[bda@mao01 logs]$ echo "mao"mao
-环境变量名称 $PATH
-12[bda@mao01 logs]$ echo $PATH/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/modules/jdk1.8.0_201/bin:/opt/modules/hadoop......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by MX on
-            2019-11-24
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Linux" title="Linux">Linux</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -611,7 +616,7 @@ echo 打印
     
     
         <li class="next">
-            <a href="/page/2/">Older Posts &rarr;</a>
+            <a href="/archives/2/">Older Posts &rarr;</a>
         </li>
     
 </ul>
@@ -644,11 +649,15 @@ echo 打印
     <div class="tags">
         
             
-            <a href="/tags/#数据重刷" title="数据重刷" rel="1">数据重刷</a>
+            <a href="/tags/#Linux" title="Linux" rel="5">Linux</a>
             
         
             
             <a href="/tags/#Hadoop" title="Hadoop" rel="5">Hadoop</a>
+            
+        
+            
+            <a href="/tags/#安装部署" title="安装部署" rel="2">安装部署</a>
             
         
             
@@ -668,11 +677,11 @@ echo 打印
             
         
             
-            <a href="/tags/#Yarn" title="Yarn" rel="1">Yarn</a>
+            <a href="/tags/#数据重刷" title="数据重刷" rel="1">数据重刷</a>
             
         
             
-            <a href="/tags/#安装部署" title="安装部署" rel="2">安装部署</a>
+            <a href="/tags/#Yarn" title="Yarn" rel="1">Yarn</a>
             
         
             
@@ -680,7 +689,11 @@ echo 打印
             
         
             
-            <a href="/tags/#Linux" title="Linux" rel="5">Linux</a>
+            <a href="/tags/#存储格式" title="存储格式" rel="1">存储格式</a>
+            
+        
+            
+            <a href="/tags/#压缩格式" title="压缩格式" rel="1">压缩格式</a>
             
         
     </div>
@@ -736,23 +749,23 @@ echo 打印
     <ul>
       
         <li>
-          <a href="/article/13. hdfs读写流程/">HDFS读写流程以及多节点，单节点磁盘均衡</a>
+          <a href="/article/数据的存储格式与压缩格式/">大数据中数据的存储格式与压缩格式</a>
         </li>
       
         <li>
-          <a href="/article/12. hdfs架构/">Hadoop block概念与HDFS架构，NN和SNN交互与CheckPoint流程</a>
+          <a href="/article/hdfs读写流程/">HDFS读写流程以及多节点，单节点磁盘均衡</a>
         </li>
       
         <li>
-          <a href="/article/11. Yarn伪分布式安装教程/">Yarn安装部署，以及JPS的正确使用</a>
+          <a href="/article/hdfs架构/">Hadoop block概念与HDFS架构，NN和SNN交互与CheckPoint流程</a>
         </li>
       
         <li>
-          <a href="/article/10. 数据重刷/">数据重刷机制—待新增</a>
+          <a href="/article/Yarn伪分布式安装教程/">Yarn安装部署，以及JPS的正确使用</a>
         </li>
       
         <li>
-          <a href="/article/9. Hadoop伪分布式安装教程/">Hadoop伪分布式安装教程，以及基本命令</a>
+          <a href="/article/Hadoop伪分布式安装教程/">Hadoop伪分布式安装教程，以及基本命令</a>
         </li>
       
     </ul>
@@ -767,7 +780,7 @@ echo 打印
         
     <h5>ARCHIVES</h5>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">6</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">6</span></li></ul>
     </div>
 
         <hr>

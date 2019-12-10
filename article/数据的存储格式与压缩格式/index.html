@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          Linux日常使用详解五 - 妖精小狗@MX | Blog
+          大数据中数据的存储格式与压缩格式 - 妖精小狗@MX | Blog
         
     </title>
 
-    <link rel="canonical" href="https://github.com/demonlittledog/article/5. Linux日常使用详解五/">
+    <link rel="canonical" href="https://github.com/demonlittledog/article/数据的存储格式与压缩格式/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -71,7 +71,7 @@
 <style type="text/css">
     header.intro-header{
         
-            background-image: url('/img/article_header/ice_rock.jpg')
+            background-image: url('/img/article_header/green.jpg')
             /*post*/
         
     }
@@ -88,14 +88,16 @@
                     <div class="post-heading">
                         <div class="tags">
                             
-                              <a class="tag" href="/tags/#Linux" title="Linux">Linux</a>
+                              <a class="tag" href="/tags/#存储格式" title="存储格式">存储格式</a>
+                            
+                              <a class="tag" href="/tags/#压缩格式" title="压缩格式">压缩格式</a>
                             
                         </div>
-                        <h1>Linux日常使用详解五</h1>
-                        <h2 class="subheading">Linux日常使用详解五。</h2>
+                        <h1>大数据中数据的存储格式与压缩格式</h1>
+                        <h2 class="subheading">大数据中数据的存储格式TEXTFILE 、SEQUENCEFILE、ORC、PARQUET与压缩格式gzip、lzo、snappy、bzip2。</h2>
                         <span class="meta">
                             Posted by MX on
-                            2019-11-27
+                            2019-12-07
                         </span>
                     </div>
                 
@@ -214,72 +216,89 @@
 
                 <h3 id="欢迎来到妖精小狗的博客">欢迎来到妖精小狗的博客</h3>
 <hr>
-<h4 id="调度工具">调度工具</h4>
-<p><em>airflow<br>
-azkaban<br>
-rundeck  B站  作业  部署</em></p>
-<p><strong>linux 自带crontab</strong></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@JD software]# vi test.sh</span><br><span class="line">[root@JD software]# ./test.sh</span><br><span class="line">-bash: ./test.sh: Permission denied</span><br><span class="line">[root@JD software]# which test.sh</span><br><span class="line">/usr/bin/which: no test.sh in (/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin)</span><br><span class="line">[root@JD software]# chmod 744 test.sh </span><br><span class="line">[root@JD software]# ./test.sh </span><br><span class="line">Fri Nov 29 21:44:43 CST 2019</span><br></pre></td></tr></table></figure>
-<p>#!/bin/bash 解释器<br>
-<em>shell脚本执行 需要 x权限</em></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@JD software]# chmod 744 test.sh</span><br></pre></td></tr></table></figure>
-<p><em><a href="http://xn--fqr621h.sh" target="_blank" rel="noopener">后缀.sh</a>，第一行#!/bin/bash一定要加，比较正规</em></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">data</span><br></pre></td></tr></table></figure>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@JD software]# cp test.sh test</span><br><span class="line">[root@JD software]# sh test</span><br><span class="line">Fri Nov 29 21:48:12 CST 2019</span><br><span class="line">[root@JD software]# ./test</span><br><span class="line">Fri Nov 29 21:48:25 CST 2019</span><br></pre></td></tr></table></figure>
-<p><em>查看帮助文档：</em></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">[root@JD software]# crontab --help</span><br><span class="line">crontab: invalid option -- '-'</span><br><span class="line">crontab: usage error: unrecognized option</span><br><span class="line">Usage:</span><br><span class="line"> crontab [options] file</span><br><span class="line"> crontab [options]</span><br><span class="line"> crontab -n [hostname]</span><br><span class="line"></span><br><span class="line">Options:</span><br><span class="line"> -u &lt;user&gt;  define user</span><br><span class="line"> -e         edit user's crontab</span><br><span class="line"> -l         list user's crontab</span><br><span class="line"> -r         delete user's crontab</span><br><span class="line"> -i         prompt before deleting</span><br><span class="line"> -n &lt;host&gt;  set host in cluster to run users' crontabs</span><br><span class="line"> -c         get host in cluster to run users' crontabs</span><br><span class="line"> -s         selinux context</span><br><span class="line"> -x &lt;mask&gt;  enable debugging</span><br><span class="line"></span><br><span class="line">Default operation is replace, per 1003.2</span><br><span class="line"></span><br><span class="line">[root@JD software]# crontab -l</span><br><span class="line">no crontab for root</span><br><span class="line">[root@JD software]# crontab -e</span><br><span class="line">no crontab for root - using an empty one</span><br><span class="line">crontab: installing new crontab</span><br><span class="line">[root@JD software]# crontab -l</span><br><span class="line">* * * * * /opt/software/test.sh &gt;&gt; /opt/software/test.log</span><br><span class="line">[root@JD software]# tail -f test.log </span><br><span class="line">Fri Nov 29 22:11:01 CST 2019</span><br><span class="line">Fri Nov 29 22:12:01 CST 2019</span><br></pre></td></tr></table></figure>
-<p>分<br>
-小时<br>
-日<br>
-月<br>
-周<br>
-*/6代表每6分钟<br>
-*1=*代表每1分钟<br>
-* 代表每</p>
-<p><strong>面试题：</strong><br>
-<em>每隔10s执行一次</em></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@JD software]# cat test.sh </span><br><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"></span><br><span class="line">for((i=1;i&lt;=6;i++));</span><br><span class="line">do</span><br><span class="line">      date</span><br><span class="line">      sleep 10s</span><br><span class="line"></span><br><span class="line">done</span><br><span class="line">exit</span><br></pre></td></tr></table></figure>
-<p><strong>后台执行：</strong><br>
-<em>./test.sh &amp;<br>
-nohup ./test.sh &amp;</em><br>
-手动启动脚本，可以看日志，主要用于开发维护，测试<br>
-<em>nohup ./test.sh &gt; /root/test.log 2&gt;&amp;1 &amp;</em><br>
-生产上主要这么用（一定要记住前后都要加nohup和&amp;）一定要定期处理</p>
-<h4 id="软连接">软连接：</h4>
-<p><em>示例：</em></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@ruozedata001 ~]# ll</span><br><span class="line">total 4</span><br><span class="line">drwxr-xr-x 2 root root   6 Nov 20 21:33 mysql5.6  低版本部署</span><br><span class="line">drwxr-xr-x 2 root root   6 Nov 20 21:33 mysql5.7  高版本</span><br><span class="line">drwxr-xr-x 3 root root  44 Nov 17 23:13 ruozedata</span><br><span class="line">-rw-r--r-- 1 root root 846 Nov 17 23:12 ruozedata.zip</span><br></pre></td></tr></table></figure>
-<p><em>ln -s 原path 目标path</em><br>
-<strong><em>注意：</em></strong><br>
-<em>1.	CDH升级，有可能误删原文件，有时会出现光标跳动</em><br>
-<em>解决办法：</em><br>
-找原文件文件夹；<br>
-删除快捷键文件文件夹 --&gt; 重新做新的软连接，升级到高版本；</p>
-<p>这样环境变量不会很多的变化，如果出现改变改变比较少</p>
-<p><em>2.	个人建议软链接使用绝对路径：</em><br>
-ln –s /root/mysql5.6 mysql<br>
-CDH里面就是绝对路径。</p>
-<p><strong>系统盘：</strong><br>
-/ 50G<br>
-<strong>数据盘：</strong><br>
-/data01 2T<br>
-<em>CDH log：</em><br>
-/var/log/hbase/xxx.log  1G<br>
-/var/log/hbase/xxx.log1  1G<br>
-…<br>
-/var/log/hbase/xxx.log10  1G<br>
-默认保持10份<br>
----- 11G<br>
-<em>先建文件夹：</em><br>
-mkdir /data01/log/<br>
-<em>要先停掉服务，然后把文件夹复制到新加的文件夹里：</em><br>
-mv /var/log/hbase /data01/log/<br>
-<em>软链接到原有的文件夹中：</em><br>
-ln -s /data01/log/hbase /var/log/hbase<br>
-<em>但是有可能会忽略权限的问题（有可能移动中忽略了权限的问题）：</em><br>
-一定要记住chmod chown<br>
-<em>集群:</em><br>
-看另外一台的权限<br>
-也可以直接777</p>
+<h4 id="文件存储格式">文件存储格式</h4>
+<p><strong>Hive支持的存储数的格式主要有：TEXTFILE 、SEQUENCEFILE、ORC、PARQUET。</strong><br>
+<img src="/img/article/hadoop5/storage.png" alt="storage"><br>
+上图左边为逻辑表，右边第一个为行式存储，第二个为列式存储。<br>
+<strong>行存储的特点：</strong><br>
+查询满足条件的一整行数据的时候，列存储则需要去每个聚集的字段找到对应的每个列的值，行存储只需要找到其中一个值，其余的值都在相邻地方，所以此时行存储查询的速度更快。<br>
+<strong>列存储的特点：</strong><br>
+因为每个字段的数据聚集存储，在查询只需要少数几个字段的时候，能大大减少读取的数据量；每个字段的数据类型一定是相同的，列式存储可以针对性的设计更好的设计压缩算法。<br>
+<strong><em>TEXTFILE和SEQUENCEFILE的存储格式都是基于行存储的；</em></strong><br>
+<strong><em>ORC和PARQUET是基于列式存储的。</em></strong></p>
+<h5 id="行存储textfile格式">行存储textFile格式</h5>
+<p>默认格式，数据不做压缩，磁盘开销大，数据解析开销大。可结合Gzip、Bzip2使用，但使用Gzip这种方式，hive不会对数据进行切分，从而无法对数据进行并行操作。</p>
+<h5 id="列存储orc格式">列存储orc格式</h5>
+<p><strong>ORC (Optimized Row Columnar)是Hive 0.11版里引入的新的存储格式。</strong><br>
+可以看到每个ORC文件由1个或多个stripe组成，每个stripe250MB大小，这个Stripe实际相当于RowGroup概念，不过大小由4MB-&gt;250MB，这样应该能提升顺序读的吞吐率。每个Stripe里有三部分组成，分别是Index Data，Row Data，Stripe Footer：<br>
+<img src="/img/article/hadoop5/orc.png" alt="orc"></p>
+<h6 id="index-data一个轻量级的index默认是每隔1w行做一个索引-这里做的索引应该只是记录某行的各字段在row-data中的offset">Index Data：一个轻量级的index，默认是每隔1W行做一个索引。这里做的索引应该只是记录某行的各字段在Row Data中的offset。</h6>
+<h6 id="row-data存的是具体的数据先取部分行然后对这些行按列进行存储-对每个列进行了编码分成多个stream来存储">Row Data：存的是具体的数据，先取部分行，然后对这些行按列进行存储。对每个列进行了编码，分成多个Stream来存储。</h6>
+<h6 id="stripe-footer存的是各个stream的类型长度等信息">Stripe Footer：存的是各个Stream的类型，长度等信息。</h6>
+<p>每个文件有一个File Footer，这里面存的是每个Stripe的行数，每个Column的数据类型信息等；每个文件的尾部是一个PostScript，这里面记录了整个文件的压缩类型以及FileFooter的长度信息等。在读取文件时，会seek到文件尾部读PostScript，从里面解析到File Footer长度，再读FileFooter，从里面解析到各个Stripe信息，再读各个Stripe，即从后往前读。</p>
+<h5 id="列存储parquet格式">列存储parquet格式</h5>
+<p><strong>parquet文件是以二进制方式存储的，所以是不可以直接读取的，文件中包括该文件的数据和元数据，因此parquet格式文件是自解析的。</strong><br>
+通常情况下，在存储parquet数据的时候会按照Block大小设置行组的大小，由于一般情况下每一个Mapper任务处理数据的最小单位是一个Block，这样可以把每一个行组由一个Mapper任务处理，增大任务执行并行度。parquet文件的格式如下图所示。<br>
+<img src="/img/article/hadoop5/parquet.png" alt="parquet"><br>
+上图展示了一个Parquet文件的内容，一个文件中可以存储多个行组，文件的首位都是该文件的Magic Code，用于校验它是否是一个Parquet文件，Footer length记录了文件元数据的大小，通过该值和文件长度可以计算出元数据的偏移量，文件的元数据中包括每一个行组的元数据信息和该文件存储数据的Schema信息。除了文件中每一个行组的元数据，每一页的开始都会存储该页的元数据，在Parquet中，有三种类型的页：数据页、字典页和索引页。数据页用于存储当前行组中该列的值，字典页存储该列值的编码字典，每一个列块中最多包含一个字典页，索引页用来存储当前行组下该列的索引，目前Parquet中还不支持索引页。</p>
+<h5 id="存储文件的压缩比总结">存储文件的压缩比总结：</h5>
+<p>ORC &gt;  Parquet &gt;  textFile<br>
+存储文件的查询速度总结：查询速度相近。</p>
+<h4 id="压缩格式">压缩格式</h4>
+<h5 id="压缩的好处和坏处">压缩的好处和坏处</h5>
+<h6 id="好处">好处</h6>
+<ul>
+<li>减少存储磁盘空间</li>
+<li>降低IO(网络的IO和磁盘的IO)</li>
+<li>加快数据在磁盘和网络中的传输速度，从而提高系统的处理速度</li>
+</ul>
+<h6 id="坏处">坏处</h6>
+<ul>
+<li>由于使用数据时，需要先将数据解压，加重CPU负荷</li>
+</ul>
+<h5 id="压缩格式">压缩格式</h5>
+<p><img src="/img/article/hadoop5/compress1.png" alt="compress1"></p>
+<h5 id="压缩比">压缩比</h5>
+<p><img src="/img/article/hadoop5/compress2.png" alt="compress2"></p>
+<h5 id="压缩时间">压缩时间</h5>
+<p><img src="/img/article/hadoop5/compress3.png" alt="compress3"><br>
+<strong><em>压缩比越高，压缩时间越长，压缩比：Snappy&gt;LZ4&gt;LZO&gt;GZIP&gt;BZIP2</em></strong></p>
+<table>
+<thead>
+<tr>
+<th>压缩格式</th>
+<th>优点</th>
+<th>缺点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>gzip</td>
+<td>压缩比在四种压缩方式中较高；</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>hadoop本身支持，在应用中处理gzip格式的文件就和直接处理文本一样；<br>
+有hadoop native库；<br>
+大部分linux系统都自带gzip命令，使用方便。 | 不支持split。                                                                                                                                                                                  |<br>
+| lzo      | 压缩/解压速度也比较快，合理的压缩率；<br>
+支持split，是hadoop中最流行的压缩格式；<br>
+支持hadoop native库；<br>
+需要在linux系统下自行安装lzop命令，使用方便。           | 压缩率比gzip要低；<br>
+hadoop本身不支持，需要安装；<br>
+lzo虽然支持split，但需要对lzo文件建索引，否则hadoop也是会把lzo文件看成一个普通文件<br>
+（为了支持split需要建索引，需要指定inputformat为lzo格式）。 |<br>
+| snappy   | 压缩速度快；支持hadoop native库。                                                                                                                           | 不支持split；压缩比低；<br>
+hadoop本身不支持，需要安装；<br>
+linux系统下没有对应的命令d. bzip2。                                                                                                       |<br>
+| bzip2    | 支持split；具有很高的压缩率，比gzip压缩率都高；<br>
+hadoop本身支持，但不支持native；<br>
+在linux系统下自带bzip2命令，使用方便。                                     |                                                                                                                                                                                                |</p>
+<h5 id="总结">总结：</h5>
+<p>不同的场景选择不同的压缩方式，肯定没有一个一劳永逸的方法，如果选择高压缩比，那么对于cpu的性能要求要高，同时压缩、解压时间耗费也多；选择压缩比低的，对于磁盘io、网络io的时间要多，空间占据要多；对于支持分割的，可以实现并行处理。</p>
+<h5 id="应用场景">应用场景：</h5>
+<p>一般在HDFS 、Hive、HBase中会使用；当然一般较多的是结合Spark 来一起使用。</p>
 
                 
 
@@ -287,13 +306,9 @@ ln -s /data01/log/hbase /var/log/hbase<br>
                 <!-- Pager -->
                 <ul class="pager">
                     
-                        <li class="previous">
-                            <a href="/article/6. MySQL部署/" data-toggle="tooltip" data-placement="top" title="MySQL安装部署">&larr; Previous Post</a>
-                        </li>
-                    
                     
                         <li class="next">
-                            <a href="/article/4. Linux日常使用详解四/" data-toggle="tooltip" data-placement="top" title="Linux日常使用详解四">Next Post &rarr;</a>
+                            <a href="/article/hdfs读写流程/" data-toggle="tooltip" data-placement="top" title="HDFS读写流程以及多节点，单节点磁盘均衡">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -343,7 +358,7 @@ ln -s /data01/log/hbase /var/log/hbase<br>
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#欢迎来到妖精小狗的博客"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">&#x6B22;&#x8FCE;&#x6765;&#x5230;&#x5996;&#x7CBE;&#x5C0F;&#x72D7;&#x7684;&#x535A;&#x5BA2;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#调度工具"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">&#x8C03;&#x5EA6;&#x5DE5;&#x5177;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#软连接"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">&#x8F6F;&#x8FDE;&#x63A5;&#xFF1A;</span></a></li></ol></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#欢迎来到妖精小狗的博客"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">&#x6B22;&#x8FCE;&#x6765;&#x5230;&#x5996;&#x7CBE;&#x5C0F;&#x72D7;&#x7684;&#x535A;&#x5BA2;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#文件存储格式"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">&#x6587;&#x4EF6;&#x5B58;&#x50A8;&#x683C;&#x5F0F;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#行存储textfile格式"><span class="toc-nav-number">1.1.1.</span> <span class="toc-nav-text">&#x884C;&#x5B58;&#x50A8;textFile&#x683C;&#x5F0F;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#列存储orc格式"><span class="toc-nav-number">1.1.2.</span> <span class="toc-nav-text">&#x5217;&#x5B58;&#x50A8;orc&#x683C;&#x5F0F;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#index-data一个轻量级的index默认是每隔1w行做一个索引-这里做的索引应该只是记录某行的各字段在row-data中的offset"><span class="toc-nav-number">1.1.2.1.</span> <span class="toc-nav-text">Index Data&#xFF1A;&#x4E00;&#x4E2A;&#x8F7B;&#x91CF;&#x7EA7;&#x7684;index&#xFF0C;&#x9ED8;&#x8BA4;&#x662F;&#x6BCF;&#x9694;1W&#x884C;&#x505A;&#x4E00;&#x4E2A;&#x7D22;&#x5F15;&#x3002;&#x8FD9;&#x91CC;&#x505A;&#x7684;&#x7D22;&#x5F15;&#x5E94;&#x8BE5;&#x53EA;&#x662F;&#x8BB0;&#x5F55;&#x67D0;&#x884C;&#x7684;&#x5404;&#x5B57;&#x6BB5;&#x5728;Row Data&#x4E2D;&#x7684;offset&#x3002;</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#row-data存的是具体的数据先取部分行然后对这些行按列进行存储-对每个列进行了编码分成多个stream来存储"><span class="toc-nav-number">1.1.2.2.</span> <span class="toc-nav-text">Row Data&#xFF1A;&#x5B58;&#x7684;&#x662F;&#x5177;&#x4F53;&#x7684;&#x6570;&#x636E;&#xFF0C;&#x5148;&#x53D6;&#x90E8;&#x5206;&#x884C;&#xFF0C;&#x7136;&#x540E;&#x5BF9;&#x8FD9;&#x4E9B;&#x884C;&#x6309;&#x5217;&#x8FDB;&#x884C;&#x5B58;&#x50A8;&#x3002;&#x5BF9;&#x6BCF;&#x4E2A;&#x5217;&#x8FDB;&#x884C;&#x4E86;&#x7F16;&#x7801;&#xFF0C;&#x5206;&#x6210;&#x591A;&#x4E2A;Stream&#x6765;&#x5B58;&#x50A8;&#x3002;</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#stripe-footer存的是各个stream的类型长度等信息"><span class="toc-nav-number">1.1.2.3.</span> <span class="toc-nav-text">Stripe Footer&#xFF1A;&#x5B58;&#x7684;&#x662F;&#x5404;&#x4E2A;Stream&#x7684;&#x7C7B;&#x578B;&#xFF0C;&#x957F;&#x5EA6;&#x7B49;&#x4FE1;&#x606F;&#x3002;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#列存储parquet格式"><span class="toc-nav-number">1.1.3.</span> <span class="toc-nav-text">&#x5217;&#x5B58;&#x50A8;parquet&#x683C;&#x5F0F;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#存储文件的压缩比总结"><span class="toc-nav-number">1.1.4.</span> <span class="toc-nav-text">&#x5B58;&#x50A8;&#x6587;&#x4EF6;&#x7684;&#x538B;&#x7F29;&#x6BD4;&#x603B;&#x7ED3;&#xFF1A;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#压缩格式"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">&#x538B;&#x7F29;&#x683C;&#x5F0F;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#压缩的好处和坏处"><span class="toc-nav-number">1.2.1.</span> <span class="toc-nav-text">&#x538B;&#x7F29;&#x7684;&#x597D;&#x5904;&#x548C;&#x574F;&#x5904;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#好处"><span class="toc-nav-number">1.2.1.1.</span> <span class="toc-nav-text">&#x597D;&#x5904;</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#坏处"><span class="toc-nav-number">1.2.1.2.</span> <span class="toc-nav-text">&#x574F;&#x5904;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#压缩格式"><span class="toc-nav-number">1.2.2.</span> <span class="toc-nav-text">&#x538B;&#x7F29;&#x683C;&#x5F0F;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#压缩比"><span class="toc-nav-number">1.2.3.</span> <span class="toc-nav-text">&#x538B;&#x7F29;&#x6BD4;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#压缩时间"><span class="toc-nav-number">1.2.4.</span> <span class="toc-nav-text">&#x538B;&#x7F29;&#x65F6;&#x95F4;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#总结"><span class="toc-nav-number">1.2.5.</span> <span class="toc-nav-text">&#x603B;&#x7ED3;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#应用场景"><span class="toc-nav-number">1.2.6.</span> <span class="toc-nav-text">&#x5E94;&#x7528;&#x573A;&#x666F;&#xFF1A;</span></a></li></ol></li></ol></li></ol>
         
         </div>
       </aside>
@@ -363,7 +378,9 @@ ln -s /data01/log/hbase /var/log/hbase<br>
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
-                          <a class="tag" href="/tags/#Linux" title="Linux">Linux</a>
+                          <a class="tag" href="/tags/#存储格式" title="存储格式">存储格式</a>
+                        
+                          <a class="tag" href="/tags/#压缩格式" title="压缩格式">压缩格式</a>
                         
                     </div>
                 </section>
