@@ -274,27 +274,26 @@
 <tbody>
 <tr>
 <td>gzip</td>
-<td>压缩比在四种压缩方式中较高；</td>
-<td></td>
+<td>压缩比在四种压缩方式中较高；hadoop本身支持，在应用中处理gzip格式的文件就和直接处理文本一样；有hadoop native库；大部分linux系统都自带gzip命令，使用方便。</td>
+<td>不支持split。</td>
+</tr>
+<tr>
+<td>lzo</td>
+<td>压缩/解压速度也比较快，合理的压缩率；支持split，是hadoop中最流行的压缩格式；支持hadoop native库；需要在linux系统下自行安装lzop命令，使用方便。</td>
+<td>压缩率比gzip要低；hadoop本身不支持，需要安装；lzo虽然支持split，但需要对lzo文件建索引，否则hadoop也是会把lzo文件看成一个普通文件（为了支持split需要建索引，需要指定inputformat为lzo格式）。</td>
+</tr>
+<tr>
+<td>snappy</td>
+<td>压缩速度快；支持hadoop native库。</td>
+<td>不支持split；压缩比低；hadoop本身不支持，需要安装；linux系统下没有对应的命令d. bzip2。</td>
+</tr>
+<tr>
+<td>bzip2</td>
+<td>支持split；具有很高的压缩率，比gzip压缩率都高；hadoop本身支持，但不支持native；在linux系统下自带bzip2命令，使用方便。</td>
+<td>压缩/解压速度慢；不支持native。</td>
 </tr>
 </tbody>
 </table>
-<p>hadoop本身支持，在应用中处理gzip格式的文件就和直接处理文本一样；<br>
-有hadoop native库；<br>
-大部分linux系统都自带gzip命令，使用方便。 | 不支持split。                                                                                                                                                                                  |<br>
-| lzo      | 压缩/解压速度也比较快，合理的压缩率；<br>
-支持split，是hadoop中最流行的压缩格式；<br>
-支持hadoop native库；<br>
-需要在linux系统下自行安装lzop命令，使用方便。           | 压缩率比gzip要低；<br>
-hadoop本身不支持，需要安装；<br>
-lzo虽然支持split，但需要对lzo文件建索引，否则hadoop也是会把lzo文件看成一个普通文件<br>
-（为了支持split需要建索引，需要指定inputformat为lzo格式）。 |<br>
-| snappy   | 压缩速度快；支持hadoop native库。                                                                                                                           | 不支持split；压缩比低；<br>
-hadoop本身不支持，需要安装；<br>
-linux系统下没有对应的命令d. bzip2。                                                                                                       |<br>
-| bzip2    | 支持split；具有很高的压缩率，比gzip压缩率都高；<br>
-hadoop本身支持，但不支持native；<br>
-在linux系统下自带bzip2命令，使用方便。                                     |                                                                                                                                                                                                |</p>
 <h5 id="总结">总结：</h5>
 <p>不同的场景选择不同的压缩方式，肯定没有一个一劳永逸的方法，如果选择高压缩比，那么对于cpu的性能要求要高，同时压缩、解压时间耗费也多；选择压缩比低的，对于磁盘io、网络io的时间要多，空间占据要多；对于支持分割的，可以实现并行处理。</p>
 <h5 id="应用场景">应用场景：</h5>
