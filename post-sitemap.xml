@@ -7,8 +7,16 @@
     </url>
 
     <url>
+        <loc>https://github.com/demonlittledog/article/MapReduce2.x%20%E4%BB%8B%E7%BB%8D%E4%BB%A5%E5%8F%8A%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/</loc>
+        <lastmod>2019-12-11T16:43:00.601Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>https://github.com/demonlittledog/article/MapReduce%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E5%9B%BE%E6%96%87%E8%AF%A6%E8%A7%A3/</loc>
-        <lastmod>2019-12-11T16:37:19.601Z</lastmod>
+        <lastmod>2019-12-11T16:42:34.327Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
@@ -25,14 +33,6 @@
     <url>
         <loc>https://github.com/demonlittledog/article/%E6%95%B0%E6%8D%AE%E7%9A%84%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F%E4%B8%8E%E5%8E%8B%E7%BC%A9%E6%A0%BC%E5%BC%8F/</loc>
         <lastmod>2019-12-11T03:24:37.848Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://github.com/demonlittledog/article/MapReduce2.x%20%E4%BB%8B%E7%BB%8D%E4%BB%A5%E5%8F%8A%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/</loc>
-        <lastmod>2019-12-10T17:00:34.939Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
