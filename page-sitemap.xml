@@ -7,6 +7,13 @@
     </url>
     
     <url>
+        <loc>https://github.com/demonlittledog/404.html</loc>
+        <lastmod>2019-12-11T06:16:33.423Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <url>
         <loc>https://github.com/demonlittledog/about/</loc>
         <lastmod>2019-11-27T03:05:44.601Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -23,13 +30,6 @@
     <url>
         <loc>https://github.com/demonlittledog/archive/</loc>
         <lastmod>2019-11-26T14:14:06.853Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    
-    <url>
-        <loc>https://github.com/demonlittledog/404.html</loc>
-        <lastmod>2019-11-21T12:26:18.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
