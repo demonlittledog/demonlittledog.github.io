@@ -257,7 +257,68 @@
 <li>由于使用数据时，需要先将数据解压，加重CPU负荷</li>
 </ul>
 <h5 id="压缩格式">压缩格式</h5>
-<p><img src="/img/article/hadoop5/compress1.png" alt="compress1"></p>
+<table>
+<thead>
+<tr>
+<th>压缩格式</th>
+<th>工具</th>
+<th>算法</th>
+<th>扩展名</th>
+<th>是否支持分隔</th>
+<th>Hadoop编码/解码器</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DEFLATE</td>
+<td>N/A</td>
+<td>DEFLATE</td>
+<td>.deflate</td>
+<td>NO</td>
+<td>org.apache.hadoop.io.compress.DefaultCodec</td>
+</tr>
+<tr>
+<td>gzip</td>
+<td>gzip</td>
+<td>DEFLATE</td>
+<td>.gz</td>
+<td>NO</td>
+<td>org.apache.hadoop.io.compress.GzipCodec</td>
+</tr>
+<tr>
+<td>bzip2</td>
+<td>bzip2</td>
+<td></td>
+<td>.bz2</td>
+<td>YES</td>
+<td>org.apache.hadoop.io.compress.BZip2Codec</td>
+</tr>
+<tr>
+<td>LZO</td>
+<td>Lzop</td>
+<td>LZO</td>
+<td>.lzo</td>
+<td>YES(if index)</td>
+<td>com.hadoop.compression.lzo.LzoCodec</td>
+</tr>
+<tr>
+<td>LZ4</td>
+<td>N/A</td>
+<td>LZ4</td>
+<td>.lz4</td>
+<td>NO</td>
+<td>org.apache.hadoop.io.compress.Lz4Codec</td>
+</tr>
+<tr>
+<td>Snappy</td>
+<td>N/A</td>
+<td>Snappy</td>
+<td>.snappy</td>
+<td>NO</td>
+<td>org.apache.hadoop.o.compress.SnappyCodec</td>
+</tr>
+</tbody>
+</table>
 <h5 id="压缩比">压缩比</h5>
 <p><img src="/img/article/hadoop5/compress2.png" alt="compress2"></p>
 <h5 id="压缩时间">压缩时间</h5>
