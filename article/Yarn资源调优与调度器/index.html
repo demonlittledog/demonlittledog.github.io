@@ -144,14 +144,14 @@
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
+                            <a href="/about/">About</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/about/">About</a>
+                            <a href="/archive/">Archives</a>
                         </li>
                         
                     
@@ -275,7 +275,8 @@ DN拥有内存2G，还有NM留存4G这样就剩下204 - 2 -4 = 198G</strong></p>
 org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler</p>
 <h5 id="cdh默认fair公平">CDH默认Fair（公平）：</h5>
 <p>Web界面可以查看，CDH认为计算调度器会占一个位置20%的队列就会浪费了<br>
-CDH fair来配置动态资源池，放置规则</p>
+CDH fair来配置动态资源池，放置规则<br>
+<img src="/img/article/hadoop8/three.png" alt="three"></p>
 <h4 id="常用命令">常用命令</h4>
 <h5 id="yarn-jar">yarn jar</h5>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD root]$ yarn</span><br><span class="line">Usage: yarn [--config confdir] COMMAND</span><br><span class="line">where COMMAND is one of:</span><br><span class="line">  resourcemanager -format-state-store   deletes the RMStateStore</span><br><span class="line">  resourcemanager                       run the ResourceManager</span><br><span class="line">                                        Use -format-state-store for deleting the RMStateStore.</span><br><span class="line">                                        Use -remove-application-from-state-store &lt;appId&gt; for </span><br><span class="line">                                            removing application from RMStateStore.</span><br><span class="line">  nodemanager                           run a nodemanager on each slave</span><br><span class="line">  timelineserver                        run the timeline server</span><br><span class="line">  rmadmin                               admin tools</span><br><span class="line">  version                               print the version</span><br><span class="line">  jar &lt;jar&gt;                             run a jar file</span><br><span class="line">  application                           prints application(s)</span><br><span class="line">                                        report/kill application</span><br><span class="line">  applicationattempt                    prints applicationattempt(s)</span><br><span class="line">                                        report</span><br><span class="line">  container                             prints container(s) report</span><br><span class="line">  node                                  prints node report(s)</span><br><span class="line">  queue                                 prints queue information</span><br><span class="line">  logs                                  dump container logs</span><br><span class="line">  classpath                             prints the class path needed to</span><br><span class="line">                                        get the Hadoop jar and the</span><br><span class="line">                                        required libraries</span><br><span class="line">  daemonlog                             get/set the log level for each</span><br><span class="line">                                        daemon</span><br><span class="line">  top                                   run cluster usage tool</span><br><span class="line"> or</span><br><span class="line">  CLASSNAME                             run the class named CLASSNAME</span><br><span class="line"></span><br><span class="line">Most commands print help when invoked w/o parameters.</span><br></pre></td></tr></table></figure>
