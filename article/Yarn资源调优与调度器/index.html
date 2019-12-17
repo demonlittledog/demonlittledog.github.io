@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Yarn资源调优与调度器 - 妖精小狗@MX | Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://github.com/demonlittledog/article/Yarn资源调优与调度器/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/universe.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#yarn" title="yarn">yarn</a>
+                            
+                              <a class="tag" href="/tags/#MapReduce2.x" title="MapReduce2.x">MapReduce2.x</a>
+                            
+                        </div>
+                        <h1>Yarn资源调优与调度器</h1>
+                        <h2 class="subheading">yarn的架构，如何进行资源调优，三种调度器的详解与优缺点描述</h2>
+                        <span class="meta">
+                            Posted by MX on
+                            2019-12-11
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">妖精小狗@MX Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h3 id="欢迎来到妖精小狗的博客">欢迎来到妖精小狗的博客</h3>
+<hr>
+<h4 id="container">Container</h4>
+<p><strong>容器，虚拟化的，维度</strong><br>
+内容是memory+vcore<br>
+负责运行task任务</p>
+<h4 id="生产如何调优container参数">生产如何调优Container参数：</h4>
+<p><img src="/img/article/hadoop8/yarnResource.png" alt="yarnResource"><br>
+<strong>假设128G，16物理core，分配内存</strong></p>
+<h5 id="装完centos消耗内存1g">装完CentOS，消耗内存1G</h5>
+<h5 id="系统预览15-20内存包含装完centos需要的内存空间以防全部使用导致系统夯住和oom机制事件或者给未来部署组件预览点空间">系统预览15%-20%内存（包含装完CentOS需要的内存空间），以防全部使用导致系统夯住，和oom机制事件，或者给未来部署组件预览点空间</h5>
+<p><em>计算空间128 * 20% = 25.6G == 26G</em></p>
+<h5 id="假设只有dn-nm节点余下内存有128-26-102g">假设只有DN NM节点，余下内存有128-26 = 102g</h5>
+<h6 id="假设dn拥有内存2g还有nm留存4g这样就剩下102-2-496g">假设DN拥有内存2G，还有NM留存4G这样就剩下102-2-4=96G</h6>
+<h6 id="container内存">container内存</h6>
+<p><strong>划分区域，每个区域的内存</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">yarn.nodemanager.resource.memory-mb   96G</span><br><span class="line">（调度的最小内存）yarn.scheduler.minimum-allocation-mb     1G   </span><br><span class="line">极限情况下，只有96个container 内存1G</span><br><span class="line">（调度的最大内存，一般设置成和环境一样大的内存）yarn.scheduler.maximum-allocation-mb     96G  </span><br><span class="line">极限情况下，只有1个container 内存96G</span><br><span class="line">container的内存会自动增加，默认1g递增</span><br><span class="line">所以这种情况下container的个数是1-96个</span><br></pre></td></tr></table></figure>
+<h6 id="container虚拟核">container虚拟核</h6>
+<p><strong>物理核:虚拟核一般比例是1:2  32vcore</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">yarn.nodemanager.resource.pcores-vcores-multiplier 2</span><br><span class="line">yarn.nodemanager.resource.cpu-vcores      32</span><br><span class="line">yarn.scheduler.minimum-allocation-vcores    1  极限情况下，只有32个container	</span><br><span class="line">yarn.scheduler.maximum-allocation-vcores   32  极限情况下，只有1个container</span><br><span class="line">所以这种情况下container的个数是1-32个</span><br></pre></td></tr></table></figure>
+<h6 id="官方建议">官方建议</h6>
+<p><strong>cloudera公司推荐，一个container的vcore最好不要超过5，那么我们设置4（这是核心）</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn.scheduler.maximum-allocation-vcores   4   极限情况下，只有8个container</span><br></pre></td></tr></table></figure>
+<h6 id="综合memoryvcore">综合memory+vcore</h6>
+<p><strong>确定vcore = 4，container = 8</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">yarn.nodemanager.resource.memory-mb     96G</span><br><span class="line">yarn.scheduler.minimum-allocation-mb       1G</span><br><span class="line">yarn.scheduler.maximum-allocation-mb      12G 极限container 8个</span><br><span class="line">当然当spark计算时内存不够大，这个参数肯定要调大，那么这种理想化的设置个数必然要打破，以memory为主</span><br><span class="line">yarn.nodemanager.resource.cpu-vcores            32</span><br><span class="line">yarn.scheduler.minimum-allocation-vcores         1</span><br><span class="line">yarn.scheduler.maximum-allocation-vcores	4 极限container 8个</span><br><span class="line">所以在设定的情况下最好是8个container，每个有12G，再加上4个vcore</span><br></pre></td></tr></table></figure>
+<h5 id="举个例子">举个例子：</h5>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">yarn.nodemanager.resource.memory-mb     96G</span><br><span class="line">yarn.scheduler.minimum-allocation-mb	      1G  </span><br><span class="line">yarn.scheduler.maximum-allocation-mb      8G </span><br><span class="line">yarn.nodemanager.resource.cpu-vcores      32</span><br><span class="line">yarn.scheduler.minimum-allocation-vcores    1</span><br><span class="line">yarn.scheduler.maximum-allocation-vcores    2</span><br></pre></td></tr></table></figure>
+<p><strong>如果是上面的情况，在以内存为主导的情况下：</strong><br>
+<em>12container  12 * 2 = 24但是现在有32个vcore（不能100%完全使用）<br>
+但是如果有16 container每个8g内存就会爆掉</em></p>
+<h5 id="假如-256g内存-56core请问参数如何设置">假如 256G内存 56core，请问参数如何设置</h5>
+<p><strong>256 * 20% = 52G<br>
+DN拥有内存2G，还有NM留存4G这样就剩下204 - 2 -4 = 198G</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">yarn.nodemanager.resource.memory-mb     198G</span><br><span class="line">yarn.scheduler.minimum-allocation-mb       1G</span><br><span class="line">yarn.scheduler.maximum-allocation-mb      24G 极限container 8个</span><br><span class="line">yarn.nodemanager.resource.cpu-vcores            112</span><br><span class="line">yarn.scheduler.minimum-allocation-vcores         1</span><br><span class="line">yarn.scheduler.maximum-allocation-vcores	4 极限container 8个</span><br></pre></td></tr></table></figure>
+<h5 id="假如该节点还有组件比如hbase-regionserver进程那么该如何设置">假如该节点还有组件，比如hbase regionserver进程，那么该如何设置？</h5>
+<p><strong>假如hbase regionserver有30G，此时内存的缩放就是102-2-4-30=66G</strong></p>
+<h4 id="vcore是yarn自己引入的">vcore是yarn自己引入的</h4>
+<p><strong>设计初衷是考虑不同节点的CPU的性能不一样，每个CPU的计算能力不一样。</strong><br>
+比如某个物理CPU是另外一个物理CPU的2倍，这时通过设置第一个物理CPU的虚拟core来弥补这种差异。</p>
+<p>第一台机器很强悍设置为pcore: vcore=1:2<br>
+第二台机器不强悍设置为pcore: vcore=1:1<br>
+<em>现在的CPU性能都差不多所以xml配置，所有节点pcore: vcore=1:2</em></p>
+<h4 id="再回顾架构">再回顾架构</h4>
+<p><img src="/img/article/hadoop8/yarn.png" alt="yarn"><br>
+<strong>Client提交一个job到Resource Manager，然后RM会向某一个Node Manager请求一个Container容器来运行job的App Master，App Master启动成功之后会去申请资源，并且到对应的Container容器的节点去跑task任务。</strong></p>
+<h4 id="调度器">调度器</h4>
+<p><strong>有三种调度器：</strong></p>
+<h5 id="fifo先进先出">FIFO（先进先出）</h5>
+<p><img src="/img/article/hadoop8/fifo.png" alt="fifo"><br>
+<em>2处表示job2一直等待job1完成之后再提交</em></p>
+<h5 id="capacity计算">Capacity（计算）</h5>
+<p><img src="/img/article/hadoop8/capacity.png" alt="capacity"><br>
+<em>有一个专门的队列来运行小任务，但是为了小任务专门设置一个队列预先占用一定的集群资源，这会导致大任务的执行时间落后FIFO的调度时间。</em></p>
+<h5 id="fair公平">Fair（公平）</h5>
+<p><img src="/img/article/hadoop8/fair.png" alt="fair"></p>
+<h5 id="apache中默认是capacity计算">Apache中默认是Capacity（计算）：</h5>
+<p>yarn.resourcemanager.scheduler.class<br>
+org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler</p>
+<h5 id="cdh默认fair公平">CDH默认Fair（公平）：</h5>
+<p>Web界面可以查看，CDH认为计算调度器会占一个位置20%的队列就会浪费了<br>
+CDH fair来配置动态资源池，放置规则</p>
+<h4 id="常用命令">常用命令</h4>
+<h5 id="yarn-jar">yarn jar</h5>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD root]$ yarn</span><br><span class="line">Usage: yarn [--config confdir] COMMAND</span><br><span class="line">where COMMAND is one of:</span><br><span class="line">  resourcemanager -format-state-store   deletes the RMStateStore</span><br><span class="line">  resourcemanager                       run the ResourceManager</span><br><span class="line">                                        Use -format-state-store for deleting the RMStateStore.</span><br><span class="line">                                        Use -remove-application-from-state-store &lt;appId&gt; for </span><br><span class="line">                                            removing application from RMStateStore.</span><br><span class="line">  nodemanager                           run a nodemanager on each slave</span><br><span class="line">  timelineserver                        run the timeline server</span><br><span class="line">  rmadmin                               admin tools</span><br><span class="line">  version                               print the version</span><br><span class="line">  jar &lt;jar&gt;                             run a jar file</span><br><span class="line">  application                           prints application(s)</span><br><span class="line">                                        report/kill application</span><br><span class="line">  applicationattempt                    prints applicationattempt(s)</span><br><span class="line">                                        report</span><br><span class="line">  container                             prints container(s) report</span><br><span class="line">  node                                  prints node report(s)</span><br><span class="line">  queue                                 prints queue information</span><br><span class="line">  logs                                  dump container logs</span><br><span class="line">  classpath                             prints the class path needed to</span><br><span class="line">                                        get the Hadoop jar and the</span><br><span class="line">                                        required libraries</span><br><span class="line">  daemonlog                             get/set the log level for each</span><br><span class="line">                                        daemon</span><br><span class="line">  top                                   run cluster usage tool</span><br><span class="line"> or</span><br><span class="line">  CLASSNAME                             run the class named CLASSNAME</span><br><span class="line"></span><br><span class="line">Most commands print help when invoked w/o parameters.</span><br></pre></td></tr></table></figure>
+<h5 id="yarn-application-kill-ltapplication-idgt-如果权限控制严格会经常使用">yarn application -kill  &lt;Application ID&gt; （如果权限控制严格会经常使用）</h5>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD root]$ yarn application</span><br><span class="line">19/12/17 17:53:51 INFO client.RMProxy: Connecting to ResourceManager at /0.0.0.0:8032</span><br><span class="line">19/12/17 17:53:51 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable</span><br><span class="line">Invalid Command Usage : </span><br><span class="line">usage: application</span><br><span class="line"> -appStates &lt;States&gt;             Works with -list to filter applications</span><br><span class="line">                                 based on input comma-separated list of</span><br><span class="line">                                 application states. The valid application</span><br><span class="line">                                 state can be one of the following:</span><br><span class="line">                                 ALL,NEW,NEW_SAVING,SUBMITTED,ACCEPTED,RUN</span><br><span class="line">                                 NING,FINISHED,FAILED,KILLED</span><br><span class="line"> -appTypes &lt;Types&gt;               Works with -list to filter applications</span><br><span class="line">                                 based on input comma-separated list of</span><br><span class="line">                                 application types.</span><br><span class="line"> -help                           Displays help for all commands.</span><br><span class="line"> -kill &lt;Application ID&gt;          Kills the application.</span><br><span class="line"> -list                           List applications. Supports optional use</span><br><span class="line">                                 of -appTypes to filter applications based</span><br><span class="line">                                 on application type, and -appStates to</span><br><span class="line">                                 filter applications based on application</span><br><span class="line">                                 state.</span><br><span class="line"> -movetoqueue &lt;Application ID&gt;   Moves the application to a different</span><br><span class="line">                                 queue.</span><br><span class="line"> -queue &lt;Queue Name&gt;             Works with the movetoqueue command to</span><br><span class="line">                                 specify which queue to move an</span><br><span class="line">                                 application to.</span><br><span class="line"> -status &lt;Application ID&gt;        Prints the status of the application.</span><br></pre></td></tr></table></figure>
+<h5 id="还有yarn-logs">还有yarn logs</h5>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD root]$ yarn logs</span><br><span class="line">Retrieve logs for completed YARN applications.</span><br><span class="line">usage: yarn logs -applicationId &lt;application ID&gt; [OPTIONS]</span><br><span class="line">general options are:</span><br><span class="line"> -appOwner &lt;Application Owner&gt;   AppOwner (assumed to be current user if</span><br><span class="line">                                 not specified)</span><br><span class="line"> -containerId &lt;Container ID&gt;     ContainerId (must be specified if node</span><br><span class="line">                                 address is specified)</span><br><span class="line"> -nodeAddress &lt;Node Address&gt;     NodeAddress in the format nodename:port</span><br><span class="line">                                 (must be specified if container id is</span><br><span class="line">                                 specified)</span><br></pre></td></tr></table></figure>
+<h4 id="木桶效应">木桶效应：</h4>
+<p><strong>一个水桶无论有多高，它盛水的高度取决于其中最低的那块木板。</strong></p>
+<h5 id="原始的-128m">原始的 128M：</h5>
+<blockquote>
+<p>f1   130M   2task   128M   00:55   2M   00:03<br>
+f2   14M    1task   14M 00:05<br>
+f3   20M    1task   20M    00:09</p>
+</blockquote>
+<p><em>job中4个task的时间是128M的map task控制的，总共需要55秒，是不规则的</em></p>
+<h5 id="解决办法将文件均分成最理想的情况来执行">解决办法将文件均分成最理想的情况来执行：</h5>
+<blockquote>
+<p>164M/55M<br>
+f1   55m   1task<br>
+f2   55m   1task<br>
+f3   55m   1task</p>
+</blockquote>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/article/MapReduce2.x 介绍以及架构设计/" data-toggle="tooltip" data-placement="top" title="MapReduce2.x 介绍以及架构设计">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share"  data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+  
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#欢迎来到妖精小狗的博客"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">&#x6B22;&#x8FCE;&#x6765;&#x5230;&#x5996;&#x7CBE;&#x5C0F;&#x72D7;&#x7684;&#x535A;&#x5BA2;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#container"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">Container</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#生产如何调优container参数"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">&#x751F;&#x4EA7;&#x5982;&#x4F55;&#x8C03;&#x4F18;Container&#x53C2;&#x6570;&#xFF1A;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#装完centos消耗内存1g"><span class="toc-nav-number">1.2.1.</span> <span class="toc-nav-text">&#x88C5;&#x5B8C;CentOS&#xFF0C;&#x6D88;&#x8017;&#x5185;&#x5B58;1G</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#系统预览15-20内存包含装完centos需要的内存空间以防全部使用导致系统夯住和oom机制事件或者给未来部署组件预览点空间"><span class="toc-nav-number">1.2.2.</span> <span class="toc-nav-text">&#x7CFB;&#x7EDF;&#x9884;&#x89C8;15%-20%&#x5185;&#x5B58;&#xFF08;&#x5305;&#x542B;&#x88C5;&#x5B8C;CentOS&#x9700;&#x8981;&#x7684;&#x5185;&#x5B58;&#x7A7A;&#x95F4;&#xFF09;&#xFF0C;&#x4EE5;&#x9632;&#x5168;&#x90E8;&#x4F7F;&#x7528;&#x5BFC;&#x81F4;&#x7CFB;&#x7EDF;&#x592F;&#x4F4F;&#xFF0C;&#x548C;oom&#x673A;&#x5236;&#x4E8B;&#x4EF6;&#xFF0C;&#x6216;&#x8005;&#x7ED9;&#x672A;&#x6765;&#x90E8;&#x7F72;&#x7EC4;&#x4EF6;&#x9884;&#x89C8;&#x70B9;&#x7A7A;&#x95F4;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#假设只有dn-nm节点余下内存有128-26-102g"><span class="toc-nav-number">1.2.3.</span> <span class="toc-nav-text">&#x5047;&#x8BBE;&#x53EA;&#x6709;DN NM&#x8282;&#x70B9;&#xFF0C;&#x4F59;&#x4E0B;&#x5185;&#x5B58;&#x6709;128-26 = 102g</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#假设dn拥有内存2g还有nm留存4g这样就剩下102-2-496g"><span class="toc-nav-number">1.2.3.1.</span> <span class="toc-nav-text">&#x5047;&#x8BBE;DN&#x62E5;&#x6709;&#x5185;&#x5B58;2G&#xFF0C;&#x8FD8;&#x6709;NM&#x7559;&#x5B58;4G&#x8FD9;&#x6837;&#x5C31;&#x5269;&#x4E0B;102-2-4=96G</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#container内存"><span class="toc-nav-number">1.2.3.2.</span> <span class="toc-nav-text">container&#x5185;&#x5B58;</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#container虚拟核"><span class="toc-nav-number">1.2.3.3.</span> <span class="toc-nav-text">container&#x865A;&#x62DF;&#x6838;</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#官方建议"><span class="toc-nav-number">1.2.3.4.</span> <span class="toc-nav-text">&#x5B98;&#x65B9;&#x5EFA;&#x8BAE;</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#综合memoryvcore"><span class="toc-nav-number">1.2.3.5.</span> <span class="toc-nav-text">&#x7EFC;&#x5408;memory+vcore</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#举个例子"><span class="toc-nav-number">1.2.4.</span> <span class="toc-nav-text">&#x4E3E;&#x4E2A;&#x4F8B;&#x5B50;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#假如-256g内存-56core请问参数如何设置"><span class="toc-nav-number">1.2.5.</span> <span class="toc-nav-text">&#x5047;&#x5982; 256G&#x5185;&#x5B58; 56core&#xFF0C;&#x8BF7;&#x95EE;&#x53C2;&#x6570;&#x5982;&#x4F55;&#x8BBE;&#x7F6E;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#假如该节点还有组件比如hbase-regionserver进程那么该如何设置"><span class="toc-nav-number">1.2.6.</span> <span class="toc-nav-text">&#x5047;&#x5982;&#x8BE5;&#x8282;&#x70B9;&#x8FD8;&#x6709;&#x7EC4;&#x4EF6;&#xFF0C;&#x6BD4;&#x5982;hbase regionserver&#x8FDB;&#x7A0B;&#xFF0C;&#x90A3;&#x4E48;&#x8BE5;&#x5982;&#x4F55;&#x8BBE;&#x7F6E;&#xFF1F;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#vcore是yarn自己引入的"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">vcore&#x662F;yarn&#x81EA;&#x5DF1;&#x5F15;&#x5165;&#x7684;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#再回顾架构"><span class="toc-nav-number">1.4.</span> <span class="toc-nav-text">&#x518D;&#x56DE;&#x987E;&#x67B6;&#x6784;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#调度器"><span class="toc-nav-number">1.5.</span> <span class="toc-nav-text">&#x8C03;&#x5EA6;&#x5668;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#fifo先进先出"><span class="toc-nav-number">1.5.1.</span> <span class="toc-nav-text">FIFO&#xFF08;&#x5148;&#x8FDB;&#x5148;&#x51FA;&#xFF09;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#capacity计算"><span class="toc-nav-number">1.5.2.</span> <span class="toc-nav-text">Capacity&#xFF08;&#x8BA1;&#x7B97;&#xFF09;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#fair公平"><span class="toc-nav-number">1.5.3.</span> <span class="toc-nav-text">Fair&#xFF08;&#x516C;&#x5E73;&#xFF09;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#apache中默认是capacity计算"><span class="toc-nav-number">1.5.4.</span> <span class="toc-nav-text">Apache&#x4E2D;&#x9ED8;&#x8BA4;&#x662F;Capacity&#xFF08;&#x8BA1;&#x7B97;&#xFF09;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#cdh默认fair公平"><span class="toc-nav-number">1.5.5.</span> <span class="toc-nav-text">CDH&#x9ED8;&#x8BA4;Fair&#xFF08;&#x516C;&#x5E73;&#xFF09;&#xFF1A;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#常用命令"><span class="toc-nav-number">1.6.</span> <span class="toc-nav-text">&#x5E38;&#x7528;&#x547D;&#x4EE4;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#yarn-jar"><span class="toc-nav-number">1.6.1.</span> <span class="toc-nav-text">yarn jar</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#yarn-application-kill-ltapplication-idgt-如果权限控制严格会经常使用"><span class="toc-nav-number">1.6.2.</span> <span class="toc-nav-text">yarn application -kill  &lt;Application ID&gt; &#xFF08;&#x5982;&#x679C;&#x6743;&#x9650;&#x63A7;&#x5236;&#x4E25;&#x683C;&#x4F1A;&#x7ECF;&#x5E38;&#x4F7F;&#x7528;&#xFF09;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#还有yarn-logs"><span class="toc-nav-number">1.6.3.</span> <span class="toc-nav-text">&#x8FD8;&#x6709;yarn logs</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#木桶效应"><span class="toc-nav-number">1.7.</span> <span class="toc-nav-text">&#x6728;&#x6876;&#x6548;&#x5E94;&#xFF1A;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#原始的-128m"><span class="toc-nav-number">1.7.1.</span> <span class="toc-nav-text">&#x539F;&#x59CB;&#x7684; 128M&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#解决办法将文件均分成最理想的情况来执行"><span class="toc-nav-number">1.7.2.</span> <span class="toc-nav-text">&#x89E3;&#x51B3;&#x529E;&#x6CD5;&#x5C06;&#x6587;&#x4EF6;&#x5747;&#x5206;&#x6210;&#x6700;&#x7406;&#x60F3;&#x7684;&#x60C5;&#x51B5;&#x6765;&#x6267;&#x884C;&#xFF1A;</span></a></li></ol></li></ol></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#yarn" title="yarn">yarn</a>
+                        
+                          <a class="tag" href="/tags/#MapReduce2.x" title="MapReduce2.x">MapReduce2.x</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'rz'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+<!-- chrome Firefox 中文锚点定位失效-->
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<!-- smooth scroll behavior polyfill  -->
+<script type="text/javascript" src="/js/smoothscroll.js"></script>
+<script>
+        $('#toc').on('click','a',function(a){
+            // var isChrome = window.navigator.userAgent.indexOf("Chrome") !== -1;
+            // console.log(window.navigator.userAgent,isChrome)
+                // if(isChrome) {
+                    // console.log(a.currentTarget.outerHTML);
+                    // console.log($(a.currentTarget).attr("href"));
+                    //跳转到指定锚点
+                    // document.getElementById(a.target.innerText.toLowerCase()).scrollIntoView(true);
+                    document.getElementById($(a.currentTarget).attr("href").replace("#","")).scrollIntoView({behavior: 'smooth' });
+                // }
+        })  
+</script>
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/demonlittledog">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; MX 2019 
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://github.com/demonlittledog/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = 'xxx';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://github.com/demonlittledog/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

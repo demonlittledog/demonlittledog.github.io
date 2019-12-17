@@ -134,14 +134,14 @@
 
                         
                         <li>
-                            <a href="/about/">About</a>
+                            <a href="/archive/">Archives</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
+                            <a href="/about/">About</a>
                         </li>
                         
                     
@@ -211,6 +211,48 @@
 
 <div class="post-preview">
 
+    <a href="/article/Yarn资源调优与调度器/">
+        <h2 class="post-title">
+                                 
+            Yarn资源调优与调度器
+        </h2>
+        <h3 class="post-subtitle">
+            yarn的架构，如何进行资源调优，三种调度器的详解与优缺点描述
+        </h3>
+        <div class="post-content-preview">
+            欢迎来到妖精小狗的博客
+
+Container
+容器，虚拟化的，维度
+内容是memory+vcore
+负责运行task任务
+生产如何调优Container参数：
+
+假设128G，16物理core，分配内存
+装完CentOS，消耗内存1G
+系统预览15%-20%内存（包含装完CentOS需要的内存空间），以防全部使用导致系统夯住，和oom机制事件，或者给未来部署组件预览点空间
+计算空间128 *......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by MX on
+            2019-12-11
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#yarn" title="yarn">yarn</a>
+            
+              <a href="/tags/#MapReduce2.x" title="MapReduce2.x">MapReduce2.x</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/article/MapReduce2.x 介绍以及架构设计/">
         <h2 class="post-title">
                                  
@@ -236,6 +278,8 @@ select a+1 as ......
         <div class="tags">
             
               <a href="/tags/#MapReduce" title="MapReduce">MapReduce</a>
+            
+              <a href="/tags/#yarn" title="yarn">yarn</a>
             
         </div>
     
@@ -269,6 +313,8 @@ MapReduce是一个计算框架，既然是做计算的框架，那么表现形�
         <div class="tags">
             
               <a href="/tags/#MapReduce" title="MapReduce">MapReduce</a>
+            
+              <a href="/tags/#yarn" title="yarn">yarn</a>
             
         </div>
     
@@ -567,42 +613,6 @@ hbase服务 --&gt; hbase用户
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/article/Linux日常使用详解五/">
-        <h2 class="post-title">
-                                 
-            Linux日常使用详解五
-        </h2>
-        <h3 class="post-subtitle">
-            Linux日常使用详解五。
-        </h3>
-        <div class="post-content-preview">
-            欢迎来到妖精小狗的博客
-
-调度工具
-airflow
-azkaban
-rundeck  B站  作业  部署
-linux 自带crontab
-12345678[root@JD software]# vi test.sh[root@JD software]# ./test.sh-bash: ./test.sh: Permission denied[root@JD software]# which......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by MX on
-            2019-11-27
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Linux" title="Linux">Linux</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -611,7 +621,7 @@ linux 自带crontab
     
     
         <li class="next">
-            <a href="/archives/2/">Older Posts &rarr;</a>
+            <a href="/page/2/">Older Posts &rarr;</a>
         </li>
     
 </ul>
@@ -644,6 +654,10 @@ linux 自带crontab
     <div class="tags">
         
             
+            <a href="/tags/#Linux" title="Linux" rel="5">Linux</a>
+            
+        
+            
             <a href="/tags/#Hadoop" title="Hadoop" rel="5">Hadoop</a>
             
         
@@ -652,11 +666,11 @@ linux 自带crontab
             
         
             
-            <a href="/tags/#Linux" title="Linux" rel="5">Linux</a>
+            <a href="/tags/#MapReduce" title="MapReduce" rel="2">MapReduce</a>
             
         
             
-            <a href="/tags/#MapReduce" title="MapReduce" rel="2">MapReduce</a>
+            <a href="/tags/#yarn" title="yarn" rel="3">yarn</a>
             
         
             
@@ -664,11 +678,7 @@ linux 自带crontab
             
         
             
-            <a href="/tags/#Yarn" title="Yarn" rel="1">Yarn</a>
-            
-        
-            
-            <a href="/tags/#jps" title="jps" rel="1">jps</a>
+            <a href="/tags/#MapReduce2.x" title="MapReduce2.x" rel="1">MapReduce2.x</a>
             
         
             
@@ -681,6 +691,14 @@ linux 自带crontab
         
             
             <a href="/tags/#CheckPoint" title="CheckPoint" rel="1">CheckPoint</a>
+            
+        
+            
+            <a href="/tags/#Yarn" title="Yarn" rel="1">Yarn</a>
+            
+        
+            
+            <a href="/tags/#jps" title="jps" rel="1">jps</a>
             
         
             
@@ -748,6 +766,10 @@ linux 自带crontab
     <ul>
       
         <li>
+          <a href="/article/Yarn资源调优与调度器/">Yarn资源调优与调度器</a>
+        </li>
+      
+        <li>
           <a href="/article/MapReduce2.x 介绍以及架构设计/">MapReduce2.x 介绍以及架构设计</a>
         </li>
       
@@ -763,10 +785,6 @@ linux 自带crontab
           <a href="/article/hdfs读写流程/">HDFS读写流程以及多节点，单节点磁盘均衡</a>
         </li>
       
-        <li>
-          <a href="/article/hdfs架构/">Hadoop block概念与HDFS架构，NN和SNN交互与CheckPoint流程</a>
-        </li>
-      
     </ul>
   </div>
 
@@ -779,7 +797,7 @@ linux 自带crontab
         
     <h5>ARCHIVES</h5>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">6</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">6</span></li></ul>
     </div>
 
         <hr>
