@@ -134,14 +134,14 @@
 
                         
                         <li>
-                            <a href="/about/">About</a>
+                            <a href="/archive/">Archives</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
+                            <a href="/about/">About</a>
                         </li>
                         
                     
@@ -208,6 +208,46 @@
             
                 <!-- Main Content -->
 
+
+<div class="post-preview">
+
+    <a href="/article/hive部署，概述/">
+        <h2 class="post-title">
+                                 
+            Hive概述，安装部署
+        </h2>
+        <h3 class="post-subtitle">
+            Hive概述，安装部署，基本命令
+        </h3>
+        <div class="post-content-preview">
+            欢迎来到妖精小狗的博客
+
+Hadoop
+狭义：
+Hadoop是最重要最基础的一个部分
+广义：
+Hadoop生态圈：Hadoop、Hive、Sqoop、HBase…
+所以基于Hadoop处理大数据存在一定弊端：
+处理如下业务：join/group by如果进行面向MapReduce编程难度很大，很麻烦
+RDBMS的需求
+==&gt; Hive的产生背景
+MySQL/Oracle…等数据库想要进......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by MX on
+            2019-12-18
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#hive" title="hive">hive</a>
+            
+        </div>
+    
+
+</div>
+<hr>
 
 <div class="post-preview">
 
@@ -574,45 +614,6 @@ a......
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/article/MySQL部署/">
-        <h2 class="post-title">
-                                 
-            MySQL安装部署
-        </h2>
-        <h3 class="post-subtitle">
-            MySQL安装部署教程。
-        </h3>
-        <div class="post-content-preview">
-            欢迎来到妖精小狗的博客
-
-mysql
-命令执行，是哪个用户，哪个目录
-mysql服务 --&gt; mysql用户去维护
-hadoop服务 --&gt; hadoop用户
-CDH中的服务：
-hdfs服务 --&gt; hdfs用户
-hbase服务 --&gt; hbase用户
-下载mysql的安装包：mysql-5.6.23-linux-glibc2.5-x86_64.tar.gz
-123[......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by MX on
-            2019-11-27
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#MySQL" title="MySQL">MySQL</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -621,7 +622,7 @@ hbase服务 --&gt; hbase用户
     
     
         <li class="next">
-            <a href="/archives/2/">Older Posts &rarr;</a>
+            <a href="/page/2/">Older Posts &rarr;</a>
         </li>
     
 </ul>
@@ -674,19 +675,11 @@ hbase服务 --&gt; hbase用户
             
         
             
-            <a href="/tags/#Yarn" title="Yarn" rel="1">Yarn</a>
-            
-        
-            
-            <a href="/tags/#jps" title="jps" rel="1">jps</a>
+            <a href="/tags/#MySQL" title="MySQL" rel="2">MySQL</a>
             
         
             
             <a href="/tags/#MapReduce2.x" title="MapReduce2.x" rel="1">MapReduce2.x</a>
-            
-        
-            
-            <a href="/tags/#MySQL" title="MySQL" rel="2">MySQL</a>
             
         
             
@@ -702,6 +695,10 @@ hbase服务 --&gt; hbase用户
             
         
             
+            <a href="/tags/#hive" title="hive" rel="1">hive</a>
+            
+        
+            
             <a href="/tags/#存储格式" title="存储格式" rel="1">存储格式</a>
             
         
@@ -711,6 +708,14 @@ hbase服务 --&gt; hbase用户
         
             
             <a href="/tags/#数据重刷" title="数据重刷" rel="1">数据重刷</a>
+            
+        
+            
+            <a href="/tags/#Yarn" title="Yarn" rel="1">Yarn</a>
+            
+        
+            
+            <a href="/tags/#jps" title="jps" rel="1">jps</a>
             
         
     </div>
@@ -766,6 +771,10 @@ hbase服务 --&gt; hbase用户
     <ul>
       
         <li>
+          <a href="/article/hive部署，概述/">Hive概述，安装部署</a>
+        </li>
+      
+        <li>
           <a href="/article/Yarn资源调优与调度器/">Yarn资源调优与调度器</a>
         </li>
       
@@ -781,10 +790,6 @@ hbase服务 --&gt; hbase用户
           <a href="/article/数据的存储格式与压缩格式/">大数据中数据的存储格式与压缩格式</a>
         </li>
       
-        <li>
-          <a href="/article/hdfs读写流程/">HDFS读写流程以及多节点，单节点磁盘均衡</a>
-        </li>
-      
     </ul>
   </div>
 
@@ -797,7 +802,7 @@ hbase服务 --&gt; hbase用户
         
     <h5>ARCHIVES</h5>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">6</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">6</span></li></ul>
     </div>
 
         <hr>

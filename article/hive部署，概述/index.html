@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Hive概述，安装部署 - 妖精小狗@MX | Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://github.com/demonlittledog/article/hive部署，概述/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/dog.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#hive" title="hive">hive</a>
+                            
+                        </div>
+                        <h1>Hive概述，安装部署</h1>
+                        <h2 class="subheading">Hive概述，安装部署，基本命令</h2>
+                        <span class="meta">
+                            Posted by MX on
+                            2019-12-18
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">妖精小狗@MX Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h3 id="欢迎来到妖精小狗的博客">欢迎来到妖精小狗的博客</h3>
+<hr>
+<h4 id="hadoop">Hadoop</h4>
+<p><strong>狭义：</strong><br>
+Hadoop是最重要最基础的一个部分<br>
+<strong>广义：</strong><br>
+Hadoop生态圈：Hadoop、Hive、Sqoop、HBase…<br>
+<strong>所以基于Hadoop处理大数据存在一定弊端：</strong><br>
+处理如下业务：join/group by如果进行面向MapReduce编程难度很大，很麻烦<br>
+RDBMS的需求</p>
+<h4 id="gt-hive的产生背景">==&gt; Hive的产生背景</h4>
+<h5 id="mysqloracle等数据库想要进行统计操作">MySQL/Oracle…等数据库想要进行统计操作</h5>
+<p><strong>先创建表：</strong> 表名、列名、列类型…  schema(元数据/metadata)，然后再使用SQL进行相应的业务统计分析<br>
+<strong>HDFS上的文件：</strong> 文本格式<br>
+<strong>按照某个分隔符(\t)：</strong> 第一列是什么、第二列是什么</p>
+<h5 id="元数据-vs-源数据">元数据  vs  源数据</h5>
+<p><strong>源数据：</strong> HDFS上的文件<br>
+<strong>元数据：</strong> 是描述数据（HDFS上的数据）的数据（也就是表名、列名、列类型这类数据）</p>
+<h4 id="hive概述">Hive概述</h4>
+<p><strong>官网：<a href="http://hive.apache.org" target="_blank" rel="noopener">hive.apache.org</a></strong><br>
+The Apache Hive ™数据仓库软件使用老进行读、写，使用SQL管理在分布式存储系统（HDFS/S3）中存储的的大型数据集，提供了一个命令行工具和JDBC驱动程序来将用户连接到Hive<br>
+<strong>Facebook开源，用于解决海量结构化的日志数据统计问题；构建在Hadoop（HDFS/MapReduce/YARN）之上的数据仓库</strong><br>
+<strong>Hive的数据是存放在HDFS之上，Hive底层执行引擎：</strong> MapReduce/Tez/Spark，只需要通过一个参数就能够切换底层的执行引擎<br>
+<strong>Hive作业提交到YARN上运行；提供了HQL查询语言和SQL类似，但不完全相同</strong><br>
+<strong>所谓的大数据“云化”：</strong><br>
+是一个很大项目<br>
+适用于离线处理/批处理<br>
+<strong>HDFS上的数据：</strong><br>
+文本、压缩、列式存储<br>
+SQL on Hadoop用到的组件有：Hive/Presto/Impala/Spark SQL…</p>
+<h5 id="hive的优缺点">Hive的优缺点</h5>
+<p><strong>优点：</strong> SQL<br>
+<strong>缺点：</strong> 如果底层引擎是基于MR，性能必然不高</p>
+<h5 id="hive架构">Hive架构：</h5>
+<p><img src="/img/article/hive/hive1.png" alt="hive1"><br>
+<strong>用户接口层：</strong> 黑窗口、JDBC<br>
+<strong>Driver/驱动器</strong><br>
+<strong>SQL解析：</strong> SQL ==&gt; AST(antlr)<br>
+<strong>查询优化：</strong> 逻辑/物理执行计划<br>
+<strong>UDF/SerDes：</strong> 用户自定义函数和序列化<br>
+<strong>Execution：</strong> 执行<br>
+<strong>元数据：</strong> 表名、所属数据库、列（名/类型/index）、表类型、表数据所在目录<br>
+<em>元数据包括table的db、column、location<br>
+Hive的数据是存放在HDFS之上<br>
+Hive的数据分为两部分：数据 + 元数据</em></p>
+<h5 id="hive和rdbms的对比">Hive和RDBMS的对比</h5>
+<h6 id="相同点">相同点：</h6>
+<p>SQL，事务，（insert/update/delete）Hive-0.14才支持，针对Hive数据仓库，写比较少的，批次加载数据到Hive然后进行统计分析</p>
+<h6 id="不同点">不同点：</h6>
+<p>体量/集群规模，延迟/时性</p>
+<h4 id="hive部署">Hive部署：</h4>
+<p><strong>查看网址：</strong><br>
+<a href="https://cwiki.apache.org/confluence/display/Hive/GettingStarted" target="_blank" rel="noopener">https://cwiki.apache.org/confluence/display/Hive/GettingStarted</a><br>
+<strong>前置：</strong><br>
+JDK8，Hadoop2.x，Linux，MySQL<br>
+<strong>版本：</strong><br>
+CDH-5.16.2<br>
+wget <a href="http://archive.cloudera.com/cdh5/cdh/5/hive-1.1.0-cdh5.16.2.tar.gz" target="_blank" rel="noopener">http://archive.cloudera.com/cdh5/cdh/5/hive-1.1.0-cdh5.16.2.tar.gz</a></p>
+<h5 id="安装">安装：</h5>
+<p><strong>解压：</strong><br>
+tar -zxvf hive-1.1.0-cdh5.16.2.tar.gz -C ~/app/<br>
+<strong>配置环境变量：</strong> source /etc/profice<br>
+export HIVE_HOME=/home/hadoop/app/hive-1.1.0-cdh5.16.2<br>
+export PATH=$HIVE_HOME/bin:$PATH<br>
+$HIVE_HOME下目录说明<br>
+<strong>bin：</strong> 脚本<br>
+<strong>lib：</strong> 依赖包<br>
+<strong>conf：</strong> 配置文件<br>
+<em>$HIVE_HOME/conf/hive-site.xml</em></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version="1.0"?&gt;</span><br><span class="line">&lt;?xml-stylesheet type="text/xsl" href="configuration.xsl"?&gt;</span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;<span class="name">name</span>&gt;</span>javax.jdo.option.ConnectionURL<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;<span class="name">value</span>&gt;</span>jdbc:mysql://JD:3306/hive?createDatabaseIfNotExist=true<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">	</span><br><span class="line">	<span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;<span class="name">name</span>&gt;</span>javax.jdo.option.ConnectionDriverName<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;<span class="name">value</span>&gt;</span>com.mysql.jdbc.Driver<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line">	<span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;<span class="name">name</span>&gt;</span>javax.jdo.option.ConnectionUserName<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;<span class="name">value</span>&gt;</span>root<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line">	<span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;<span class="name">name</span>&gt;</span>javax.jdo.option.ConnectionPassword<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;<span class="name">value</span>&gt;</span>hadoop123<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">	</span><br><span class="line">	<span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">name</span>&gt;</span>hive.cli.print.current.db<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">value</span>&gt;</span>true<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">	</span><br><span class="line">	<span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">name</span>&gt;</span>hive.cli.print.header<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">value</span>&gt;</span>true<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>hive.cli.print.current.db这个参数设置为true</strong><br>
+可以显示出当前的数据库<br>
+<strong>hive.cli.print.header这个参数设置为True</strong><br>
+可以显示出表的列名<br>
+<em>拷贝MySQL驱动包到$HIVE_HOME/lib/下</em></p>
+<p><strong>!clear;</strong> 清屏命令<br>
+<strong>exit;</strong> 退出命令<br>
+<strong>use dbname;</strong> 切换到dbname所在数据库<br>
+<strong>show tables;</strong> 查看当前数据库下的所有表<br>
+<strong>创建表：</strong> create table stu(id int, name string, age int);<br>
+<strong>查看表结构：</strong><br>
+<strong><em>desc stu;（查看到的信息比较少</em></strong>）</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">hive</span> <span class="string">(default)&gt;</span> <span class="string">desc</span> <span class="string">stu;</span></span><br><span class="line"><span class="string">OK</span></span><br><span class="line"><span class="string">col_name</span>	<span class="string">data_type</span>	<span class="string">comment</span></span><br><span class="line"><span class="string">id</span>                  	<span class="string">int</span>                 	                    </span><br><span class="line"><span class="string">name</span>                	<span class="string">string</span>              	                    </span><br><span class="line"><span class="string">age</span>                 	<span class="string">int</span>                 	                    </span><br><span class="line"><span class="string">Time</span> <span class="attr">taken:</span> <span class="number">0.06</span> <span class="string">seconds,</span> <span class="attr">Fetched:</span> <span class="number">3</span> <span class="string">row(s)</span></span><br></pre></td></tr></table></figure>
+<p><strong><em>desc extended stu;（查看到的信息会多一些）</em></strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">hive</span> <span class="string">(default)&gt;</span> <span class="string">desc</span> <span class="string">extended</span> <span class="string">stu;</span></span><br><span class="line"><span class="string">OK</span></span><br><span class="line"><span class="string">col_name</span>	<span class="string">data_type</span>	<span class="string">comment</span></span><br><span class="line"><span class="string">id</span>                  	<span class="string">int</span>                 	                    </span><br><span class="line"><span class="string">name</span>                	<span class="string">string</span>              	                    </span><br><span class="line"><span class="string">age</span>                 	<span class="string">int</span>                 	                    </span><br><span class="line"><span class="string">Detailed</span> <span class="string">Table</span> <span class="string">Information</span>	<span class="string">Table(tableName:stu,</span> <span class="attr">dbName:default,</span> <span class="attr">owner:mao,</span> <span class="attr">createTime:1576658286,</span> <span class="attr">lastAccessTime:0,</span> <span class="attr">retention:0,</span> <span class="attr">sd:StorageDescriptor(cols:[FieldSchema(name:id,</span> <span class="attr">type:int,</span> <span class="attr">comment:null),</span> <span class="string">FieldSchema(name:name,</span> <span class="attr">type:string,</span> <span class="attr">comment:null),</span> <span class="string">FieldSchema(name:age,</span> <span class="attr">type:int,</span> <span class="attr">comment:null)],</span> <span class="attr">location:hdfs://JD:9000/user/hive/warehouse/stu,</span> <span class="attr">inputFormat:org.apache.hadoop.mapred.TextInputFormat,</span> <span class="attr">outputFormat:org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat,</span> <span class="attr">compressed:false,</span> <span class="attr">numBuckets:-1,</span> <span class="attr">serdeInfo:SerDeInfo(name:null,</span> <span class="attr">serializationLib:org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe,</span> <span class="attr">parameters:&#123;serialization.format=1&#125;),</span> <span class="attr">bucketCols:[],</span> <span class="attr">sortCols:[],</span> <span class="attr">parameters:&#123;&#125;,</span> <span class="attr">skewedInfo:SkewedInfo(skewedColNames:[],</span> <span class="attr">skewedColValues:[],</span> <span class="attr">skewedColValueLocationMaps:&#123;&#125;),</span> <span class="attr">storedAsSubDirectories:false),</span> <span class="attr">partitionKeys:[],</span> <span class="attr">parameters:&#123;transient_lastDdlTime=1576658286&#125;,</span> <span class="attr">viewOriginalText:null,</span> <span class="attr">viewExpandedText:null,</span> <span class="attr">tableType:MANAGED_TABLE,</span> <span class="attr">ownerType:USER)</span>	</span><br><span class="line"><span class="string">Time</span> <span class="attr">taken:</span> <span class="number">0.126</span> <span class="string">seconds,</span> <span class="attr">Fetched:</span> <span class="number">5</span> <span class="string">row(s)</span></span><br></pre></td></tr></table></figure>
+<p><strong><em>desc formatted stu; （查看到的信息会格式化）</em></strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">hive</span> <span class="string">(default)&gt;</span> <span class="string">desc</span> <span class="string">formatted</span> <span class="string">stu;</span></span><br><span class="line"><span class="string">OK</span></span><br><span class="line"><span class="string">col_name</span>	<span class="string">data_type</span>	<span class="string">comment</span></span><br><span class="line"><span class="comment"># col_name            	data_type           	comment             </span></span><br><span class="line"><span class="string">id</span>                  	<span class="string">int</span>                 	                    </span><br><span class="line"><span class="string">name</span>                	<span class="string">string</span>              	                    </span><br><span class="line"><span class="string">age</span>                 	<span class="string">int</span>                 	                    </span><br><span class="line"><span class="comment"># Detailed Table Information	 	 </span></span><br><span class="line"><span class="attr">Database:</span>           	<span class="string">default</span>             	 </span><br><span class="line"><span class="attr">OwnerType:</span>          	<span class="string">USER</span>                	 </span><br><span class="line"><span class="attr">Owner:</span>              	<span class="string">mao</span>                 	 </span><br><span class="line"><span class="attr">CreateTime:</span>         	<span class="string">Wed</span> <span class="string">Dec</span> <span class="number">18</span> <span class="number">16</span><span class="string">:38:06</span> <span class="string">CST</span> <span class="number">2019</span>	 </span><br><span class="line"><span class="attr">LastAccessTime:</span>     	<span class="string">UNKNOWN</span>             	 </span><br><span class="line"><span class="string">Protect</span> <span class="attr">Mode:</span>       	<span class="string">None</span>                	 </span><br><span class="line"><span class="attr">Retention:</span>          	<span class="number">0</span>                   	 </span><br><span class="line"><span class="attr">Location:</span>           	<span class="attr">hdfs://JD:9000/user/hive/warehouse/stu</span>	 </span><br><span class="line"><span class="string">Table</span> <span class="attr">Type:</span>         	<span class="string">MANAGED_TABLE</span>       	 </span><br><span class="line"><span class="string">Table</span> <span class="attr">Parameters:</span>	 	 </span><br><span class="line">	<span class="string">transient_lastDdlTime</span>	<span class="number">1576658286</span>          </span><br><span class="line"><span class="comment"># Storage Information	 	 </span></span><br><span class="line"><span class="string">SerDe</span> <span class="attr">Library:</span>      	<span class="string">org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe</span>	 </span><br><span class="line"><span class="attr">InputFormat:</span>        	<span class="string">org.apache.hadoop.mapred.TextInputFormat</span>	 </span><br><span class="line"><span class="attr">OutputFormat:</span>       	<span class="string">org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat</span>	 </span><br><span class="line"><span class="attr">Compressed:</span>         	<span class="literal">No</span>                  	 </span><br><span class="line"><span class="string">Num</span> <span class="attr">Buckets:</span>        	<span class="bullet">-1</span>                  	 </span><br><span class="line"><span class="string">Bucket</span> <span class="attr">Columns:</span>     	<span class="string">[]</span>                  	 </span><br><span class="line"><span class="string">Sort</span> <span class="attr">Columns:</span>       	<span class="string">[]</span>                  	 </span><br><span class="line"><span class="string">Storage</span> <span class="string">Desc</span> <span class="attr">Params:</span>	 	 </span><br><span class="line">	<span class="string">serialization.format</span>	<span class="number">1</span>                   </span><br><span class="line"><span class="string">Time</span> <span class="attr">taken:</span> <span class="number">0.067</span> <span class="string">seconds,</span> <span class="attr">Fetched:</span> <span class="number">29</span> <span class="string">row(s)</span></span><br></pre></td></tr></table></figure>
+<p><strong>插入数据：</strong> insert into stu values(1,‘mao’,26);（但是插入数据需要跑MR非常不建议使用）<br>
+<strong>查询数据：</strong> select * from stu;</p>
+<h5 id="创建stu表默认存储在hdfs的目录是">创建stu表，默认存储在HDFS的目录是</h5>
+<p>hdfs://ruozedata001:8020/user/hive/warehouse/stu<br>
+hive.metastore.warehouse.dir：/user/hive/warehouse<br>
+<strong><em>stu：表的名字</em></strong><br>
+<strong>表的完整路径是：</strong> ${hive.metastore.warehouse.dir}/tablename</p>
+<h5 id="hive的完整执行日志">Hive的完整执行日志：</h5>
+<p>cd $HIVE_HOME<br>
+cp hive-log4j.properties.template hive-log4j.properties<br>
+<strong>里面有个参数</strong><br>
+hive.log.dir=${java.io.tmpdir}/${<a href="http://user.name" target="_blank" rel="noopener">user.name</a>}<br>
+hive.log.file=hive.log<br>
+<strong>这个参数可以看到hive日志的目录（但是建议配置到其他文件夹中）</strong><br>
+${java.io.tmpdir}/${<a href="http://user.name" target="_blank" rel="noopener">user.name</a>}/${hive.log.file}<br>
+/tmp/hadoop/hive.log</p>
+<h5 id="hive配置属性">Hive配置属性：</h5>
+<p><strong>全局：</strong> $HIVE_HOME/hive-site.xml中<br>
+<strong>临时/当前session（当前黑窗口）：</strong> 仅对当前session生效<br>
+		<strong>查看当前的属性：</strong> set key;<br>
+		<strong>修改当前的属性：</strong>  set key=value;<br>
+		<strong>也可以在启动时加上：</strong>  hive -hiveconf hive.cli.print.current.db=true</p>
+<h5 id="hive中交互式命令">Hive中交互式命令：</h5>
+<p><strong>-e：</strong> 不需要进入hive命令后，就可以跟上sql语句查询<br>
+<strong>-f：</strong> 执行指定文件（内容是SQL语句）</p>
+<h5 id="拓展基于hive的离线统计数据仓库">拓展：基于Hive的离线统计/数据仓库</h5>
+<p>把SQL封装到shell脚本中去，使用hive -e &quot;里面写sql命令&quot;<br>
+定时调度：crontab</p>
+<h5 id="hive中的数据抽象">Hive中的数据抽象</h5>
+<p>Hive中的表(stu)必须要归属于某个数据库(default)<br>
+<img src="/img/article/hive/hive2.png" alt="hive2"></p>
+<h4 id="database数据库">Database（数据库）：</h4>
+<p>包含了0到N张表<br>
+每个db对应HDFS上的一个文件夹：default==&gt;/user/hive/warehouse</p>
+<h5 id="创建数据库其中中括号表示可有可无但是在生产中if-not-exists一定要加上">创建数据库（其中中括号表示可有可无，但是在生产中IF NOT EXISTS一定要加上）：</h5>
+<p>CREATE (DATABASE|SCHEMA) [IF NOT EXISTS] database_name<br>
+[COMMENT database_comment]<br>
+[LOCATION hdfs_path]<br>
+[WITH DBPROPERTIES (property_name=property_value, …)];</p>
+<p><em>CREATE DATABASE IF NOT EXISTS mao;</em></p>
+<h5 id="自己创建的hive数据库的存放目录规则">自己创建的Hive数据库的存放目录规则：</h5>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mao@JD mao]$ hdfs dfs -ls /user/hive/warehouse/</span><br><span class="line">19/12/18 17:08:42 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable</span><br><span class="line">Found 2 items</span><br><span class="line">drwx------   - mao supergroup          0 2019-12-18 17:08 /user/hive/warehouse/mao.db</span><br><span class="line">drwx------   - mao supergroup          0 2019-12-18 16:41 /user/hive/warehouse/stu</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>${hive.metastore.warehouse.dir}/dbname.db<br>
+/user/hive/warehouse/mao.db</p>
+</blockquote>
+<h6 id="如果用location指定了创建数据库的路径数据库的存放路径就在指定的目录下">如果用LOCATION指定了创建数据库的路径，数据库的存放路径就在指定的目录下</h6>
+<p>CREATE DATABASE IF NOT EXISTS mao_hive LOCATION ‘/user/mao_hive’;</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[mao@JD mao]$ hdfs dfs -ls /user/mao_hive</span><br><span class="line">19/12/18 17:14:54 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable</span><br><span class="line">[mao@JD mao]$ hdfs dfs -ls /user</span><br><span class="line">19/12/18 17:15:01 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable</span><br><span class="line">Found 3 items</span><br><span class="line">drwx------   - mao supergroup          0 2019-12-18 16:38 /user/hive</span><br><span class="line">drwx------   - mao supergroup          0 2019-12-10 21:38 /user/mao</span><br><span class="line">drwx------   - mao supergroup          0 2019-12-18 17:11 /user/mao_hive</span><br></pre></td></tr></table></figure>
+<h6 id="查看数据库的详细信息desc-databases-database_name">查看数据库的详细信息（desc databases database_name）：</h6>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">hive</span> <span class="string">(default)&gt;</span> <span class="string">desc</span> <span class="string">database</span> <span class="string">mao_hive;</span></span><br><span class="line"><span class="string">OK</span></span><br><span class="line"><span class="string">db_name</span>	<span class="string">comment</span>	<span class="string">location</span>	<span class="string">owner_name</span>	<span class="string">owner_type</span>	<span class="string">parameters</span></span><br><span class="line"><span class="string">mao_hive</span>		<span class="attr">hdfs://JD:9000/user/mao_hive</span>	<span class="string">mao</span>	<span class="string">USER</span>	</span><br><span class="line"><span class="string">Time</span> <span class="attr">taken:</span> <span class="number">0.011</span> <span class="string">seconds,</span> <span class="attr">Fetched:</span> <span class="number">1</span> <span class="string">row(s)</span></span><br></pre></td></tr></table></figure>
+<h6 id="创建数据库的时候加上注释和数据库的属性">创建数据库的时候加上注释和数据库的属性：</h6>
+<p>CREATE DATABASE IF NOT EXISTS mao_hive1 COMMENT ‘this is MX database’ WITH DBPROPERTIES(‘creator’=‘mx’, ‘date’=‘2019-12-18’);</p>
+<h6 id="修改数据库">修改数据库：</h6>
+<h6 id="删除数据库">删除数据库</h6>
+<p>DROP (DATABASE|SCHEMA) [IF EXISTS] database_name [RESTRICT|CASCADE];<br>
+DROP DATABASE IF EXISTS mao_hive;<br>
+<strong>如果数据库中有表，在删除时就会报错：</strong><br>
+hive (mao_hive)&gt; DROP DATABASE IF EXISTS mao_hive;<br>
+FAILED: Execution Error, return code 1 from org.apache.hadoop.hive.ql.exec.DDLTask. InvalidOperationException(message:Database mao_hive is not empty. One or more tables exist.)<br>
+<strong>此时如果想删除要使用CASCADE（但是了解即可，慎用）：一对多相当于现在的一个数据库对应多个table表</strong></p>
+<h5 id="基本数据类型">基本数据类型</h5>
+<p><strong>HDFS上的文件来说：</strong> string<br>
+<strong>数值类型：</strong> int、bigint、float、double、decimal<br>
+<strong>字符串类型：</strong> string生产中占90%<br>
+<strong>布尔类型：</strong> boolean：true/false<br>
+<strong>日期类型：</strong> date、timestamp一般不使用，用String类型就可以满足</p>
+<h5 id="分隔符">分隔符</h5>
+<table>
+<thead>
+<tr>
+<th>分隔符</th>
+<th>对应编码</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>^A</td>
+<td>\001</td>
+<td>字段之间的分隔符</td>
+</tr>
+<tr>
+<td>\n</td>
+<td>\n</td>
+<td>记录分隔符</td>
+</tr>
+<tr>
+<td>^B</td>
+<td>\002</td>
+<td>ARRAY/STRUCT（Hive中的复杂数据类型）</td>
+</tr>
+<tr>
+<td>^C</td>
+<td>\003</td>
+<td>MAP中的key/value（Hive中的复杂数据类型）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>但是不可以和数据中的内容重合</strong><br>
+1,pk,30<br>
+1$$$$$pk$$$$$30</p>
+<p><strong>create table stu(id int, name string, age int) row format delimited fields terminated by ‘,’;<br>
+insert into stu values(1,‘mao’,25);</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">hive</span> <span class="string">(mao_hive)&gt;</span> <span class="string">select</span> <span class="string">*</span> <span class="string">from</span> <span class="string">stu;</span></span><br><span class="line"><span class="string">OK</span></span><br><span class="line"><span class="string">stu.id</span>	<span class="string">stu.name</span>	<span class="string">stu.age</span></span><br><span class="line"><span class="number">1</span>	<span class="string">mao</span>	<span class="number">25</span></span><br><span class="line"><span class="string">Time</span> <span class="attr">taken:</span> <span class="number">0.044</span> <span class="string">seconds,</span> <span class="attr">Fetched:</span> <span class="number">1</span> <span class="string">row(s)</span></span><br><span class="line"><span class="string">hive</span> <span class="string">(mao_hive)&gt;</span> <span class="string">desc</span> <span class="string">formatted</span> <span class="string">stu;</span></span><br><span class="line"><span class="string">OK</span></span><br><span class="line"><span class="string">col_name</span>	<span class="string">data_type</span>	<span class="string">comment</span></span><br><span class="line"><span class="comment"># col_name            	data_type           	comment             </span></span><br><span class="line">	 	 </span><br><span class="line"><span class="string">id</span>                  	<span class="string">int</span>                 	                    </span><br><span class="line"><span class="string">name</span>                	<span class="string">string</span>              	                    </span><br><span class="line"><span class="string">age</span>                 	<span class="string">int</span>                 	                    </span><br><span class="line">	 	 </span><br><span class="line"><span class="comment"># Detailed Table Information	 	 </span></span><br><span class="line"><span class="attr">Database:</span>           	<span class="string">mao_hive</span>            	 </span><br><span class="line"><span class="attr">OwnerType:</span>          	<span class="string">USER</span>                	 </span><br><span class="line"><span class="attr">Owner:</span>              	<span class="string">mao</span>                 	 </span><br><span class="line"><span class="attr">CreateTime:</span>         	<span class="string">Wed</span> <span class="string">Dec</span> <span class="number">18</span> <span class="number">17</span><span class="string">:34:06</span> <span class="string">CST</span> <span class="number">2019</span>	 </span><br><span class="line"><span class="attr">LastAccessTime:</span>     	<span class="string">UNKNOWN</span>             	 </span><br><span class="line"><span class="string">Protect</span> <span class="attr">Mode:</span>       	<span class="string">None</span>                	 </span><br><span class="line"><span class="attr">Retention:</span>          	<span class="number">0</span>                   	 </span><br><span class="line"><span class="attr">Location:</span>           	<span class="attr">hdfs://JD:9000/user/mao_hive/stu</span>	 </span><br><span class="line"><span class="string">Table</span> <span class="attr">Type:</span>         	<span class="string">MANAGED_TABLE</span>       	 </span><br><span class="line"><span class="string">Table</span> <span class="attr">Parameters:</span>	 	 </span><br><span class="line">	<span class="string">COLUMN_STATS_ACCURATE</span>	<span class="literal">true</span>                </span><br><span class="line">	<span class="string">numFiles</span>            	<span class="number">1</span>                   </span><br><span class="line">	<span class="string">numRows</span>             	<span class="number">1</span>                   </span><br><span class="line">	<span class="string">rawDataSize</span>         	<span class="number">8</span>                   </span><br><span class="line">	<span class="string">totalSize</span>           	<span class="number">9</span>                   </span><br><span class="line">	<span class="string">transient_lastDdlTime</span>	<span class="number">1576661699</span>          </span><br><span class="line">	 	 </span><br><span class="line"><span class="comment"># Storage Information	 	 </span></span><br><span class="line"><span class="string">SerDe</span> <span class="attr">Library:</span>      	<span class="string">org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe</span>	 </span><br><span class="line"><span class="attr">InputFormat:</span>        	<span class="string">org.apache.hadoop.mapred.TextInputFormat</span>	 </span><br><span class="line"><span class="attr">OutputFormat:</span>       	<span class="string">org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat</span>	 </span><br><span class="line"><span class="attr">Compressed:</span>         	<span class="literal">No</span>                  	 </span><br><span class="line"><span class="string">Num</span> <span class="attr">Buckets:</span>        	<span class="bullet">-1</span>                  	 </span><br><span class="line"><span class="string">Bucket</span> <span class="attr">Columns:</span>     	<span class="string">[]</span>                  	 </span><br><span class="line"><span class="string">Sort</span> <span class="attr">Columns:</span>       	<span class="string">[]</span>                  	 </span><br><span class="line"><span class="string">Storage</span> <span class="string">Desc</span> <span class="attr">Params:</span>	 	 </span><br><span class="line">	<span class="string">field.delim</span>         	<span class="string">,</span>                   </span><br><span class="line">	<span class="string">serialization.format</span>	<span class="string">,</span>                   </span><br><span class="line"><span class="string">Time</span> <span class="attr">taken:</span> <span class="number">0.051</span> <span class="string">seconds,</span> <span class="attr">Fetched:</span> <span class="number">35</span> <span class="string">row(s)</span></span><br><span class="line"></span><br><span class="line"><span class="string">把/user/hive/warehouse/stu/000000_0下载到本地，查看数据的内容。</span></span><br><span class="line"><span class="string">[mao@JD</span> <span class="string">hadoop]$</span> <span class="string">hadoop</span> <span class="string">fs</span> <span class="bullet">-get</span> <span class="string">/user/mao_hive/stu/000000_0</span></span><br><span class="line"><span class="number">19</span><span class="string">/12/18</span> <span class="number">17</span><span class="string">:45:36</span> <span class="string">WARN</span> <span class="string">util.NativeCodeLoader:</span> <span class="string">Unable</span> <span class="string">to</span> <span class="string">load</span> <span class="string">native-hadoop</span> <span class="string">library</span> <span class="string">for</span> <span class="string">your</span> <span class="string">platform...</span> <span class="string">using</span> <span class="string">builtin-java</span> <span class="string">classes</span> <span class="string">where</span> <span class="string">applicable</span></span><br><span class="line"><span class="string">[mao@JD</span> <span class="string">hadoop]$</span> <span class="string">cat</span> <span class="number">000000</span><span class="string">_0</span> </span><br><span class="line"><span class="number">1</span><span class="string">,mao,25</span></span><br></pre></td></tr></table></figure>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/article/Yarn资源调优与调度器/" data-toggle="tooltip" data-placement="top" title="Yarn资源调优与调度器">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share"  data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+  
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#欢迎来到妖精小狗的博客"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">&#x6B22;&#x8FCE;&#x6765;&#x5230;&#x5996;&#x7CBE;&#x5C0F;&#x72D7;&#x7684;&#x535A;&#x5BA2;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#hadoop"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">Hadoop</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#gt-hive的产生背景"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">==&gt; Hive&#x7684;&#x4EA7;&#x751F;&#x80CC;&#x666F;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#mysqloracle等数据库想要进行统计操作"><span class="toc-nav-number">1.2.1.</span> <span class="toc-nav-text">MySQL/Oracle&#x2026;&#x7B49;&#x6570;&#x636E;&#x5E93;&#x60F3;&#x8981;&#x8FDB;&#x884C;&#x7EDF;&#x8BA1;&#x64CD;&#x4F5C;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#元数据-vs-源数据"><span class="toc-nav-number">1.2.2.</span> <span class="toc-nav-text">&#x5143;&#x6570;&#x636E;  vs  &#x6E90;&#x6570;&#x636E;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#hive概述"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">Hive&#x6982;&#x8FF0;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#hive的优缺点"><span class="toc-nav-number">1.3.1.</span> <span class="toc-nav-text">Hive&#x7684;&#x4F18;&#x7F3A;&#x70B9;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#hive架构"><span class="toc-nav-number">1.3.2.</span> <span class="toc-nav-text">Hive&#x67B6;&#x6784;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#hive和rdbms的对比"><span class="toc-nav-number">1.3.3.</span> <span class="toc-nav-text">Hive&#x548C;RDBMS&#x7684;&#x5BF9;&#x6BD4;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#相同点"><span class="toc-nav-number">1.3.3.1.</span> <span class="toc-nav-text">&#x76F8;&#x540C;&#x70B9;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#不同点"><span class="toc-nav-number">1.3.3.2.</span> <span class="toc-nav-text">&#x4E0D;&#x540C;&#x70B9;&#xFF1A;</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#hive部署"><span class="toc-nav-number">1.4.</span> <span class="toc-nav-text">Hive&#x90E8;&#x7F72;&#xFF1A;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#安装"><span class="toc-nav-number">1.4.1.</span> <span class="toc-nav-text">&#x5B89;&#x88C5;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#创建stu表默认存储在hdfs的目录是"><span class="toc-nav-number">1.4.2.</span> <span class="toc-nav-text">&#x521B;&#x5EFA;stu&#x8868;&#xFF0C;&#x9ED8;&#x8BA4;&#x5B58;&#x50A8;&#x5728;HDFS&#x7684;&#x76EE;&#x5F55;&#x662F;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#hive的完整执行日志"><span class="toc-nav-number">1.4.3.</span> <span class="toc-nav-text">Hive&#x7684;&#x5B8C;&#x6574;&#x6267;&#x884C;&#x65E5;&#x5FD7;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#hive配置属性"><span class="toc-nav-number">1.4.4.</span> <span class="toc-nav-text">Hive&#x914D;&#x7F6E;&#x5C5E;&#x6027;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#hive中交互式命令"><span class="toc-nav-number">1.4.5.</span> <span class="toc-nav-text">Hive&#x4E2D;&#x4EA4;&#x4E92;&#x5F0F;&#x547D;&#x4EE4;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#拓展基于hive的离线统计数据仓库"><span class="toc-nav-number">1.4.6.</span> <span class="toc-nav-text">&#x62D3;&#x5C55;&#xFF1A;&#x57FA;&#x4E8E;Hive&#x7684;&#x79BB;&#x7EBF;&#x7EDF;&#x8BA1;/&#x6570;&#x636E;&#x4ED3;&#x5E93;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#hive中的数据抽象"><span class="toc-nav-number">1.4.7.</span> <span class="toc-nav-text">Hive&#x4E2D;&#x7684;&#x6570;&#x636E;&#x62BD;&#x8C61;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#database数据库"><span class="toc-nav-number">1.5.</span> <span class="toc-nav-text">Database&#xFF08;&#x6570;&#x636E;&#x5E93;&#xFF09;&#xFF1A;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#创建数据库其中中括号表示可有可无但是在生产中if-not-exists一定要加上"><span class="toc-nav-number">1.5.1.</span> <span class="toc-nav-text">&#x521B;&#x5EFA;&#x6570;&#x636E;&#x5E93;&#xFF08;&#x5176;&#x4E2D;&#x4E2D;&#x62EC;&#x53F7;&#x8868;&#x793A;&#x53EF;&#x6709;&#x53EF;&#x65E0;&#xFF0C;&#x4F46;&#x662F;&#x5728;&#x751F;&#x4EA7;&#x4E2D;IF NOT EXISTS&#x4E00;&#x5B9A;&#x8981;&#x52A0;&#x4E0A;&#xFF09;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#自己创建的hive数据库的存放目录规则"><span class="toc-nav-number">1.5.2.</span> <span class="toc-nav-text">&#x81EA;&#x5DF1;&#x521B;&#x5EFA;&#x7684;Hive&#x6570;&#x636E;&#x5E93;&#x7684;&#x5B58;&#x653E;&#x76EE;&#x5F55;&#x89C4;&#x5219;&#xFF1A;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#如果用location指定了创建数据库的路径数据库的存放路径就在指定的目录下"><span class="toc-nav-number">1.5.2.1.</span> <span class="toc-nav-text">&#x5982;&#x679C;&#x7528;LOCATION&#x6307;&#x5B9A;&#x4E86;&#x521B;&#x5EFA;&#x6570;&#x636E;&#x5E93;&#x7684;&#x8DEF;&#x5F84;&#xFF0C;&#x6570;&#x636E;&#x5E93;&#x7684;&#x5B58;&#x653E;&#x8DEF;&#x5F84;&#x5C31;&#x5728;&#x6307;&#x5B9A;&#x7684;&#x76EE;&#x5F55;&#x4E0B;</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#查看数据库的详细信息desc-databases-database_name"><span class="toc-nav-number">1.5.2.2.</span> <span class="toc-nav-text">&#x67E5;&#x770B;&#x6570;&#x636E;&#x5E93;&#x7684;&#x8BE6;&#x7EC6;&#x4FE1;&#x606F;&#xFF08;desc databases database_name&#xFF09;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#创建数据库的时候加上注释和数据库的属性"><span class="toc-nav-number">1.5.2.3.</span> <span class="toc-nav-text">&#x521B;&#x5EFA;&#x6570;&#x636E;&#x5E93;&#x7684;&#x65F6;&#x5019;&#x52A0;&#x4E0A;&#x6CE8;&#x91CA;&#x548C;&#x6570;&#x636E;&#x5E93;&#x7684;&#x5C5E;&#x6027;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#修改数据库"><span class="toc-nav-number">1.5.2.4.</span> <span class="toc-nav-text">&#x4FEE;&#x6539;&#x6570;&#x636E;&#x5E93;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#删除数据库"><span class="toc-nav-number">1.5.2.5.</span> <span class="toc-nav-text">&#x5220;&#x9664;&#x6570;&#x636E;&#x5E93;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#基本数据类型"><span class="toc-nav-number">1.5.3.</span> <span class="toc-nav-text">&#x57FA;&#x672C;&#x6570;&#x636E;&#x7C7B;&#x578B;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#分隔符"><span class="toc-nav-number">1.5.4.</span> <span class="toc-nav-text">&#x5206;&#x9694;&#x7B26;</span></a></li></ol></li></ol></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#hive" title="hive">hive</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'rz'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+<!-- chrome Firefox 中文锚点定位失效-->
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<!-- smooth scroll behavior polyfill  -->
+<script type="text/javascript" src="/js/smoothscroll.js"></script>
+<script>
+        $('#toc').on('click','a',function(a){
+            // var isChrome = window.navigator.userAgent.indexOf("Chrome") !== -1;
+            // console.log(window.navigator.userAgent,isChrome)
+                // if(isChrome) {
+                    // console.log(a.currentTarget.outerHTML);
+                    // console.log($(a.currentTarget).attr("href"));
+                    //跳转到指定锚点
+                    // document.getElementById(a.target.innerText.toLowerCase()).scrollIntoView(true);
+                    document.getElementById($(a.currentTarget).attr("href").replace("#","")).scrollIntoView({behavior: 'smooth' });
+                // }
+        })  
+</script>
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/demonlittledog">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; MX 2019 
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://github.com/demonlittledog/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = 'xxx';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://github.com/demonlittledog/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
