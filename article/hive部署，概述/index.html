@@ -142,14 +142,14 @@
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
+                            <a href="/about/">About</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/about/">About</a>
+                            <a href="/archive/">Archives</a>
                         </li>
                         
                     
@@ -353,6 +353,11 @@ ${java.io.tmpdir}/${<a href="http://user.name" target="_blank" rel="noopener">us
 <h6 id="创建数据库的时候加上注释和数据库的属性">创建数据库的时候加上注释和数据库的属性：</h6>
 <p>CREATE DATABASE IF NOT EXISTS mao_hive1 COMMENT ‘this is MX database’ WITH DBPROPERTIES(‘creator’=‘mx’, ‘date’=‘2019-12-18’);</p>
 <h6 id="修改数据库">修改数据库：</h6>
+<blockquote>
+<p>ALTER (DATABASE|SCHEMA) database_name SET DBPROPERTIES (property_name=property_value, …);   – (Note: SCHEMA added in Hive 0.14.0)<br>
+ALTER (DATABASE|SCHEMA) database_name SET OWNER [USER|ROLE] user_or_role;   – (Note: Hive 0.13.0 and later; SCHEMA added in Hive  0.14.0)<br>
+ALTER (DATABASE|SCHEMA) database_name SET LOCATION hdfs_path;  – (Note: Hive 2.2.1, 2.4.0 and later)</p>
+</blockquote>
 <h6 id="删除数据库">删除数据库</h6>
 <p>DROP (DATABASE|SCHEMA) [IF EXISTS] database_name [RESTRICT|CASCADE];<br>
 DROP DATABASE IF EXISTS mao_hive;<br>
