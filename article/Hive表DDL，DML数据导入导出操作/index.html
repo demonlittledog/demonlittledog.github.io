@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Hive表DDL，DML数据导入导出操作 - 妖精小狗@MX | Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://github.com/demonlittledog/article/Hive表DDL，DML数据导入导出操作/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/dog.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#hive" title="hive">hive</a>
+                            
+                        </div>
+                        <h1>Hive表DDL，DML数据导入导出操作</h1>
+                        <h2 class="subheading">Hive表DDL数据定义(增删查改)&amp;DML数据操作(导入导出)</h2>
+                        <span class="meta">
+                            Posted by MX on
+                            2019-12-19
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">妖精小狗@MX Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h3 id="欢迎来到妖精小狗的博客">欢迎来到妖精小狗的博客</h3>
+<hr>
+<h4 id="hive表ddl非常重要">Hive表DDL（非常重要）</h4>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">CREATE</span> <span class="string">[TEMPORARY]</span> <span class="string">[EXTERNAL]</span> <span class="string">TABLE</span> <span class="string">[IF</span> <span class="string">NOT</span> <span class="string">EXISTS]</span> <span class="string">[db_name.]table_name</span>    <span class="bullet">--</span> <span class="string">(Note:</span> <span class="string">TEMPORARY</span> <span class="string">available</span> <span class="string">in</span> <span class="string">Hive</span> <span class="number">0.14</span><span class="number">.0</span> <span class="string">and</span> <span class="string">later)</span></span><br><span class="line">  <span class="string">[(col_name</span> <span class="string">data_type</span> <span class="string">[column_constraint_specification]</span> <span class="string">[COMMENT</span> <span class="string">col_comment],</span> <span class="string">...</span> <span class="string">[constraint_specification])]</span></span><br><span class="line">  <span class="string">[COMMENT</span> <span class="string">table_comment]</span></span><br><span class="line">  <span class="string">[PARTITIONED</span> <span class="string">BY</span> <span class="string">(col_name</span> <span class="string">data_type</span> <span class="string">[COMMENT</span> <span class="string">col_comment],</span> <span class="string">...)]</span></span><br><span class="line">  <span class="string">[CLUSTERED</span> <span class="string">BY</span> <span class="string">(col_name,</span> <span class="string">col_name,</span> <span class="string">...)</span> <span class="string">[SORTED</span> <span class="string">BY</span> <span class="string">(col_name</span> <span class="string">[ASC|DESC],</span> <span class="string">...)]</span> <span class="string">INTO</span> <span class="string">num_buckets</span> <span class="string">BUCKETS]</span></span><br><span class="line">  <span class="string">[SKEWED</span> <span class="string">BY</span> <span class="string">(col_name,</span> <span class="string">col_name,</span> <span class="string">...)</span>                  <span class="bullet">--</span> <span class="string">(Note:</span> <span class="string">Available</span> <span class="string">in</span> <span class="string">Hive</span> <span class="number">0.10</span><span class="number">.0</span> <span class="string">and</span> <span class="string">later)]</span></span><br><span class="line">     <span class="string">ON</span> <span class="string">((col_value,</span> <span class="string">col_value,</span> <span class="string">...),</span> <span class="string">(col_value,</span> <span class="string">col_value,</span> <span class="string">...),</span> <span class="string">...)</span></span><br><span class="line">     <span class="string">[STORED</span> <span class="string">AS</span> <span class="string">DIRECTORIES]</span></span><br><span class="line">  <span class="string">[</span></span><br><span class="line">   <span class="string">[ROW</span> <span class="string">FORMAT</span> <span class="string">row_format]</span> </span><br><span class="line">   <span class="string">[STORED</span> <span class="string">AS</span> <span class="string">file_format]</span></span><br><span class="line">     <span class="string">| STORED BY 'storage.handler.class.name' [WITH SERDEPROPERTIES (...)]  -- (Note: Available in Hive 0.6.0 and later)</span></span><br><span class="line"><span class="string">  ]</span></span><br><span class="line"><span class="string">  [LOCATION hdfs_path]</span></span><br><span class="line"><span class="string">  [TBLPROPERTIES (property_name=property_value, ...)]   -- (Note: Available in Hive 0.6.0 and later)</span></span><br><span class="line"><span class="string">  [AS select_statement];   -- (Note: Available in Hive 0.5.0 and later; not supported for external tables)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">CREATE [TEMPORARY] [EXTERNAL] TABLE [IF NOT EXISTS] [db_name.]table_name</span></span><br><span class="line"><span class="string">  LIKE existing_table_or_view_name</span></span><br><span class="line"><span class="string">  [LOCATION hdfs_path];</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">data_type</span></span><br><span class="line"><span class="string">  : primitive_type</span></span><br><span class="line"><span class="string">  | array_type</span></span><br><span class="line"><span class="string">  | map_type</span></span><br><span class="line"><span class="string">  | struct_type</span></span><br><span class="line"><span class="string">  | union_type  -- (Note: Available in Hive 0.7.0 and later)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">primitive_type</span></span><br><span class="line"><span class="string">  : TINYINT</span></span><br><span class="line"><span class="string">  | SMALLINT</span></span><br><span class="line"><span class="string">  | INT</span></span><br><span class="line"><span class="string">  | BIGINT</span></span><br><span class="line"><span class="string">  | BOOLEAN</span></span><br><span class="line"><span class="string">  | FLOAT</span></span><br><span class="line"><span class="string">  | DOUBLE</span></span><br><span class="line"><span class="string">  | DOUBLE PRECISION -- (Note: Available in Hive 2.2.0 and later)</span></span><br><span class="line"><span class="string">  | STRING</span></span><br><span class="line"><span class="string">  | BINARY      -- (Note: Available in Hive 0.8.0 and later)</span></span><br><span class="line"><span class="string">  | TIMESTAMP   -- (Note: Available in Hive 0.8.0 and later)</span></span><br><span class="line"><span class="string">  | DECIMAL     -- (Note: Available in Hive 0.11.0 and later)</span></span><br><span class="line"><span class="string">  | DECIMAL(precision, scale)  -- (Note: Available in Hive 0.13.0 and later)</span></span><br><span class="line"><span class="string">  | DATE        -- (Note: Available in Hive 0.12.0 and later)</span></span><br><span class="line"><span class="string">  | VARCHAR     -- (Note: Available in Hive 0.12.0 and later)</span></span><br><span class="line"><span class="string">  | CHAR        -- (Note: Available in Hive 0.13.0 and later)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">array_type</span></span><br><span class="line"><span class="string">  : ARRAY &lt; data_type &gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">map_type</span></span><br><span class="line"><span class="string">  : MAP &lt; primitive_type, data_type &gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">struct_type</span></span><br><span class="line"><span class="string">  : STRUCT &lt; col_name : data_type [COMMENT col_comment], ...&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">union_type</span></span><br><span class="line"><span class="string">   : UNIONTYPE &lt; data_type, data_type, ... &gt;  -- (Note: Available in Hive 0.7.0 and later)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">row_format</span></span><br><span class="line"><span class="string">  : DELIMITED [FIELDS TERMINATED BY char [ESCAPED BY char]] [COLLECTION ITEMS TERMINATED BY char]</span></span><br><span class="line"><span class="string">        [MAP KEYS TERMINATED BY char] [LINES TERMINATED BY char]</span></span><br><span class="line"><span class="string">        [NULL DEFINED AS char]   -- (Note: Available in Hive 0.13 and later)</span></span><br><span class="line"><span class="string">  | SERDE serde_name [WITH SERDEPROPERTIES (property_name=property_value, property_name=property_value, ...)]</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span><span class="attr">file_format:</span></span><br><span class="line">  <span class="string">:</span> <span class="string">SEQUENCEFILE</span></span><br><span class="line">  <span class="string">| TEXTFILE    -- (Default, depending on hive.default.fileformat configuration)</span></span><br><span class="line"><span class="string">  | RCFILE      -- (Note: Available in Hive 0.6.0 and later)</span></span><br><span class="line"><span class="string">  | ORC         -- (Note: Available in Hive 0.11.0 and later)</span></span><br><span class="line"><span class="string">  | PARQUET     -- (Note: Available in Hive 0.13.0 and later)</span></span><br><span class="line"><span class="string">  | AVRO        -- (Note: Available in Hive 0.14.0 and later)</span></span><br><span class="line"><span class="string">  | JSONFILE    -- (Note: Available in Hive 4.0.0 and later)</span></span><br><span class="line"><span class="string">  | INPUTFORMAT input_format_classname OUTPUTFORMAT output_format_classname</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span><span class="attr">column_constraint_specification:</span></span><br><span class="line">  <span class="string">:</span> <span class="string">[</span> <span class="string">PRIMARY</span> <span class="string">KEY|UNIQUE|NOT</span> <span class="literal">NULL</span><span class="string">|DEFAULT</span> <span class="string">[default_value]|CHECK</span>  <span class="string">[check_expression]</span> <span class="string">ENABLE|DISABLE</span> <span class="string">NOVALIDATE</span> <span class="string">RELY/NORELY</span> <span class="string">]</span></span><br><span class="line"></span><br><span class="line"><span class="attr">default_value:</span></span><br><span class="line">  <span class="string">:</span> <span class="string">[</span> <span class="string">LITERAL|CURRENT_USER()|CURRENT_DATE()|CURRENT_TIMESTAMP()|NULL</span> <span class="string">]</span>  </span><br><span class="line"></span><br><span class="line"><span class="attr">constraint_specification:</span></span><br><span class="line">  <span class="string">:</span> <span class="string">[,</span> <span class="string">PRIMARY</span> <span class="string">KEY</span> <span class="string">(col_name,</span> <span class="string">...)</span> <span class="string">DISABLE</span> <span class="string">NOVALIDATE</span> <span class="string">RELY/NORELY</span> <span class="string">]</span></span><br><span class="line">    <span class="string">[,</span> <span class="string">PRIMARY</span> <span class="string">KEY</span> <span class="string">(col_name,</span> <span class="string">...)</span> <span class="string">DISABLE</span> <span class="string">NOVALIDATE</span> <span class="string">RELY/NORELY</span> <span class="string">]</span></span><br><span class="line">    <span class="string">[,</span> <span class="string">CONSTRAINT</span> <span class="string">constraint_name</span> <span class="string">FOREIGN</span> <span class="string">KEY</span> <span class="string">(col_name,</span> <span class="string">...)</span> <span class="string">REFERENCES</span> <span class="string">table_name(col_name,</span> <span class="string">...)</span> <span class="string">DISABLE</span> <span class="string">NOVALIDATE</span> </span><br><span class="line">    <span class="string">[,</span> <span class="string">CONSTRAINT</span> <span class="string">constraint_name</span> <span class="string">UNIQUE</span> <span class="string">(col_name,</span> <span class="string">...)</span> <span class="string">DISABLE</span> <span class="string">NOVALIDATE</span> <span class="string">RELY/NORELY</span> <span class="string">]</span></span><br><span class="line"><span class="string">[,</span> <span class="string">CONSTRAINT</span> <span class="string">constraint_name</span> <span class="string">CHECK</span> <span class="string">[check_expression]</span> <span class="string">ENABLE|DISABLE</span> <span class="string">NOVALIDATE</span> <span class="string">RELY/NORELY</span> <span class="string">]</span></span><br></pre></td></tr></table></figure>
+<p><strong><em>SQL处理，第一步必须要有表的存在</em></strong></p>
+<h5 id="实际操作">实际操作：</h5>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">EXTERNAL</span> <span class="keyword">TABLE</span> emp(</span><br><span class="line">empno <span class="built_in">int</span>,</span><br><span class="line">ename <span class="keyword">string</span>,</span><br><span class="line">job <span class="keyword">string</span>,</span><br><span class="line">mgr <span class="built_in">int</span>,</span><br><span class="line">hiredate <span class="keyword">string</span>,</span><br><span class="line">sal <span class="keyword">double</span>,</span><br><span class="line">comm <span class="keyword">double</span>,</span><br><span class="line">deptno <span class="built_in">int</span></span><br><span class="line">) <span class="keyword">ROW</span> <span class="keyword">FORMAT</span> <span class="keyword">DELIMITED</span> <span class="keyword">FIELDS</span> <span class="keyword">TERMINATED</span> <span class="keyword">BY</span> <span class="string">'\t'</span> LOCATION <span class="string">'/mao/hive_external_table/emp/'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">LOAD</span> <span class="keyword">DATA</span> <span class="keyword">LOCAL</span> INPATH <span class="string">' /opt/software/emp.txt'</span> <span class="keyword">into</span> <span class="keyword">table</span> emp;</span><br></pre></td></tr></table></figure>
+<h5 id="数据操纵语言dml主要有三种形式">数据操纵语言DML主要有三种形式：</h5>
+<ol>
+<li>插入：INSERT</li>
+<li>更新：UPDATE</li>
+<li>删除：DELETE</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">LOAD</span> <span class="keyword">DATA</span> <span class="keyword">LOCAL</span> INPATH <span class="string">'filepath'</span> [OVERWRITE] <span class="keyword">INTO</span> <span class="keyword">TABLE</span> tablename [<span class="keyword">PARTITION</span> (partcol1=val1, partcol2=val2 ...)]</span><br></pre></td></tr></table></figure>
+<p><strong>LOCAL：“本地”  linux服务器  JD</strong><br>
+<strong>无LOCAL：从HDFS</strong></p>
+<p><em>CREATE TABLE emp2 LIKE emp;（只把表结构复制出来）<br>
+CREATE TABLE emp3 as select * from emp;（把表结构和内容都复制出来，但是会跑一个MapReduce）</em></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> [<span class="keyword">TEMPORARY</span>] [<span class="keyword">EXTERNAL</span>] <span class="keyword">TABLE</span> [<span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span>] [db_name.]table_name</span><br><span class="line">  <span class="keyword">LIKE</span> existing_table_or_view_name</span><br><span class="line">  [LOCATION hdfs_path];</span><br></pre></td></tr></table></figure>
+<h5 id="几个查看表的小窍门">几个查看表的小窍门：</h5>
+<ol>
+<li>show tables in database_name（可以查看某一个库里的所有表）</li>
+<li>show tables ‘emp*’（查看当前数据库所有以emp开头的表）</li>
+<li>show create table emp;（可以看到创建表的详细信息，可以直接用这个语句创建一个新的表）</li>
+</ol>
+<h4 id="修改表">修改表：</h4>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> table_name <span class="keyword">RENAME</span> <span class="keyword">TO</span> new_table_name;（修改表名）</span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> table_name <span class="keyword">SET</span> TBLPROPERTIES table_properties;（修改表属性）</span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> table_name <span class="keyword">SET</span> TBLPROPERTIES (<span class="string">'comment'</span> = new_comment);（修改备注）</span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> table_name [<span class="keyword">PARTITION</span> partition_spec] <span class="keyword">SET</span> SERDE serde_class_name [<span class="keyword">WITH</span> SERDEPROPERTIES serde_properties];（修改序列化）</span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> table_name CLUSTERED <span class="keyword">BY</span> (col_name, col_name, ...) [SORTED <span class="keyword">BY</span> (col_name, ...)]</span><br><span class="line">  <span class="keyword">INTO</span> num_buckets BUCKETS;（修改存储属性）</span><br></pre></td></tr></table></figure>
+<h4 id="删除表">删除表：</h4>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">TRUNCATE</span> <span class="keyword">TABLE</span> table_name [<span class="keyword">PARTITION</span> partition_spec];（清空表中数据）</span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> [<span class="keyword">IF</span> <span class="keyword">EXISTS</span>] table_name [<span class="keyword">PURGE</span>];（删除表）</span><br></pre></td></tr></table></figure>
+<h5 id="hive中有两种常见类型的表">Hive中有两种常见类型的表：</h5>
+<p><strong>内部表：</strong> MANAGED TABLE<br>
+<strong>内部表删除时：</strong> HDFS + META都被删除</p>
+<p><strong>外部表：</strong> EXTERNAL TABLE<br>
+<strong>外部表删除时：</strong> HDFS不删除，仅META被删除</p>
+<h5 id="内部表和外部表的相互转换">内部表和外部表的相互转换：</h5>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Alter</span> <span class="keyword">table</span> table_name <span class="keyword">set</span> tblproperties(<span class="string">'EXTERNAL'</span>=<span class="string">'TRUE'</span>);</span><br><span class="line"><span class="keyword">Alter</span> <span class="keyword">table</span> table_name <span class="keyword">set</span> tblproperties(<span class="string">'EXTERNAL'</span>=<span class="string">'FALSE'</span>);</span><br></pre></td></tr></table></figure>
+<p>（一定要记住是大写(‘EXTERNAL’=’TRUE’)）</p>
+<h5 id="hive做的是离线数仓">Hive做的是离线数仓</h5>
+<p>我们在收集日志的时候会按照一定的时间顺序将日志存储在不同文件中<br>
+log_20191229<br>
+log_20191230  time 创建index</p>
+<h5 id="如果不分区我们查询一些信息就会全表查询所有都会扫描一遍非常浪费io">如果不分区，我们查询一些信息就会全表查询所有都会扫描一遍，非常浪费IO。</h5>
+<p><strong>IO分为磁盘IO和网络IO如果占用太多，都会影响整个集群。</strong><br>
+<strong>IO的开销不是一个级别的</strong><br>
+Hive中也引入了分区非常好<br>
+select … from log where day=’…'<br>
+select … from log where day='90121229’<br>
+<strong>分区表：</strong> 分区其实对应的就是HDFS上的一个文件夹/目录</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> order_partition(</span><br><span class="line">order_no <span class="keyword">string</span>,</span><br><span class="line">event_time <span class="keyword">string</span></span><br><span class="line">)</span><br><span class="line">PARTITIONED <span class="keyword">BY</span> (event_month <span class="keyword">string</span>)</span><br><span class="line"><span class="keyword">ROW</span> <span class="keyword">FORMAT</span> <span class="keyword">DELIMITED</span> <span class="keyword">FIELDS</span> <span class="keyword">TERMINATED</span> <span class="keyword">BY</span> <span class="string">'\t'</span>;</span><br></pre></td></tr></table></figure>
+<p><em>分区列并不是一个“真正的”表字段，其实是HDFS上表对应的文件夹下的一个文件夹</em></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">load</span> <span class="keyword">data</span> <span class="keyword">local</span> inpath <span class="string">'/opt/software/order_created.txt'</span> <span class="keyword">into</span> <span class="keyword">table</span> order_partition <span class="keyword">partition</span> (event_month=<span class="string">'201901'</span>);</span><br></pre></td></tr></table></figure>
+<p><strong>分区表加载数据一定要指定分区字段</strong>（select * from order_partition where event_month = ‘201901’;）</p>
+<h6 id="可以先用hdfs命令将文件存到指定路径下">可以先用hdfs命令将文件存到指定路径下：</h6>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">hadoop</span> <span class="string">fs</span> <span class="string">–mkdir</span> <span class="string">–p</span> <span class="string">/user/hive/warehouse/mao.db/order_partition/event_month=201902</span></span><br><span class="line"><span class="string">hadoop</span> <span class="string">fs</span> <span class="string">–put</span> <span class="string">order_created.txt</span> <span class="string">/user/hive/warehouse/mao.db/order_partition/event_month=201902/</span></span><br></pre></td></tr></table></figure>
+<p><strong>对于分区表操作，如果你的数据是写入HDFS</strong><br>
+此时因为元数据里没有，所以默认sql是查询不到的，此时需要在hive中执行相应命令更新分区：<em>msck repair table order_partition;</em>，这样就可以将文件中的hive分区更新</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> order_partition <span class="keyword">ADD</span> <span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> <span class="keyword">PARTITION</span>(event_month=<span class="string">'2014-07'</span>) ;</span><br></pre></td></tr></table></figure>
+<p><strong>一般都使用单级分区，也就是一层目录</strong><br>
+<strong>有时会使用多级分区，多层目录</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> order_mulit_partition(</span><br><span class="line">order_no <span class="keyword">string</span>,</span><br><span class="line">event_time <span class="keyword">string</span></span><br><span class="line">)</span><br><span class="line">PARTITIONED <span class="keyword">BY</span> (event_month <span class="keyword">string</span>, step <span class="keyword">string</span>)</span><br><span class="line"><span class="keyword">ROW</span> <span class="keyword">FORMAT</span> <span class="keyword">DELIMITED</span> <span class="keyword">FIELDS</span> <span class="keyword">TERMINATED</span> <span class="keyword">BY</span> <span class="string">'\t'</span>;</span><br></pre></td></tr></table></figure>
+<h5 id="加载数据">加载数据：</h5>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">LOAD</span> <span class="keyword">DATA</span> <span class="keyword">LOCAL</span> INPATH <span class="string">'/home/hadoop/data/order_created.txt'</span> <span class="keyword">INTO</span> <span class="keyword">TABLE</span> order_mulit_partition <span class="keyword">PARTITION</span> (event_month=<span class="string">'2014-05'</span>,step=<span class="string">'1'</span>);</span><br></pre></td></tr></table></figure>
+<p><strong>使用分区表时，加载数据一定要指定我们的所有分区字段<br>
+把emp的数据加载到emp分区表中去，分区字段是deptno</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> emp_partition(</span><br><span class="line">empno <span class="built_in">int</span>,</span><br><span class="line">ename <span class="keyword">string</span>,</span><br><span class="line">job <span class="keyword">string</span>,</span><br><span class="line">mgr <span class="built_in">int</span>,</span><br><span class="line">hiredate <span class="keyword">string</span>,</span><br><span class="line">sal <span class="keyword">double</span>,</span><br><span class="line">comm <span class="keyword">double</span></span><br><span class="line">) </span><br><span class="line">PARTITIONED <span class="keyword">BY</span> (deptno <span class="built_in">int</span>)</span><br><span class="line"><span class="keyword">ROW</span> <span class="keyword">FORMAT</span> <span class="keyword">DELIMITED</span> <span class="keyword">FIELDS</span> <span class="keyword">TERMINATED</span> <span class="keyword">BY</span> <span class="string">'\t'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> OVERWRITE <span class="keyword">TABLE</span> emp_partition <span class="keyword">PARTITION</span> (deptno=<span class="number">10</span>) <span class="keyword">select</span> empno,ename,job,mgr,hiredate,sal,comm <span class="keyword">from</span> emp <span class="keyword">where</span> deptno=<span class="number">10</span>;</span><br></pre></td></tr></table></figure>
+<p><strong><em>（一定要注意select中一定不要使用</em>，并且保证字段一定要和创建的目标表字段）</strong>*</p>
+<h4 id="动态分区">动态分区：</h4>
+<p>动态分区和静态分区不是从语法层面上区分的，而是从参数上区分的</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> emp_dynamic_partition(</span><br><span class="line">empno <span class="built_in">int</span>,</span><br><span class="line">ename <span class="keyword">string</span>,</span><br><span class="line">job <span class="keyword">string</span>,</span><br><span class="line">mgr <span class="built_in">int</span>,</span><br><span class="line">hiredate <span class="keyword">string</span>,</span><br><span class="line">sal <span class="keyword">double</span>,</span><br><span class="line">comm <span class="keyword">double</span></span><br><span class="line">) </span><br><span class="line">PARTITIONED <span class="keyword">BY</span> (deptno <span class="built_in">int</span>)</span><br><span class="line"><span class="keyword">ROW</span> <span class="keyword">FORMAT</span> <span class="keyword">DELIMITED</span> <span class="keyword">FIELDS</span> <span class="keyword">TERMINATED</span> <span class="keyword">BY</span> <span class="string">'\t'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> OVERWRITE <span class="keyword">TABLE</span> emp_dynamic_partition <span class="keyword">PARTITION</span> (deptno) <span class="keyword">select</span> empno,ename,job,mgr,hiredate,sal,comm,deptno <span class="keyword">from</span> emp;</span><br></pre></td></tr></table></figure>
+<p>要把partition的字段放在最后，然后会自动匹配，就不用写where条件了<br>
+<em>但是此时会报错：</em></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">FAILED</span>: <span class="type">SemanticException</span> [<span class="type">Error</span> <span class="number">10096</span>]: <span class="type">Dynamic</span> <span class="built_in">partition</span> strict mode requires at least one <span class="keyword">static</span> <span class="built_in">partition</span> column. <span class="type">To</span> turn this off <span class="keyword">set</span> hive.exec.<span class="keyword">dynamic</span>.<span class="built_in">partition</span>.mode=nonstrict</span><br></pre></td></tr></table></figure>
+<p><strong>此时必须使用set hive.exec.dynamic.partition.mode=nonstrict改成非严格模式</strong><br>
+由此可以发现动态分区比静态分区用起来更简便，不需要在导入数据的时候指定相应字段，可以自动导入，但是需要改成非严格模式。</p>
+<h4 id="hive-dml加载数据">Hive DML（加载数据）</h4>
+<p><strong>【truncate table emp（用来清空数据）】</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">LOAD</span> <span class="keyword">DATA</span> <span class="keyword">LOCAL</span> INPATH <span class="string">'/home/hadoop/data/order_created.txt'</span> [OVERWRITE] <span class="keyword">INTO</span> <span class="keyword">TABLE</span> order_mulit_partition <span class="keyword">PARTITION</span> (event_month=<span class="string">'2014-05'</span>,step=<span class="string">'1'</span>);</span><br></pre></td></tr></table></figure>
+<p><strong>LOAD DATA：</strong> 加载数据的固定写法<br>
+<strong>LOCAL：</strong> “本地路径”，但是没有的话就HDFS<br>
+<strong>INPATH：</strong> 指定路径<br>
+<strong>OVERWRITE：</strong> 数据覆盖，没有的话就是追加</p>
+<h5 id="ctascreate-table-as-select">CTAS：create table … as select…</h5>
+<p><strong>表不能事先存在</strong></p>
+<h5 id="insert">insert：</h5>
+<p>表必须事先存在<br>
+create table emp4 like emp;</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> overwrite <span class="keyword">table</span> emp4 <span class="keyword">select</span> empno,job,ename,mgr,hiredate,sal,comm,deptno <span class="keyword">from</span> emp;（写法比较常规）</span><br><span class="line">from emp <span class="keyword">insert</span> <span class="keyword">into</span> <span class="keyword">table</span> emp4 <span class="keyword">select</span> *;（不常规的写法）</span><br><span class="line">FAILED: SemanticException [Error 10044]: Line 1:23 Cannot <span class="keyword">insert</span> <span class="keyword">into</span> target <span class="keyword">table</span> because <span class="keyword">column</span> <span class="built_in">number</span>/types <span class="keyword">are</span> different <span class="string">'emp4'</span>: <span class="keyword">Table</span> insclause<span class="number">-0</span> has <span class="number">8</span> <span class="keyword">columns</span>, but <span class="keyword">query</span> has <span class="number">2</span> columns.（如果出现这种报错一般就是目标表与来源表列对应不上）</span><br></pre></td></tr></table></figure>
+<h6 id="注">注：</h6>
+<p><strong>如果在写入的时候不小心顺序写错了，此时不会报错，但是结果就全错了</strong></p>
+<h5 id="使用插入把结果写入文件系统">使用插入把结果写入文件系统：</h5>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">NSERT OVERWRITE LOCAL DIRECTORY '/home/hadoop/tmp/hivetmp' ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t' <span class="keyword">SELECT</span> empno,ename <span class="keyword">FROM</span> emp;	 </span><br><span class="line">hive –e “<span class="keyword">select</span> empno,ename <span class="keyword">from</span> tmp” | grep SMITH &gt; <span class="keyword">file</span></span><br></pre></td></tr></table></figure>
+<p><strong>（使用hive –e来导出文件）</strong><br>
+Sqoop 数据导入导出操作（以后详细说明）</p>
+<h4 id="数据查询使用hive必然是写sql">数据查询（使用Hive，必然是写sql）</h4>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> [ALL | <span class="keyword">DISTINCT</span>] select_expr, select_expr, ...</span><br><span class="line">  <span class="keyword">FROM</span> table_reference</span><br><span class="line">  [<span class="keyword">WHERE</span> where_condition]</span><br><span class="line">  [<span class="keyword">GROUP</span> <span class="keyword">BY</span> col_list]</span><br><span class="line">  [<span class="keyword">ORDER</span> <span class="keyword">BY</span> col_list]</span><br><span class="line">  [CLUSTER <span class="keyword">BY</span> col_list</span><br><span class="line">    | [<span class="keyword">DISTRIBUTE</span> <span class="keyword">BY</span> col_list] [<span class="keyword">SORT</span> <span class="keyword">BY</span> col_list]</span><br><span class="line">  ]</span><br><span class="line"> [<span class="keyword">LIMIT</span> [<span class="keyword">offset</span>,] <span class="keyword">rows</span>]</span><br></pre></td></tr></table></figure>
+<h5 id="简单实例">简单实例：</h5>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> empno <span class="keyword">as</span> <span class="keyword">id</span>, ename <span class="keyword">from</span> emp;</span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> emp <span class="keyword">where</span> ename =’SCOTT’;</span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> emp <span class="keyword">where</span> empno &gt;= <span class="number">7500</span>;</span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> emp <span class="keyword">where</span> sal <span class="keyword">between</span> <span class="number">800</span> <span class="keyword">and</span> <span class="number">1500</span>;（左闭右闭区间）</span><br><span class="line"><span class="keyword">select</span> * ename <span class="keyword">from</span> emp <span class="keyword">where</span> ename <span class="keyword">in</span> (‘SCOTT’,’KING’);</span><br><span class="line"><span class="keyword">select</span> * ename <span class="keyword">from</span> emp <span class="keyword">where</span> comm <span class="keyword">is</span> <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">select</span> * ename <span class="keyword">from</span> emp <span class="keyword">where</span> comm <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">null</span>;</span><br></pre></td></tr></table></figure>
+<p><strong>生产上有可能是不规范的数据，判断null有很多情况都要写出来（null NULL “” &quot; &quot;）</strong></p>
+<h6 id="注">注：</h6>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> sal <span class="keyword">from</span> emp <span class="keyword">where</span> sal <span class="keyword">like</span> ‘<span class="number">1</span>%’;</span><br><span class="line"><span class="keyword">select</span> sal <span class="keyword">from</span> emp <span class="keyword">where</span> sal <span class="keyword">like</span> ‘_2%’;</span><br><span class="line"><span class="keyword">select</span> sal <span class="keyword">from</span> emp <span class="keyword">where</span> sal <span class="keyword">like</span> ‘%<span class="number">2</span>%’;</span><br><span class="line"><span class="keyword">select</span> sal <span class="keyword">from</span> emp <span class="keyword">where</span> sal <span class="keyword">rlike</span> ‘[<span class="number">2</span>]’;</span><br></pre></td></tr></table></figure>
+<p><strong>like和rlinke区别，like使用_或者%来进行模糊匹配，rlike要使用正则来进行匹配</strong></p>
+<h5 id="聚合join多进一出">聚合join：多进一出</h5>
+<p><strong>（max，min，count，sum，avg）</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">count</span>(<span class="number">1</span>) <span class="keyword">from</span> emp <span class="keyword">where</span> deptno = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">max</span>(sal),<span class="keyword">min</span>(sal),<span class="keyword">sum</span>(sal),<span class="keyword">avg</span>(sal) <span class="keyword">from</span> emp;</span><br></pre></td></tr></table></figure>
+<h6 id="group-byhive中使用最多的语法">group by（Hive中使用最多的语法）：</h6>
+<p><strong>求每个部门的平均工资：</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> deptno,<span class="keyword">avg</span>(sal) avg_sal <span class="keyword">from</span> emp <span class="keyword">group</span> <span class="keyword">by</span> deptno;</span><br><span class="line"><span class="keyword">select</span> ename,deptno,<span class="keyword">avg</span>(sal) avg_sal <span class="keyword">from</span> emp <span class="keyword">group</span> <span class="keyword">by</span> deptno;</span><br></pre></td></tr></table></figure>
+<p><strong>（此时会报错group by中要放所有select中除了聚合函数中的字段）</strong><br>
+<strong>select中出现的字段，如果没有出现在group by中，必须出现在聚合函数中</strong></p>
+<figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FAILED: SemanticException [<span class="keyword">Error</span> <span class="number">10025</span>]: Line <span class="number">1</span>:<span class="number">7</span> Expression <span class="keyword">not</span> <span class="keyword">in</span> <span class="keyword">GROUP</span> <span class="keyword">BY</span> <span class="keyword">key</span> <span class="comment">'ename'</span></span><br></pre></td></tr></table></figure>
+<p><strong>求每个部门的平均工资大于2000：</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> deptno,<span class="keyword">avg</span>(sal) avg_sal <span class="keyword">from</span> emp <span class="keyword">group</span> <span class="keyword">by</span> deptno <span class="keyword">having</span> avg_sal&gt;<span class="number">2000</span>;</span><br></pre></td></tr></table></figure>
+<h6 id="where和having的区别">where和having的区别：</h6>
+<ol>
+<li>where只能指定行的条件，不能指定处理聚合处理后的数据，所谓聚合处理，常见的有group by和sum()，count()，avg()这些；</li>
+<li>having则用来指定这些聚合处理后的数据，简单讲，having语句一次聚合汇总之后的结果。having语句后只能出现三种要素：常数/聚合函数/group by指定的聚合键（也就是分组类别）。<br>
+所以where语句用来指定行所对应的条件（单条），having语句用来指定组对应的条件，往往与聚合函数或group by 搭配使用。</li>
+</ol>
+<h5 id="抓取问题fetch">抓取问题：（fetch）</h5>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; set hive.fetch.task.conversion;</span><br><span class="line">hive.fetch.task.conversion=more</span><br><span class="line">hive (default)&gt; set hive.fetch.task.conversion=none;</span><br></pre></td></tr></table></figure>
+<p><strong><em>当设置为none之后不管执行什么都会执行一个MapReduce</em></strong></p>
+<blockquote>
+<p>hive.fetch.task.conversion<br>
+•Default Value: minimal in Hive 0.10.0 through 0.13.1, more in Hive 0.14.0 and later<br>
+•Added In: Hive 0.10.0 with HIVE-2925; default changed in Hive 0.14.0 with HIVE-7397  Some select queries can be converted to a single FETCH task, minimizing latency. Currently the query should be single sourced not having any subquery and should not have any aggregations or distincts (which incur RS – ReduceSinkOperator, requiring a MapReduce task), lateral views and joins.<br>
+Supported values are none, minimal and more.</p>
+<ol start="0">
+<li>none:  Disable hive.fetch.task.conversion (value added in Hive 0.14.0 with HIVE-8389)</li>
+<li>minimal:  SELECT *, FILTER on partition columns (WHERE and HAVING clauses), LIMIT only</li>
+<li>more:  SELECT, FILTER, LIMIT only (including TABLESAMPLE, virtual columns) “more” can take any kind of expressions in the SELECT clause, including UDFs.<br>
+(UDTFs and lateral views are not yet supported – see HIVE-5718.)</li>
+</ol>
+</blockquote>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/article/hive部署，概述/" data-toggle="tooltip" data-placement="top" title="Hive概述，安装部署">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share"  data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+  
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#欢迎来到妖精小狗的博客"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">&#x6B22;&#x8FCE;&#x6765;&#x5230;&#x5996;&#x7CBE;&#x5C0F;&#x72D7;&#x7684;&#x535A;&#x5BA2;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#hive表ddl非常重要"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">Hive&#x8868;DDL&#xFF08;&#x975E;&#x5E38;&#x91CD;&#x8981;&#xFF09;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#实际操作"><span class="toc-nav-number">1.1.1.</span> <span class="toc-nav-text">&#x5B9E;&#x9645;&#x64CD;&#x4F5C;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#数据操纵语言dml主要有三种形式"><span class="toc-nav-number">1.1.2.</span> <span class="toc-nav-text">&#x6570;&#x636E;&#x64CD;&#x7EB5;&#x8BED;&#x8A00;DML&#x4E3B;&#x8981;&#x6709;&#x4E09;&#x79CD;&#x5F62;&#x5F0F;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#几个查看表的小窍门"><span class="toc-nav-number">1.1.3.</span> <span class="toc-nav-text">&#x51E0;&#x4E2A;&#x67E5;&#x770B;&#x8868;&#x7684;&#x5C0F;&#x7A8D;&#x95E8;&#xFF1A;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#修改表"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">&#x4FEE;&#x6539;&#x8868;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#删除表"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">&#x5220;&#x9664;&#x8868;&#xFF1A;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#hive中有两种常见类型的表"><span class="toc-nav-number">1.3.1.</span> <span class="toc-nav-text">Hive&#x4E2D;&#x6709;&#x4E24;&#x79CD;&#x5E38;&#x89C1;&#x7C7B;&#x578B;&#x7684;&#x8868;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#内部表和外部表的相互转换"><span class="toc-nav-number">1.3.2.</span> <span class="toc-nav-text">&#x5185;&#x90E8;&#x8868;&#x548C;&#x5916;&#x90E8;&#x8868;&#x7684;&#x76F8;&#x4E92;&#x8F6C;&#x6362;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#hive做的是离线数仓"><span class="toc-nav-number">1.3.3.</span> <span class="toc-nav-text">Hive&#x505A;&#x7684;&#x662F;&#x79BB;&#x7EBF;&#x6570;&#x4ED3;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#如果不分区我们查询一些信息就会全表查询所有都会扫描一遍非常浪费io"><span class="toc-nav-number">1.3.4.</span> <span class="toc-nav-text">&#x5982;&#x679C;&#x4E0D;&#x5206;&#x533A;&#xFF0C;&#x6211;&#x4EEC;&#x67E5;&#x8BE2;&#x4E00;&#x4E9B;&#x4FE1;&#x606F;&#x5C31;&#x4F1A;&#x5168;&#x8868;&#x67E5;&#x8BE2;&#x6240;&#x6709;&#x90FD;&#x4F1A;&#x626B;&#x63CF;&#x4E00;&#x904D;&#xFF0C;&#x975E;&#x5E38;&#x6D6A;&#x8D39;IO&#x3002;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#可以先用hdfs命令将文件存到指定路径下"><span class="toc-nav-number">1.3.4.1.</span> <span class="toc-nav-text">&#x53EF;&#x4EE5;&#x5148;&#x7528;hdfs&#x547D;&#x4EE4;&#x5C06;&#x6587;&#x4EF6;&#x5B58;&#x5230;&#x6307;&#x5B9A;&#x8DEF;&#x5F84;&#x4E0B;&#xFF1A;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#加载数据"><span class="toc-nav-number">1.3.5.</span> <span class="toc-nav-text">&#x52A0;&#x8F7D;&#x6570;&#x636E;&#xFF1A;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#动态分区"><span class="toc-nav-number">1.4.</span> <span class="toc-nav-text">&#x52A8;&#x6001;&#x5206;&#x533A;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#hive-dml加载数据"><span class="toc-nav-number">1.5.</span> <span class="toc-nav-text">Hive DML&#xFF08;&#x52A0;&#x8F7D;&#x6570;&#x636E;&#xFF09;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#ctascreate-table-as-select"><span class="toc-nav-number">1.5.1.</span> <span class="toc-nav-text">CTAS&#xFF1A;create table &#x2026; as select&#x2026;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#insert"><span class="toc-nav-number">1.5.2.</span> <span class="toc-nav-text">insert&#xFF1A;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#注"><span class="toc-nav-number">1.5.2.1.</span> <span class="toc-nav-text">&#x6CE8;&#xFF1A;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#使用插入把结果写入文件系统"><span class="toc-nav-number">1.5.3.</span> <span class="toc-nav-text">&#x4F7F;&#x7528;&#x63D2;&#x5165;&#x628A;&#x7ED3;&#x679C;&#x5199;&#x5165;&#x6587;&#x4EF6;&#x7CFB;&#x7EDF;&#xFF1A;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#数据查询使用hive必然是写sql"><span class="toc-nav-number">1.6.</span> <span class="toc-nav-text">&#x6570;&#x636E;&#x67E5;&#x8BE2;&#xFF08;&#x4F7F;&#x7528;Hive&#xFF0C;&#x5FC5;&#x7136;&#x662F;&#x5199;sql&#xFF09;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#简单实例"><span class="toc-nav-number">1.6.1.</span> <span class="toc-nav-text">&#x7B80;&#x5355;&#x5B9E;&#x4F8B;&#xFF1A;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#注"><span class="toc-nav-number">1.6.1.1.</span> <span class="toc-nav-text">&#x6CE8;&#xFF1A;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#聚合join多进一出"><span class="toc-nav-number">1.6.2.</span> <span class="toc-nav-text">&#x805A;&#x5408;join&#xFF1A;&#x591A;&#x8FDB;&#x4E00;&#x51FA;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#group-byhive中使用最多的语法"><span class="toc-nav-number">1.6.2.1.</span> <span class="toc-nav-text">group by&#xFF08;Hive&#x4E2D;&#x4F7F;&#x7528;&#x6700;&#x591A;&#x7684;&#x8BED;&#x6CD5;&#xFF09;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#where和having的区别"><span class="toc-nav-number">1.6.2.2.</span> <span class="toc-nav-text">where&#x548C;having&#x7684;&#x533A;&#x522B;&#xFF1A;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#抓取问题fetch"><span class="toc-nav-number">1.6.3.</span> <span class="toc-nav-text">&#x6293;&#x53D6;&#x95EE;&#x9898;&#xFF1A;&#xFF08;fetch&#xFF09;</span></a></li></ol></li></ol></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#hive" title="hive">hive</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'rz'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+<!-- chrome Firefox 中文锚点定位失效-->
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<!-- smooth scroll behavior polyfill  -->
+<script type="text/javascript" src="/js/smoothscroll.js"></script>
+<script>
+        $('#toc').on('click','a',function(a){
+            // var isChrome = window.navigator.userAgent.indexOf("Chrome") !== -1;
+            // console.log(window.navigator.userAgent,isChrome)
+                // if(isChrome) {
+                    // console.log(a.currentTarget.outerHTML);
+                    // console.log($(a.currentTarget).attr("href"));
+                    //跳转到指定锚点
+                    // document.getElementById(a.target.innerText.toLowerCase()).scrollIntoView(true);
+                    document.getElementById($(a.currentTarget).attr("href").replace("#","")).scrollIntoView({behavior: 'smooth' });
+                // }
+        })  
+</script>
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/demonlittledog">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; MX 2019 
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://github.com/demonlittledog/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = 'xxx';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://github.com/demonlittledog/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
