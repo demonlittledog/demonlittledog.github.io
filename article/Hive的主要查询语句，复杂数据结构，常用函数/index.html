@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Hive的主要查询语句，复杂数据结构，常用函数 - 妖精小狗@MX | Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://github.com/demonlittledog/article/Hive的主要查询语句，复杂数据结构，常用函数/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/dog.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#hive" title="hive">hive</a>
+                            
+                        </div>
+                        <h1>Hive的主要查询语句，复杂数据结构，常用函数</h1>
+                        <h2 class="subheading">hiveserver2的介绍，Hive的复杂数据结构，hive的静动态分区表、桶表，以及hive的常用函数</h2>
+                        <span class="meta">
+                            Posted by MX on
+                            2019-12-20
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">妖精小狗@MX Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h3 id="欢迎来到妖精小狗的博客">欢迎来到妖精小狗的博客</h3>
+<hr>
+<h4 id="join的用法">join的用法</h4>
+<p>select e.empno, e.ename, e.deptno, d.dname from emp e join dept d on e.deptno = d.deptno;<br>
+<strong>支持等值连接</strong></p>
+<h5 id="你想对n张表做join连接条件有n-1个">你想对N张表做join，连接条件有N-1个</h5>
+<p><strong>inner join：</strong> 只返回连接条件匹配上的数据<br>
+<strong>outer join：</strong><br>
+	<strong>left：</strong> 左表为基准<br>
+	<strong>right：</strong> 右表为基准<br>
+	<strong>full：</strong> 包括两个表的join结果，左边在右边中没找到的结果（NULL），右边在左边没找到的结果。<br>
+会对结果去重，返回并集。<br>
+<strong><em>如果不加条件就会将所有表连接起来</em></strong></p>
+<p>select e.empno, e.ename, e.deptno, d.dname from emp e join dept d on e.deptno = d.deptno or e.ename = d.dname;<br>
+<strong>会报错，join不支持or（报错信息FAILED: SemanticException [Error 10019]: Line 1:69 OR not supported in JOIN currently ‘dname’）</strong></p>
+<h4 id="hiveserver2的简写是hs2">HiveServer2的简写是HS2</h4>
+<h5 id="hs2是服务server">HS2是服务（Server）</h5>
+<p><strong>默认端口号是10000</strong></p>
+<h6 id="可以改成其他端口">可以改成其他端口：</h6>
+<p><strong>hiveserver2 –hiveconf hive.server2.thrift.port = 10086</strong></p>
+<h5 id="beeline是客户端clienthivespark都有">Beeline是客户端（Client，Hive/Spark都有）</h5>
+<p>启动beeline时，建议先cd $HIVE_HOME/bin中去<br>
+<strong>./beeline -u jdbc:hive2://JD:10000 -n mao</strong></p>
+<h4 id="hive复杂数据类型">Hive复杂数据类型</h4>
+<h5 id="array数据类型要一样">array<t>：数据类型要一样</t></h5>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> hive_array(<span class="keyword">name</span> <span class="keyword">string</span>, work_locations <span class="built_in">array</span>&lt;<span class="keyword">string</span>&gt;)</span><br><span class="line"><span class="keyword">row</span> <span class="keyword">format</span> <span class="keyword">delimited</span></span><br><span class="line"><span class="keyword">fields</span> <span class="keyword">terminated</span> <span class="keyword">by</span> <span class="string">'\t'</span></span><br><span class="line">COLLECTION ITEMS <span class="keyword">TERMINATED</span> <span class="keyword">BY</span> <span class="string">','</span>;</span><br></pre></td></tr></table></figure>
+<p><strong><em>（创建表要注意复杂数据类型数组，数组里的分隔类型）</em></strong></p>
+<h6 id="对于复杂数据类型重点要掌握的是如何存和取">对于复杂数据类型，重点要掌握的是如何”存“和”取“</h6>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">0: jdbc:hive2://JD:10000&gt; select name,work<span class="emphasis">_locations[0] from hive_</span>array;</span><br><span class="line"><span class="code">+---------+</span>-----------<span class="code">+--+</span></span><br><span class="line">|  name   |    <span class="emphasis">_c1    |</span></span><br><span class="line"><span class="emphasis">+---------+-----------+--+</span></span><br><span class="line"><span class="emphasis">| pk      | beijing   |</span></span><br><span class="line"><span class="emphasis">| jepson  | changchu  |</span></span><br><span class="line"><span class="emphasis">+---------+-----------+--+</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">0: jdbc:hive2://JD:10000&gt; select name,work_</span>locations[4] from hive<span class="emphasis">_array;</span></span><br><span class="line"><span class="emphasis">+---------+-------+--+</span></span><br><span class="line"><span class="emphasis">|  name   |  _</span>c1  |</span><br><span class="line"><span class="code">+---------+</span>-------<span class="code">+--+</span></span><br><span class="line">| pk      | NULL  |</span><br><span class="line">| jepson  | NULL  |</span><br><span class="line"><span class="code">+---------+</span>-------<span class="code">+--+</span></span><br><span class="line"></span><br><span class="line">0: jdbc:hive2://JD:10000&gt; select name,size(work<span class="emphasis">_locations) from hive_</span>array;</span><br><span class="line"><span class="code">+---------+</span>------<span class="code">+--+</span></span><br><span class="line">|  name   | <span class="emphasis">_c1  |</span></span><br><span class="line"><span class="emphasis">+---------+------+--+</span></span><br><span class="line"><span class="emphasis">| pk      | 4    |</span></span><br><span class="line"><span class="emphasis">| jepson  | 4    |</span></span><br><span class="line"><span class="emphasis">+---------+------+--+</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">0: jdbc:hive2://JD:10000&gt; select * from hive_</span>array where array<span class="emphasis">_contains(work_</span>locations, <span class="emphasis">'tianjin'</span>);</span><br><span class="line"><span class="code">+------------------+</span>----------------------------------------------<span class="code">+--+</span></span><br><span class="line">| hive<span class="emphasis">_array.name  |          hive_</span>array.work<span class="emphasis">_locations           |</span></span><br><span class="line"><span class="emphasis">+------------------+----------------------------------------------+--+</span></span><br><span class="line"><span class="emphasis">| pk               | ["beijing","shanghai","tianjin","hangzhou"]  |</span></span><br><span class="line"><span class="emphasis">+------------------+----------------------------------------------+--+</span></span><br></pre></td></tr></table></figure>
+<h6 id="数组类型常用的函数sizearray_containscolumn-value">数组类型常用的函数：size，array_contains(column, ‘value’)</h6>
+<h5 id="mapltprimitive_type-data_typegtkv键值对">MAP&lt;primitive_type, data_type&gt;：kv（键值对）</h5>
+<p><strong>会涉及两个分隔符，kv之间的，字段与字段的分隔符</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> hive_map(</span><br><span class="line"><span class="keyword">id</span> <span class="built_in">int</span>, <span class="keyword">name</span> <span class="keyword">string</span>, members <span class="keyword">map</span>&lt;<span class="keyword">string</span>,<span class="keyword">string</span>&gt;, age <span class="built_in">int</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">row</span> <span class="keyword">format</span> <span class="keyword">delimited</span></span><br><span class="line"><span class="keyword">fields</span> <span class="keyword">terminated</span> <span class="keyword">by</span> <span class="string">','</span></span><br><span class="line">COLLECTION ITEMS <span class="keyword">TERMINATED</span> <span class="keyword">BY</span> <span class="string">'#'</span></span><br><span class="line"><span class="keyword">MAP</span> <span class="keyword">KEYS</span> <span class="keyword">TERMINATED</span> <span class="keyword">BY</span> <span class="string">':'</span>;</span><br></pre></td></tr></table></figure>
+<h5 id="原始数据">原始数据：</h5>
+<p>father:xiaoming#mother:xiaohuang#brother:xiaoxu</p>
+<h5 id="查询实例">查询实例：</h5>
+<h6 id="可以使用字段名内容来查询出需要的内容">可以使用字段名[‘内容’]来查询出需要的内容</h6>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">0: jdbc:hive2://JD:10000&gt; select name,members[<span class="emphasis">'mother'</span>] as mother,members[<span class="emphasis">'father'</span>] as father, age from hive<span class="emphasis">_map;</span></span><br><span class="line"><span class="emphasis">+-----------+-------------+--------------+------+--+</span></span><br><span class="line"><span class="emphasis">|   name    |   mother    |    father    | age  |</span></span><br><span class="line"><span class="emphasis">+-----------+-------------+--------------+------+--+</span></span><br><span class="line"><span class="emphasis">| zhangsan  | xiaohuang   | xiaoming     | 28   |</span></span><br><span class="line"><span class="emphasis">| lisi      | huangyi     | mayun        | 22   |</span></span><br><span class="line"><span class="emphasis">| wangwu    | ruhua       | wangjianlin  | 29   |</span></span><br><span class="line"><span class="emphasis">| mayun     | angelababy  | mayongzhen   | 26   |</span></span><br><span class="line"><span class="emphasis">+-----------+-------------+--------------+------+--+</span></span><br></pre></td></tr></table></figure>
+<h6 id="查询出有兄弟的人以及他的兄弟是谁">查询出有兄弟的人以及他的兄弟是谁</h6>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">0: jdbc:hive2://JD:10000&gt; select name,members[<span class="emphasis">'mother'</span>] as bother from hive<span class="emphasis">_map arrau;;</span></span><br><span class="line"><span class="emphasis">+-----------+-------------+--+</span></span><br><span class="line"><span class="emphasis">|   name    |   bother    |</span></span><br><span class="line"><span class="emphasis">+-----------+-------------+--+</span></span><br><span class="line"><span class="emphasis">| zhangsan  | xiaohuang   |</span></span><br><span class="line"><span class="emphasis">| lisi      | huangyi     |</span></span><br><span class="line"><span class="emphasis">| wangwu    | ruhua       |</span></span><br><span class="line"><span class="emphasis">| mayun     | angelababy  |</span></span><br><span class="line"><span class="emphasis">+-----------+-------------+--+</span></span><br></pre></td></tr></table></figure>
+<p>使用子查询搞定：</p>
+<h5 id="structs-structltcol_name-data_type-comment-col_comment-gt">structs: STRUCT&lt;col_name : data_type [COMMENT col_comment], …&gt;</h5>
+<p><strong>内部的数据类型可以不同</strong><br>
+192.168.1.1#zhangsan:40</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> hive_struct(</span><br><span class="line">ip <span class="keyword">string</span>, info <span class="keyword">struct</span>&lt;<span class="keyword">name</span>:<span class="keyword">string</span>,age:<span class="built_in">int</span>&gt;</span><br><span class="line">)</span><br><span class="line"><span class="keyword">row</span> <span class="keyword">format</span> <span class="keyword">delimited</span></span><br><span class="line"><span class="keyword">fields</span> <span class="keyword">terminated</span> <span class="keyword">by</span> <span class="string">'#'</span></span><br><span class="line">COLLECTION ITEMS <span class="keyword">TERMINATED</span> <span class="keyword">BY</span> <span class="string">':'</span>;</span><br></pre></td></tr></table></figure>
+<p><strong><em>结构体被冒号隔开，两个字段之间用逗号隔开</em></strong></p>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">0: jdbc:hive2://JD:10000&gt; select ip, info.name, info.age from hive<span class="emphasis">_struct;</span></span><br><span class="line"><span class="emphasis">+--------------+-----------+------+--+</span></span><br><span class="line"><span class="emphasis">|      ip      |   name    | age  |</span></span><br><span class="line"><span class="emphasis">+--------------+-----------+------+--+</span></span><br><span class="line"><span class="emphasis">| 192.168.1.1  | zhangsan  | 40   |</span></span><br><span class="line"><span class="emphasis">| 192.168.1.2  | lisi      | 50   |</span></span><br><span class="line"><span class="emphasis">| 192.168.1.3  | wangwu    | 60   |</span></span><br><span class="line"><span class="emphasis">| 192.168.1.4  | zhaoliu   | 70   |</span></span><br><span class="line"><span class="emphasis">+--------------+-----------+------+--+</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> click_log(</span><br><span class="line">cookie_id <span class="keyword">string</span>,</span><br><span class="line">ad_id <span class="keyword">string</span>,</span><br><span class="line"><span class="keyword">time</span> <span class="keyword">string</span></span><br><span class="line">) <span class="keyword">row</span> <span class="keyword">format</span> <span class="keyword">delimited</span></span><br><span class="line"><span class="keyword">fields</span> <span class="keyword">terminated</span> <span class="keyword">by</span> <span class="string">'\t'</span>;</span><br><span class="line"><span class="keyword">load</span> <span class="keyword">data</span> <span class="keyword">local</span> inpath <span class="string">'/home/mao/data/hive_struct.txt'</span> <span class="keyword">into</span> <span class="keyword">table</span>  hive_struct ;</span><br><span class="line"></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> ad_list(ad_id <span class="keyword">string</span>,<span class="keyword">url</span> <span class="keyword">string</span>,catalogs <span class="keyword">string</span>)<span class="keyword">row</span> <span class="keyword">format</span> <span class="keyword">delimited</span> <span class="keyword">fields</span> <span class="keyword">terminated</span> <span class="keyword">by</span> <span class="string">'\t'</span>;</span><br></pre></td></tr></table></figure>
+<h6 id="示例每一个人访问的所有ad_id去重">示例：每一个人，访问的所有ad_id去重</h6>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">select cookie<span class="emphasis">_id, collect_</span>set(ad<span class="emphasis">_id) from click_</span>log group by cookie<span class="emphasis">_id;</span></span><br><span class="line"><span class="emphasis">+------------+-------------------------------+--+</span></span><br><span class="line"><span class="emphasis">| cookie_</span>id  |              <span class="emphasis">_c1              |</span></span><br><span class="line"><span class="emphasis">+------------+-------------------------------+--+</span></span><br><span class="line"><span class="emphasis">| 11         | ["ad_</span>101","ad<span class="emphasis">_104"]           |</span></span><br><span class="line"><span class="emphasis">| 22         | ["ad_</span>102","ad<span class="emphasis">_103","ad_</span>104"]  |</span><br><span class="line">| 33         | ["ad<span class="emphasis">_103","ad_</span>102","ad<span class="emphasis">_101"]  |</span></span><br><span class="line"><span class="emphasis">| 35         | ["ad_</span>105","ad<span class="emphasis">_102"]           |</span></span><br><span class="line"><span class="emphasis">| 77         | ["ad_</span>103","ad<span class="emphasis">_104"]           |</span></span><br><span class="line"><span class="emphasis">| 99         | ["ad_</span>102","ad<span class="emphasis">_105"]           |</span></span><br><span class="line"><span class="emphasis">+------------+-------------------------------+--+</span></span><br><span class="line"><span class="emphasis"></span></span><br><span class="line"><span class="emphasis">select cookie_</span>id, ad<span class="emphasis">_id, count(1) amount from click_</span>log group by cookie<span class="emphasis">_id, ad_</span>id;</span><br><span class="line"><span class="code">+------------+</span>---------<span class="code">+---------+</span>--------------+</span><br><span class="line">| cookie<span class="emphasis">_id  |  ad_</span>id  | amount   |</span><br><span class="line"><span class="code">+------------+</span>---------<span class="code">+---------+</span>--------------+</span><br><span class="line">| 11         | ad<span class="emphasis">_101  | 3       |</span></span><br><span class="line"><span class="emphasis">| 11         | ad_</span>104  | 1       |</span><br><span class="line">| 22         | ad<span class="emphasis">_102  | 1       |</span></span><br><span class="line"><span class="emphasis">| 22         | ad_</span>103  | 2       |</span><br><span class="line">| 22         | ad<span class="emphasis">_104  | 1       |</span></span><br><span class="line"><span class="emphasis">| 33         | ad_</span>101  | 1       |</span><br><span class="line">| 33         | ad<span class="emphasis">_102  | 1       |</span></span><br><span class="line"><span class="emphasis">| 33         | ad_</span>103  | 1       |</span><br><span class="line">| 35         | ad<span class="emphasis">_102  | 1       |</span></span><br><span class="line"><span class="emphasis">| 35         | ad_</span>105  | 1       |</span><br><span class="line">| 77         | ad<span class="emphasis">_103  | 1       |</span></span><br><span class="line"><span class="emphasis">| 77         | ad_</span>104  | 1       |</span><br><span class="line">| 99         | ad<span class="emphasis">_102  | 1       |</span></span><br><span class="line"><span class="emphasis">| 99         | ad_</span>105  | 1       |</span><br><span class="line"><span class="code">+------------+</span>---------<span class="code">+---------+</span>--------------+</span><br></pre></td></tr></table></figure>
+<h6 id="ad_id-gt-ad_list-找到对应的类别">ad_id ==&gt; ad_list 找到对应的类别</h6>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> click.cookie_id,click.ad_id,click.amount,ad_list.catalogs <span class="keyword">from</span></span><br><span class="line">(<span class="keyword">select</span> cookie_id, ad_id, <span class="keyword">count</span>(<span class="number">1</span>) amount <span class="keyword">from</span> click_log <span class="keyword">group</span> <span class="keyword">by</span> cookie_id, ad_id) click</span><br><span class="line"><span class="keyword">join</span> ad_list <span class="keyword">on</span> ad_list.ad_id = click.ad_id;</span><br><span class="line">+<span class="comment">------------------+--------------+---------------+--------------------------------------+--+</span></span><br><span class="line">| click.cookie_id  | click.ad_id  | click.amount  |           ad_list.catalogs           |</span><br><span class="line">+<span class="comment">------------------+--------------+---------------+--------------------------------------+--+</span></span><br><span class="line">| 11               | ad_101       | 3             | catalog8|catalog1                    |</span><br><span class="line">| 11               | ad_104       | 1             | catalog5|catalog1|catalog4|catalog9  |</span><br><span class="line">| 22               | ad_102       | 1             | catalog6|catalog3                    |</span><br><span class="line">| 22               | ad_103       | 2             | catalog7                             |</span><br><span class="line">| 22               | ad_104       | 1             | catalog5|catalog1|catalog4|catalog9  |</span><br><span class="line">| 33               | ad_101       | 1             | catalog8|catalog1                    |</span><br><span class="line">| 33               | ad_102       | 1             | catalog6|catalog3                    |</span><br><span class="line">| 33               | ad_103       | 1             | catalog7                             |</span><br><span class="line">| 35               | ad_102       | 1             | catalog6|catalog3                    |</span><br><span class="line">| 35               | ad_105       | 1             | NULL                                 |</span><br><span class="line">| 77               | ad_103       | 1             | catalog7                             |</span><br><span class="line">| 77               | ad_104       | 1             | catalog5|catalog1|catalog4|catalog9  |</span><br><span class="line">| 99               | ad_102       | 1             | catalog6|catalog3                    |</span><br><span class="line">| 99               | ad_105       | 1             | NULL                                 |</span><br><span class="line">+<span class="comment">------------------+--------------+---------------+--------------------------------------+--+</span></span><br></pre></td></tr></table></figure>
+<h4 id="列转行">列转行</h4>
+<p><strong><em>结果形式：<br>
+ad_101  catalog8|catalog1<br>
+==&gt;<br>
+ad_101 catalog8<br>
+ad_101 catalog1</em></strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> ad_id, <span class="keyword">catalog</span> <span class="keyword">from</span> ad_list lateral <span class="keyword">view</span> <span class="keyword">outer</span> explode(<span class="keyword">split</span>(catalogs,<span class="string">'\\|'</span>)) t <span class="keyword">as</span> <span class="keyword">catalog</span>;</span><br><span class="line">+<span class="comment">---------+-----------+--+</span></span><br><span class="line">|  ad_id  |  catalog  |</span><br><span class="line">+<span class="comment">---------+-----------+--+</span></span><br><span class="line">| ad_101  | catalog8  |</span><br><span class="line">| ad_101  | catalog1  |</span><br><span class="line">| ad_102  | catalog6  |</span><br><span class="line">| ad_102  | catalog3  |</span><br><span class="line">| ad_103  | catalog7  |</span><br><span class="line">| ad_104  | catalog5  |</span><br><span class="line">| ad_104  | catalog1  |</span><br><span class="line">| ad_104  | catalog4  |</span><br><span class="line">| ad_104  | catalog9  |</span><br><span class="line">| ad_105  | NULL      |</span><br><span class="line">+<span class="comment">---------+-----------+--+</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> ad_list_2(ad_id <span class="keyword">string</span>,<span class="keyword">url</span> <span class="keyword">string</span>,catalogs <span class="built_in">array</span>&lt;<span class="keyword">string</span>&gt;)<span class="keyword">row</span> <span class="keyword">format</span> <span class="keyword">delimited</span> <span class="keyword">fields</span> <span class="keyword">terminated</span> <span class="keyword">by</span> <span class="string">'\t'</span> COLLECTION ITEMS <span class="keyword">TERMINATED</span> <span class="keyword">BY</span> <span class="string">'|'</span>;	</span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> ad_id,sort_array(catalogs) <span class="keyword">from</span> ad_list_2;</span><br><span class="line">+<span class="comment">---------+------------------------------------------------+--+</span></span><br><span class="line">|  ad_id  |                      _c1                       |</span><br><span class="line">+<span class="comment">---------+------------------------------------------------+--+</span></span><br><span class="line">| ad_101  | ["catalog1","catalog8"]                        |</span><br><span class="line">| ad_102  | ["catalog3","catalog6"]                        |</span><br><span class="line">| ad_103  | ["catalog7"]                                   |</span><br><span class="line">| ad_104  | ["catalog1","catalog4","catalog5","catalog9"]  |</span><br><span class="line">| ad_105  | NULL                                           |</span><br><span class="line">+<span class="comment">---------+------------------------------------------------+--+</span></span><br></pre></td></tr></table></figure>
+<h4 id="function-函数分类">Function 函数分类：</h4>
+<p><strong>build-in：</strong> 内置函数<br>
+<strong>UDF（User Defined Function）：</strong> 用户自定义函数<br>
+<strong><em>使用show funcations;来查看hive中的各种函数<br>
+使用desc function upper;来查看具体函数</em></strong></p>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="code">+----------------------------------------------------+</span>--+</span><br><span class="line">|                      tab<span class="emphasis">_name                      |</span></span><br><span class="line"><span class="emphasis">+----------------------------------------------------+--+</span></span><br><span class="line"><span class="emphasis">| upper(str) - Returns str with all characters changed to uppercase |</span></span><br><span class="line"><span class="emphasis">+----------------------------------------------------+--+</span></span><br></pre></td></tr></table></figure>
+<h5 id="castvalue-as-type">cast(value as type)</h5>
+<p><strong><em>创建一个含有空字符串的表</em></strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> dual(x <span class="keyword">string</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> <span class="keyword">table</span> dual <span class="keyword">values</span>(<span class="string">''</span>);</span><br></pre></td></tr></table></figure>
+<h6 id="求当前时间">求当前时间：</h6>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">current_timestamp</span> <span class="keyword">from</span> dual;</span><br><span class="line">+<span class="comment">--------------------------+--+</span></span><br><span class="line">|           _c0            |</span><br><span class="line">+<span class="comment">--------------------------+--+</span></span><br><span class="line">| 2019-12-27 22:08:56.535  |</span><br><span class="line">+<span class="comment">--------------------------+--+</span></span><br></pre></td></tr></table></figure>
+<h6 id="求当前的时间戳">求当前的时间戳：</h6>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">unix_timestamp</span>() <span class="keyword">from</span> dual;</span><br><span class="line">+<span class="comment">-------------+--+</span></span><br><span class="line">|     _c0     |</span><br><span class="line">+<span class="comment">-------------+--+</span></span><br><span class="line">| 1577455820  |</span><br><span class="line">+<span class="comment">-------------+--+</span></span><br></pre></td></tr></table></figure>
+<h6 id="求当前时间戳">求当前时间戳：</h6>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">unix_timestamp</span>(<span class="string">'20191227 22:08:56'</span>,<span class="string">'yyyMMdd HH:mm:ss'</span>) <span class="keyword">from</span> dual;</span><br><span class="line">+<span class="comment">-------------+--+</span></span><br><span class="line">|     _c0     |</span><br><span class="line">+<span class="comment">-------------+--+</span></span><br><span class="line">| 1577455736  |</span><br><span class="line">+<span class="comment">-------------+--+</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> <span class="keyword">to_date</span>(<span class="string">'2019-12-27 22:08:56'</span>) <span class="keyword">from</span> dual;</span><br><span class="line">+<span class="comment">-------------+--+</span></span><br><span class="line">|     _c0     |</span><br><span class="line">+<span class="comment">-------------+--+</span></span><br><span class="line">| 2019-12-27  |</span><br><span class="line">+<span class="comment">-------------+--+</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> <span class="keyword">year</span>(<span class="string">'2019-12-27 22:08:56'</span>) <span class="keyword">from</span> dual;</span><br><span class="line">+<span class="comment">-------+--+</span></span><br><span class="line">|  _c0  |</span><br><span class="line">+<span class="comment">-------+--+</span></span><br><span class="line">| 2019  |</span><br><span class="line">+<span class="comment">-------+--+</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> <span class="keyword">month</span>(<span class="string">'2019-12-27 22:08:56'</span>) <span class="keyword">from</span> dual;</span><br><span class="line">+<span class="comment">------+--+</span></span><br><span class="line">| _c0  |</span><br><span class="line">+<span class="comment">------+--+</span></span><br><span class="line">| 12   |</span><br><span class="line">+<span class="comment">------+--+</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> <span class="keyword">day</span>(<span class="string">'2019-12-27 22:08:56'</span>) <span class="keyword">from</span> dual;</span><br><span class="line">+<span class="comment">------+--+</span></span><br><span class="line">| _c0  |</span><br><span class="line">+<span class="comment">------+--+</span></span><br><span class="line">| 27   |</span><br><span class="line">+<span class="comment">------+--+</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> <span class="keyword">date_sub</span>(<span class="string">'2019-12-27'</span>,<span class="number">1</span>) <span class="keyword">from</span> dual;</span><br><span class="line">+<span class="comment">-------------+--+</span></span><br><span class="line">|     _c0     |</span><br><span class="line">+<span class="comment">-------------+--+</span></span><br><span class="line">| 2019-12-26  |</span><br><span class="line">+<span class="comment">-------------+--+</span></span><br></pre></td></tr></table></figure>
+<h6 id="cast应用非常广泛但是转不过来的就会用null来表示">cast应用非常广泛，但是转不过来的就会用null来表示</h6>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">cast</span>(<span class="string">'10'</span> <span class="keyword">as</span> <span class="built_in">int</span>) <span class="keyword">from</span> dual;</span><br><span class="line">+<span class="comment">------+--+</span></span><br><span class="line">| _c0  |</span><br><span class="line">+<span class="comment">------+--+</span></span><br><span class="line">| 10   |</span><br><span class="line">+<span class="comment">------+--+</span></span><br></pre></td></tr></table></figure>
+<p><strong><em>注：</em></strong><br>
+binary 只能转string<br>
+QA: binary ==&gt; string ==&gt; int</p>
+<h6 id="四舍五入">四舍五入：</h6>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">round</span>(<span class="number">5.1234</span>, <span class="number">3</span>) <span class="keyword">from</span> dual;</span><br><span class="line">+<span class="comment">--------+--+</span></span><br><span class="line">|  _c0   |</span><br><span class="line">+<span class="comment">--------+--+</span></span><br><span class="line">| 5.123  |</span><br><span class="line">+<span class="comment">--------+--+</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> <span class="keyword">round</span>(<span class="number">5.1235</span>, <span class="number">3</span>) <span class="keyword">from</span> dual;</span><br><span class="line">+<span class="comment">--------+--+</span></span><br><span class="line">|  _c0   |</span><br><span class="line">+<span class="comment">--------+--+</span></span><br><span class="line">| 5.124  |</span><br><span class="line">+<span class="comment">--------+--+</span></span><br></pre></td></tr></table></figure>
+<h6 id="找到最小的大于等于x的值">找到最小的大于等于x的值：</h6>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">ceil</span>(<span class="number">5.4</span>) <span class="keyword">from</span> dual;</span><br><span class="line">+<span class="comment">------+--+</span></span><br><span class="line">| _c0  |</span><br><span class="line">+<span class="comment">------+--+</span></span><br><span class="line">| 6    |</span><br><span class="line">+<span class="comment">------+--+</span></span><br></pre></td></tr></table></figure>
+<h6 id="找到最大的小于等于x的值">找到最大的小于等于x的值：</h6>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">floor</span>(<span class="number">4.3</span>) <span class="keyword">from</span> dual;</span><br><span class="line">+<span class="comment">------+--+</span></span><br><span class="line">| _c0  |</span><br><span class="line">+<span class="comment">------+--+</span></span><br><span class="line">| 4    |</span><br><span class="line">+<span class="comment">------+--+</span></span><br></pre></td></tr></table></figure>
+<h6 id="找到最大值">找到最大值：</h6>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">greatest</span>(<span class="number">4</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">7</span>) <span class="keyword">from</span> dual;</span><br><span class="line">+<span class="comment">------+--+</span></span><br><span class="line">| _c0  |</span><br><span class="line">+<span class="comment">------+--+</span></span><br><span class="line">| 7    |</span><br><span class="line">+<span class="comment">------+--+</span></span><br></pre></td></tr></table></figure>
+<h6 id="字符串截取">字符串截取：</h6>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">substr</span>(<span class="string">'qwertasdfgzcv'</span>,<span class="number">7</span>) <span class="keyword">from</span> dual;（第七个位置取到最后）</span><br><span class="line">+<span class="comment">----------+--+</span></span><br><span class="line">|   _c0    |</span><br><span class="line">+<span class="comment">----------+--+</span></span><br><span class="line">| sdfgzcv  |</span><br><span class="line">+<span class="comment">----------+--+</span></span><br><span class="line"><span class="keyword">select</span> <span class="keyword">substr</span>(<span class="string">'qwertasdfgzcv'</span>,<span class="number">7</span>,<span class="number">2</span>) <span class="keyword">from</span> dual; （第七个位置开始取2个）</span><br><span class="line">+<span class="comment">------+--+</span></span><br><span class="line">| _c0  |</span><br><span class="line">+<span class="comment">------+--+</span></span><br><span class="line">| sd   |</span><br><span class="line">+<span class="comment">------+--+</span></span><br></pre></td></tr></table></figure>
+<h6 id="字符串拼接">字符串拼接：</h6>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">concat</span>(<span class="string">'qwertasdfgzcv'</span>,<span class="string">'qw'</span>) <span class="keyword">from</span> dual;</span><br><span class="line">+<span class="comment">------------------+--+</span></span><br><span class="line">|       _c0        |</span><br><span class="line">+<span class="comment">------------------+--+</span></span><br><span class="line">| qwertasdfgzcvqw  |</span><br><span class="line">+<span class="comment">------------------+--+</span></span><br></pre></td></tr></table></figure>
+<h6 id="字符串拼接通过特殊字符">字符串拼接：（通过特殊字符）</h6>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">concat_ws</span>(<span class="string">'.'</span>, <span class="string">'www'</span>, <span class="built_in">array</span>(<span class="string">'facebook'</span>, <span class="string">'com'</span>)) <span class="keyword">from</span> dual;</span><br><span class="line">+<span class="comment">-------------------+--+</span></span><br><span class="line">|        _c0        |</span><br><span class="line">+<span class="comment">-------------------+--+</span></span><br><span class="line">| www.facebook.com  |</span><br><span class="line">+<span class="comment">-------------------+--+</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> <span class="keyword">length</span>(<span class="string">'Facebook'</span>) <span class="keyword">from</span> dual;</span><br><span class="line">+<span class="comment">------+--+</span></span><br><span class="line">| _c0  |</span><br><span class="line">+<span class="comment">------+--+</span></span><br><span class="line">| 8    |</span><br><span class="line">+<span class="comment">------+--+</span></span><br></pre></td></tr></table></figure>
+<h6 id="字符串遇到自定的字符分隔">字符串遇到自定的字符分隔：</h6>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">split</span>(<span class="string">'oneAtwoBthreeC'</span>, <span class="string">'[ABC]'</span>) <span class="keyword">from</span> dual;</span><br><span class="line">+<span class="comment">---------------------------+--+</span></span><br><span class="line">|            _c0            |</span><br><span class="line">+<span class="comment">---------------------------+--+</span></span><br><span class="line">| ["one","two","three",""]  |</span><br><span class="line">+<span class="comment">---------------------------+--+</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> <span class="keyword">split</span>(<span class="string">'192.168.80.94'</span>, <span class="string">'\\.'</span>) <span class="keyword">from</span> dual;（.点需要转义字符）</span><br><span class="line">+<span class="comment">--------------------------+--+</span></span><br><span class="line">|           _c0            |</span><br><span class="line">+<span class="comment">--------------------------+--+</span></span><br><span class="line">| ["192","168","80","94"]  |</span><br><span class="line">+<span class="comment">--------------------------+--+</span></span><br></pre></td></tr></table></figure>
+<h6 id="如果数据类型相同函数是可以合起来使用的">如果数据类型相同，函数是可以合起来使用的</h6>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">upper</span>(<span class="keyword">substr</span>(<span class="string">'asdfzxc'</span>,<span class="number">4</span>,<span class="number">3</span>)) <span class="keyword">from</span> dual;</span><br><span class="line">+<span class="comment">------+--+</span></span><br><span class="line">| _c0  |</span><br><span class="line">+<span class="comment">------+--+</span></span><br><span class="line">| FZX  |</span><br><span class="line">+<span class="comment">------+--+</span></span><br></pre></td></tr></table></figure>
+<p><strong>array_contains：</strong> 返回boolean类型用在where后面<br>
+<strong>sort_array：</strong> 返回排序后的数组<br>
+<strong>size：</strong> 返回数值<br>
+<strong>map_keys：</strong> 返回一个数组<br>
+<strong>map_values：</strong> 返回一个数组</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> rating_json(<span class="keyword">json</span> <span class="keyword">string</span>);</span><br><span class="line"><span class="keyword">load</span> <span class="keyword">data</span> <span class="keyword">local</span> inpath <span class="string">'/home/mao/data/rating_json.json'</span> <span class="keyword">into</span> <span class="keyword">table</span> rating_json;</span><br><span class="line"><span class="keyword">select</span> json_tuple(<span class="keyword">json</span>,<span class="string">'movie'</span>,<span class="string">'rate'</span>,<span class="string">'time'</span>,<span class="string">'uid'</span>) <span class="keyword">as</span> (movie,rate,<span class="keyword">time</span>,uid) <span class="keyword">from</span> rating_json;</span><br><span class="line">+<span class="comment">--------+-------+------------+------+--+</span></span><br><span class="line">| movie  | rate  |    time    | uid  |</span><br><span class="line">+<span class="comment">--------+-------+------------+------+--+</span></span><br><span class="line">| 1193   | 5     | 978300760  | 1    |</span><br><span class="line">| 661    | 3     | 978302109  | 1    |</span><br><span class="line">| 914    | 3     | 978301968  | 1    |</span><br><span class="line">| 3408   | 4     | 978300275  | 1    |</span><br><span class="line">| 2355   | 5     | 978824291  | 1    |</span><br><span class="line">| 1197   | 3     | 978302268  | 1    |</span><br><span class="line">| 1287   | 5     | 978302039  | 1    |</span><br><span class="line">| 2804   | 5     | 978300719  | 1    |</span><br><span class="line">| 594    | 4     | 978302268  | 1    |</span><br><span class="line">| 919    | 4     | 978301368  | 1    |</span><br><span class="line">| 595    | 5     | 978824268  | 1    |</span><br><span class="line">| 938    | 4     | 978301752  | 1    |</span><br><span class="line">+<span class="comment">--------+-------+------------+------+--+</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> uid,movie,rate,<span class="keyword">time</span>,</span><br><span class="line">from_unixtime(<span class="keyword">cast</span>(<span class="keyword">time</span> <span class="keyword">as</span> <span class="built_in">bigint</span>)) <span class="keyword">as</span> ts,</span><br><span class="line"><span class="keyword">year</span>(from_unixtime(<span class="keyword">cast</span>(<span class="keyword">time</span> <span class="keyword">as</span> <span class="built_in">bigint</span>))) <span class="keyword">as</span> <span class="keyword">year</span>,</span><br><span class="line"><span class="keyword">month</span>(from_unixtime(<span class="keyword">cast</span>(<span class="keyword">time</span> <span class="keyword">as</span> <span class="built_in">bigint</span>))) <span class="keyword">as</span> <span class="keyword">month</span>,</span><br><span class="line"><span class="keyword">day</span>(from_unixtime(<span class="keyword">cast</span>(<span class="keyword">time</span> <span class="keyword">as</span> <span class="built_in">bigint</span>))) <span class="keyword">as</span> <span class="keyword">day</span>,</span><br><span class="line"><span class="keyword">hour</span>(from_unixtime(<span class="keyword">cast</span>(<span class="keyword">time</span> <span class="keyword">as</span> <span class="built_in">bigint</span>))) <span class="keyword">as</span> <span class="keyword">hour</span>,</span><br><span class="line"><span class="keyword">minute</span>(from_unixtime(<span class="keyword">cast</span>(<span class="keyword">time</span> <span class="keyword">as</span> <span class="built_in">bigint</span>))) <span class="keyword">as</span> <span class="keyword">minute</span>,</span><br><span class="line"><span class="keyword">second</span>(from_unixtime(<span class="keyword">cast</span>(<span class="keyword">time</span> <span class="keyword">as</span> <span class="built_in">bigint</span>))) <span class="keyword">as</span> <span class="keyword">second</span></span><br><span class="line"><span class="keyword">from</span> (<span class="keyword">select</span> json_tuple(<span class="keyword">json</span>, <span class="string">'movie'</span>,<span class="string">'rate'</span>,<span class="string">'time'</span>,<span class="string">'uid'</span>) <span class="keyword">as</span> (movie, rate,<span class="keyword">time</span>, uid) <span class="keyword">from</span> rating_json) t;</span><br><span class="line">+<span class="comment">------+--------+-------+------------+----------------------+-------+--------+------+-------+---------+---------+--+</span></span><br><span class="line">| uid  | movie  | rate  |    time    |          ts          | year  | month  | day  | hour  | minute  | second  |</span><br><span class="line">+<span class="comment">------+--------+-------+------------+----------------------+-------+--------+------+-------+---------+---------+--+</span></span><br><span class="line">| 1    | 1193   | 5     | 978300760  | 2001-01-01 06:12:40  | 2001  | 1      | 1    | 6     | 12      | 40      |</span><br><span class="line">| 1    | 661    | 3     | 978302109  | 2001-01-01 06:35:09  | 2001  | 1      | 1    | 6     | 35      | 9       |</span><br><span class="line">| 1    | 914    | 3     | 978301968  | 2001-01-01 06:32:48  | 2001  | 1      | 1    | 6     | 32      | 48      |</span><br><span class="line">| 1    | 3408   | 4     | 978300275  | 2001-01-01 06:04:35  | 2001  | 1      | 1    | 6     | 4       | 35      |</span><br><span class="line">| 1    | 2355   | 5     | 978824291  | 2001-01-07 07:38:11  | 2001  | 1      | 7    | 7     | 38      | 11      |</span><br><span class="line">| 1    | 1197   | 3     | 978302268  | 2001-01-01 06:37:48  | 2001  | 1      | 1    | 6     | 37      | 48      |</span><br><span class="line">| 1    | 1287   | 5     | 978302039  | 2001-01-01 06:33:59  | 2001  | 1      | 1    | 6     | 33      | 59      |</span><br><span class="line">| 1    | 2804   | 5     | 978300719  | 2001-01-01 06:11:59  | 2001  | 1      | 1    | 6     | 11      | 59      |</span><br><span class="line">| 1    | 594    | 4     | 978302268  | 2001-01-01 06:37:48  | 2001  | 1      | 1    | 6     | 37      | 48      |</span><br><span class="line">| 1    | 919    | 4     | 978301368  | 2001-01-01 06:22:48  | 2001  | 1      | 1    | 6     | 22      | 48      |</span><br><span class="line">| 1    | 595    | 5     | 978824268  | 2001-01-07 07:37:48  | 2001  | 1      | 7    | 7     | 37      | 48      |</span><br><span class="line">| 1    | 938    | 4     | 978301752  | 2001-01-01 06:29:12  | 2001  | 1      | 1    | 6     | 29      | 12      |</span><br><span class="line">+<span class="comment">------+--------+-------+------------+----------------------+-------+--------+------+-------+---------+---------+--+</span></span><br></pre></td></tr></table></figure>
+<h6 id="解析url路径">解析url路径</h6>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> parse_url_tuple(<span class="string">"https://www.baidu.com/s?wd=cat&amp;rsv_spt=1"</span>,<span class="string">'HOST'</span>,<span class="string">'PATH'</span>,<span class="string">'QUERY'</span>);</span><br><span class="line">+<span class="comment">----------------+-----+-------------------+--+</span></span><br><span class="line">|       c0       | c1  |        c2         |</span><br><span class="line">+<span class="comment">----------------+-----+-------------------+--+</span></span><br><span class="line">| www.baidu.com  | /s  | wd=cat&amp;rsv_spt=1  |</span><br><span class="line">+<span class="comment">----------------+-----+-------------------+--+</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> parse_url_tuple(<span class="string">"https://www.baidu.com/s?wd=cat&amp;rsv_spt=1"</span>,<span class="string">'HOST'</span>,<span class="string">'PATH'</span>,<span class="string">'QUERY'</span>,<span class="string">'QUERY:wd'</span>);</span><br><span class="line">+<span class="comment">----------------+-----+-------------------+------+--+</span></span><br><span class="line">|       c0       | c1  |        c2         |  c3  |</span><br><span class="line">+<span class="comment">----------------+-----+-------------------+------+--+</span></span><br><span class="line">| www.baidu.com  | /s  | wd=cat&amp;rsv_spt=1  | cat  |</span><br><span class="line">+<span class="comment">----------------+-----+-------------------+------+--+</span></span><br></pre></td></tr></table></figure>
+<h6 id="判断是否为null并返回布尔值">判断是否为null并返回布尔值：</h6>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> ename,comm,<span class="keyword">isnull</span>(comm) is_null,isnotnull(comm) <span class="keyword">is_not_null</span> <span class="keyword">from</span> emp;</span><br><span class="line">+<span class="comment">---------+---------+----------+--------------+--+</span></span><br><span class="line">|  ename  |  comm   | is_null  | is_not_null  |</span><br><span class="line">+<span class="comment">---------+---------+----------+--------------+--+</span></span><br><span class="line">| SMITH   | NULL    | true     | false        |</span><br><span class="line">| ALLEN   | 300.0   | false    | true         |</span><br><span class="line">| WARD    | 500.0   | false    | true         |</span><br><span class="line">| JONES   | NULL    | true     | false        |</span><br><span class="line">| MARTIN  | 1400.0  | false    | true         |</span><br><span class="line">| BLAKE   | NULL    | true     | false        |</span><br><span class="line">| CLARK   | NULL    | true     | false        |</span><br><span class="line">| SCOTT   | NULL    | true     | false        |</span><br><span class="line">| KING    | NULL    | true     | false        |</span><br><span class="line">| TURNER  | 0.0     | false    | true         |</span><br><span class="line">| ADAMS   | NULL    | true     | false        |</span><br><span class="line">| JAMES   | NULL    | true     | false        |</span><br><span class="line">| FORD    | NULL    | true     | false        |</span><br><span class="line">| MILLER  | NULL    | true     | false        |</span><br><span class="line">| HIVE    | NULL    | true     | false        |</span><br><span class="line">| SMITH   | NULL    | true     | false        |</span><br><span class="line">| ALLEN   | 300.0   | false    | true         |</span><br><span class="line">| WARD    | 500.0   | false    | true         |</span><br><span class="line">| JONES   | NULL    | true     | false        |</span><br><span class="line">| MARTIN  | 1400.0  | false    | true         |</span><br><span class="line">| BLAKE   | NULL    | true     | false        |</span><br><span class="line">| CLARK   | NULL    | true     | false        |</span><br><span class="line">| SCOTT   | NULL    | true     | false        |</span><br><span class="line">| KING    | NULL    | true     | false        |</span><br><span class="line">| TURNER  | 0.0     | false    | true         |</span><br><span class="line">| ADAMS   | NULL    | true     | false        |</span><br><span class="line">| JAMES   | NULL    | true     | false        |</span><br><span class="line">| FORD    | NULL    | true     | false        |</span><br><span class="line">| MILLER  | NULL    | true     | false        |</span><br><span class="line">| HIVE    | NULL    | true     | false        |</span><br><span class="line">+<span class="comment">---------+---------+----------+--------------+--+</span></span><br></pre></td></tr></table></figure>
+<h6 id="条件不为空会报异常">条件不为空会报异常：</h6>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> assert_true(comm <span class="keyword">is</span> <span class="literal">NULL</span>) <span class="keyword">from</span> emp <span class="keyword">where</span> empno = <span class="number">7369</span>;（此时条件为空）</span><br><span class="line">+<span class="comment">-------+--+</span></span><br><span class="line">|  _c0  |</span><br><span class="line">+<span class="comment">-------+--+</span></span><br><span class="line">| NULL  |</span><br><span class="line">| NULL  |</span><br><span class="line">+<span class="comment">-------+--+</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> assert_true(comm <span class="keyword">is</span> <span class="literal">NULL</span>) <span class="keyword">from</span> emp <span class="keyword">where</span> empno = <span class="number">7499</span> ;（此时条件不为空）</span><br><span class="line">Error: java.io.IOException: org.apache.hadoop.hive.ql.metadata.HiveException: ASSERT_TRUE(): assertion failed. (state=,code=0)</span><br></pre></td></tr></table></figure>
+<h6 id="返回第几个字符串">返回第几个字符串：</h6>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span>  <span class="keyword">elt</span>(<span class="number">1</span>, <span class="string">'face'</span>, <span class="string">'book'</span>) <span class="keyword">from</span> dual;</span><br><span class="line">+<span class="comment">-------+--+</span></span><br><span class="line">|  _c0  |</span><br><span class="line">+<span class="comment">-------+--+</span></span><br><span class="line">| face  |</span><br><span class="line">+<span class="comment">-------+--+</span></span><br></pre></td></tr></table></figure>
+<h6 id="如果是空的值就转化成其他字符">如果是空的值就转化成其他字符：</h6>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> ename,comm,nvl(comm,<span class="number">-1</span>) <span class="keyword">from</span> emp;</span><br><span class="line">+<span class="comment">---------+---------+---------+--+</span></span><br><span class="line">|  ename  |  comm   |   _c2   |</span><br><span class="line">+<span class="comment">---------+---------+---------+--+</span></span><br><span class="line">| SMITH   | NULL    | -1.0    |</span><br><span class="line">| ALLEN   | 300.0   | 300.0   |</span><br><span class="line">| WARD    | 500.0   | 500.0   |</span><br><span class="line">| JONES   | NULL    | -1.0    |</span><br><span class="line">| MARTIN  | 1400.0  | 1400.0  |</span><br><span class="line">| BLAKE   | NULL    | -1.0    |</span><br><span class="line">| CLARK   | NULL    | -1.0    |</span><br><span class="line">| SCOTT   | NULL    | -1.0    |</span><br><span class="line">| KING    | NULL    | -1.0    |</span><br><span class="line">| TURNER  | 0.0     | 0.0     |</span><br><span class="line">| ADAMS   | NULL    | -1.0    |</span><br><span class="line">| JAMES   | NULL    | -1.0    |</span><br><span class="line">| FORD    | NULL    | -1.0    |</span><br><span class="line">| MILLER  | NULL    | -1.0    |</span><br><span class="line">| HIVE    | NULL    | -1.0    |</span><br><span class="line">| SMITH   | NULL    | -1.0    |</span><br><span class="line">| ALLEN   | 300.0   | 300.0   |</span><br><span class="line">| WARD    | 500.0   | 500.0   |</span><br><span class="line">| JONES   | NULL    | -1.0    |</span><br><span class="line">| MARTIN  | 1400.0  | 1400.0  |</span><br><span class="line">| BLAKE   | NULL    | -1.0    |</span><br><span class="line">| CLARK   | NULL    | -1.0    |</span><br><span class="line">| SCOTT   | NULL    | -1.0    |</span><br><span class="line">| KING    | NULL    | -1.0    |</span><br><span class="line">| TURNER  | 0.0     | 0.0     |</span><br><span class="line">| ADAMS   | NULL    | -1.0    |</span><br><span class="line">| JAMES   | NULL    | -1.0    |</span><br><span class="line">| FORD    | NULL    | -1.0    |</span><br><span class="line">| MILLER  | NULL    | -1.0    |</span><br><span class="line">| HIVE    | NULL    | -1.0    |</span><br><span class="line">+<span class="comment">---------+---------+---------+--+</span></span><br></pre></td></tr></table></figure>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/article/Hive表DDL，DML数据导入导出操作/" data-toggle="tooltip" data-placement="top" title="Hive表DDL，DML数据导入导出操作">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share"  data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+  
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#欢迎来到妖精小狗的博客"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">&#x6B22;&#x8FCE;&#x6765;&#x5230;&#x5996;&#x7CBE;&#x5C0F;&#x72D7;&#x7684;&#x535A;&#x5BA2;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#join的用法"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">join&#x7684;&#x7528;&#x6CD5;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#你想对n张表做join连接条件有n-1个"><span class="toc-nav-number">1.1.1.</span> <span class="toc-nav-text">&#x4F60;&#x60F3;&#x5BF9;N&#x5F20;&#x8868;&#x505A;join&#xFF0C;&#x8FDE;&#x63A5;&#x6761;&#x4EF6;&#x6709;N-1&#x4E2A;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#hiveserver2的简写是hs2"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">HiveServer2&#x7684;&#x7B80;&#x5199;&#x662F;HS2</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#hs2是服务server"><span class="toc-nav-number">1.2.1.</span> <span class="toc-nav-text">HS2&#x662F;&#x670D;&#x52A1;&#xFF08;Server&#xFF09;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#可以改成其他端口"><span class="toc-nav-number">1.2.1.1.</span> <span class="toc-nav-text">&#x53EF;&#x4EE5;&#x6539;&#x6210;&#x5176;&#x4ED6;&#x7AEF;&#x53E3;&#xFF1A;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#beeline是客户端clienthivespark都有"><span class="toc-nav-number">1.2.2.</span> <span class="toc-nav-text">Beeline&#x662F;&#x5BA2;&#x6237;&#x7AEF;&#xFF08;Client&#xFF0C;Hive/Spark&#x90FD;&#x6709;&#xFF09;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#hive复杂数据类型"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">Hive&#x590D;&#x6742;&#x6570;&#x636E;&#x7C7B;&#x578B;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#array数据类型要一样"><span class="toc-nav-number">1.3.1.</span> <span class="toc-nav-text">array<t>&#xFF1A;&#x6570;&#x636E;&#x7C7B;&#x578B;&#x8981;&#x4E00;&#x6837;</t></span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#对于复杂数据类型重点要掌握的是如何存和取"><span class="toc-nav-number">1.3.1.1.</span> <span class="toc-nav-text">&#x5BF9;&#x4E8E;&#x590D;&#x6742;&#x6570;&#x636E;&#x7C7B;&#x578B;&#xFF0C;&#x91CD;&#x70B9;&#x8981;&#x638C;&#x63E1;&#x7684;&#x662F;&#x5982;&#x4F55;&#x201D;&#x5B58;&#x201C;&#x548C;&#x201D;&#x53D6;&#x201C;</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#数组类型常用的函数sizearray_containscolumn-value"><span class="toc-nav-number">1.3.1.2.</span> <span class="toc-nav-text">&#x6570;&#x7EC4;&#x7C7B;&#x578B;&#x5E38;&#x7528;&#x7684;&#x51FD;&#x6570;&#xFF1A;size&#xFF0C;array_contains(column, &#x2018;value&#x2019;)</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#mapltprimitive_type-data_typegtkv键值对"><span class="toc-nav-number">1.3.2.</span> <span class="toc-nav-text">MAP&lt;primitive_type, data_type&gt;&#xFF1A;kv&#xFF08;&#x952E;&#x503C;&#x5BF9;&#xFF09;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#原始数据"><span class="toc-nav-number">1.3.3.</span> <span class="toc-nav-text">&#x539F;&#x59CB;&#x6570;&#x636E;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#查询实例"><span class="toc-nav-number">1.3.4.</span> <span class="toc-nav-text">&#x67E5;&#x8BE2;&#x5B9E;&#x4F8B;&#xFF1A;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#可以使用字段名内容来查询出需要的内容"><span class="toc-nav-number">1.3.4.1.</span> <span class="toc-nav-text">&#x53EF;&#x4EE5;&#x4F7F;&#x7528;&#x5B57;&#x6BB5;&#x540D;[&#x2018;&#x5185;&#x5BB9;&#x2019;]&#x6765;&#x67E5;&#x8BE2;&#x51FA;&#x9700;&#x8981;&#x7684;&#x5185;&#x5BB9;</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#查询出有兄弟的人以及他的兄弟是谁"><span class="toc-nav-number">1.3.4.2.</span> <span class="toc-nav-text">&#x67E5;&#x8BE2;&#x51FA;&#x6709;&#x5144;&#x5F1F;&#x7684;&#x4EBA;&#x4EE5;&#x53CA;&#x4ED6;&#x7684;&#x5144;&#x5F1F;&#x662F;&#x8C01;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#structs-structltcol_name-data_type-comment-col_comment-gt"><span class="toc-nav-number">1.3.5.</span> <span class="toc-nav-text">structs: STRUCT&lt;col_name : data_type [COMMENT col_comment], &#x2026;&gt;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#示例每一个人访问的所有ad_id去重"><span class="toc-nav-number">1.3.5.1.</span> <span class="toc-nav-text">&#x793A;&#x4F8B;&#xFF1A;&#x6BCF;&#x4E00;&#x4E2A;&#x4EBA;&#xFF0C;&#x8BBF;&#x95EE;&#x7684;&#x6240;&#x6709;ad_id&#x53BB;&#x91CD;</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#ad_id-gt-ad_list-找到对应的类别"><span class="toc-nav-number">1.3.5.2.</span> <span class="toc-nav-text">ad_id ==&gt; ad_list &#x627E;&#x5230;&#x5BF9;&#x5E94;&#x7684;&#x7C7B;&#x522B;</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#列转行"><span class="toc-nav-number">1.4.</span> <span class="toc-nav-text">&#x5217;&#x8F6C;&#x884C;</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#function-函数分类"><span class="toc-nav-number">1.5.</span> <span class="toc-nav-text">Function &#x51FD;&#x6570;&#x5206;&#x7C7B;&#xFF1A;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#castvalue-as-type"><span class="toc-nav-number">1.5.1.</span> <span class="toc-nav-text">cast(value as type)</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#求当前时间"><span class="toc-nav-number">1.5.1.1.</span> <span class="toc-nav-text">&#x6C42;&#x5F53;&#x524D;&#x65F6;&#x95F4;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#求当前的时间戳"><span class="toc-nav-number">1.5.1.2.</span> <span class="toc-nav-text">&#x6C42;&#x5F53;&#x524D;&#x7684;&#x65F6;&#x95F4;&#x6233;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#求当前时间戳"><span class="toc-nav-number">1.5.1.3.</span> <span class="toc-nav-text">&#x6C42;&#x5F53;&#x524D;&#x65F6;&#x95F4;&#x6233;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#cast应用非常广泛但是转不过来的就会用null来表示"><span class="toc-nav-number">1.5.1.4.</span> <span class="toc-nav-text">cast&#x5E94;&#x7528;&#x975E;&#x5E38;&#x5E7F;&#x6CDB;&#xFF0C;&#x4F46;&#x662F;&#x8F6C;&#x4E0D;&#x8FC7;&#x6765;&#x7684;&#x5C31;&#x4F1A;&#x7528;null&#x6765;&#x8868;&#x793A;</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#四舍五入"><span class="toc-nav-number">1.5.1.5.</span> <span class="toc-nav-text">&#x56DB;&#x820D;&#x4E94;&#x5165;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#找到最小的大于等于x的值"><span class="toc-nav-number">1.5.1.6.</span> <span class="toc-nav-text">&#x627E;&#x5230;&#x6700;&#x5C0F;&#x7684;&#x5927;&#x4E8E;&#x7B49;&#x4E8E;x&#x7684;&#x503C;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#找到最大的小于等于x的值"><span class="toc-nav-number">1.5.1.7.</span> <span class="toc-nav-text">&#x627E;&#x5230;&#x6700;&#x5927;&#x7684;&#x5C0F;&#x4E8E;&#x7B49;&#x4E8E;x&#x7684;&#x503C;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#找到最大值"><span class="toc-nav-number">1.5.1.8.</span> <span class="toc-nav-text">&#x627E;&#x5230;&#x6700;&#x5927;&#x503C;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#字符串截取"><span class="toc-nav-number">1.5.1.9.</span> <span class="toc-nav-text">&#x5B57;&#x7B26;&#x4E32;&#x622A;&#x53D6;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#字符串拼接"><span class="toc-nav-number">1.5.1.10.</span> <span class="toc-nav-text">&#x5B57;&#x7B26;&#x4E32;&#x62FC;&#x63A5;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#字符串拼接通过特殊字符"><span class="toc-nav-number">1.5.1.11.</span> <span class="toc-nav-text">&#x5B57;&#x7B26;&#x4E32;&#x62FC;&#x63A5;&#xFF1A;&#xFF08;&#x901A;&#x8FC7;&#x7279;&#x6B8A;&#x5B57;&#x7B26;&#xFF09;</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#字符串遇到自定的字符分隔"><span class="toc-nav-number">1.5.1.12.</span> <span class="toc-nav-text">&#x5B57;&#x7B26;&#x4E32;&#x9047;&#x5230;&#x81EA;&#x5B9A;&#x7684;&#x5B57;&#x7B26;&#x5206;&#x9694;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#如果数据类型相同函数是可以合起来使用的"><span class="toc-nav-number">1.5.1.13.</span> <span class="toc-nav-text">&#x5982;&#x679C;&#x6570;&#x636E;&#x7C7B;&#x578B;&#x76F8;&#x540C;&#xFF0C;&#x51FD;&#x6570;&#x662F;&#x53EF;&#x4EE5;&#x5408;&#x8D77;&#x6765;&#x4F7F;&#x7528;&#x7684;</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#解析url路径"><span class="toc-nav-number">1.5.1.14.</span> <span class="toc-nav-text">&#x89E3;&#x6790;url&#x8DEF;&#x5F84;</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#判断是否为null并返回布尔值"><span class="toc-nav-number">1.5.1.15.</span> <span class="toc-nav-text">&#x5224;&#x65AD;&#x662F;&#x5426;&#x4E3A;null&#x5E76;&#x8FD4;&#x56DE;&#x5E03;&#x5C14;&#x503C;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#条件不为空会报异常"><span class="toc-nav-number">1.5.1.16.</span> <span class="toc-nav-text">&#x6761;&#x4EF6;&#x4E0D;&#x4E3A;&#x7A7A;&#x4F1A;&#x62A5;&#x5F02;&#x5E38;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#返回第几个字符串"><span class="toc-nav-number">1.5.1.17.</span> <span class="toc-nav-text">&#x8FD4;&#x56DE;&#x7B2C;&#x51E0;&#x4E2A;&#x5B57;&#x7B26;&#x4E32;&#xFF1A;</span></a></li><li class="toc-nav-item toc-nav-level-6"><a class="toc-nav-link" href="#如果是空的值就转化成其他字符"><span class="toc-nav-number">1.5.1.18.</span> <span class="toc-nav-text">&#x5982;&#x679C;&#x662F;&#x7A7A;&#x7684;&#x503C;&#x5C31;&#x8F6C;&#x5316;&#x6210;&#x5176;&#x4ED6;&#x5B57;&#x7B26;&#xFF1A;</span></a></li></ol></li></ol></li></ol></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#hive" title="hive">hive</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'MX'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+<!-- chrome Firefox 中文锚点定位失效-->
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<!-- smooth scroll behavior polyfill  -->
+<script type="text/javascript" src="/js/smoothscroll.js"></script>
+<script>
+        $('#toc').on('click','a',function(a){
+            // var isChrome = window.navigator.userAgent.indexOf("Chrome") !== -1;
+            // console.log(window.navigator.userAgent,isChrome)
+                // if(isChrome) {
+                    // console.log(a.currentTarget.outerHTML);
+                    // console.log($(a.currentTarget).attr("href"));
+                    //跳转到指定锚点
+                    // document.getElementById(a.target.innerText.toLowerCase()).scrollIntoView(true);
+                    document.getElementById($(a.currentTarget).attr("href").replace("#","")).scrollIntoView({behavior: 'smooth' });
+                // }
+        })  
+</script>
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/demonlittledog">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; MX 2019 
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://github.com/demonlittledog/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = 'xxx';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://github.com/demonlittledog/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
