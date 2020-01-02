@@ -142,6 +142,13 @@
 
                         
                         <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
                             <a href="/archive/">Archives</a>
                         </li>
                         
@@ -150,13 +157,6 @@
                         
                         <li>
                             <a href="/tags/">Tags</a>
-                        </li>
-                        
-                    
-
-                        
-                        <li>
-                            <a href="/about/">About</a>
                         </li>
                         
                     
@@ -302,7 +302,7 @@ create table emp4 like emp;</p>
 <h6 id="注">注：</h6>
 <p><strong>如果在写入的时候不小心顺序写错了，此时不会报错，但是结果就全错了</strong></p>
 <h5 id="使用插入把结果写入文件系统">使用插入把结果写入文件系统：</h5>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">NSERT OVERWRITE LOCAL DIRECTORY '/home/hadoop/tmp/hivetmp' ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t' <span class="keyword">SELECT</span> empno,ename <span class="keyword">FROM</span> emp;	 </span><br><span class="line">hive –e “<span class="keyword">select</span> empno,ename <span class="keyword">from</span> tmp” | grep SMITH &gt; <span class="keyword">file</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> OVERWRITE <span class="keyword">LOCAL</span> <span class="keyword">DIRECTORY</span> <span class="string">'/home/hadoop/tmp/hivetmp'</span> <span class="keyword">ROW</span> <span class="keyword">FORMAT</span> <span class="keyword">DELIMITED</span> <span class="keyword">FIELDS</span> <span class="keyword">TERMINATED</span> <span class="keyword">BY</span> <span class="string">'\t'</span> <span class="keyword">SELECT</span> empno,ename <span class="keyword">FROM</span> emp;	 </span><br><span class="line">hive –e “<span class="keyword">select</span> empno,ename <span class="keyword">from</span> tmp” | grep SMITH &gt; <span class="keyword">file</span></span><br></pre></td></tr></table></figure>
 <p><strong>（使用hive –e来导出文件）</strong><br>
 Sqoop 数据导入导出操作（以后详细说明）</p>
 <h4 id="数据查询使用hive必然是写sql">数据查询（使用Hive，必然是写sql）</h4>
@@ -353,7 +353,7 @@ Supported values are none, minimal and more.</p>
                 <ul class="pager">
                     
                         <li class="previous">
-                            <a href="/article/Hive的主要查询语句，复杂数据结构，常用函数/" data-toggle="tooltip" data-placement="top" title="Hive的主要查询语句，复杂数据结构，常用函数">&larr; Previous Post</a>
+                            <a href="/article/Hive的主要查询语句，复杂数据结构，常用函数/" data-toggle="tooltip" data-placement="top" title="Hive的主要查询语句，复杂数据结构，常用函数，排序的用法">&larr; Previous Post</a>
                         </li>
                     
                     
@@ -532,7 +532,7 @@ Supported values are none, minimal and more.</p>
 
                 </ul>
                 <p class="copyright text-muted">
-                    Copyright &copy; MX 2019 
+                    Copyright &copy; MX 2020 
                 </p>
             </div>
         </div>
